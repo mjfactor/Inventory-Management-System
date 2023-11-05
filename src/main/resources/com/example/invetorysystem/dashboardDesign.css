@@ -1,0 +1,45 @@
+.close{
+    -fx-cursor:hand;
+    -fx-background-color: transparent;
+}
+.close:hover{
+    -fx-background-color: #9a9494;
+}
+.minimize{
+    -fx-cursor:hand;
+    -fx-background-color: transparent;
+}
+.minimize:hover{
+    -fx-background-color: #ddd;
+}
+.nav-form{
+    -fx-background-color: linear-gradient(to bottom right, #67c457, #5a93d5);
+}
+.nav-button{
+    -fx-background-color: transparent;
+    -fx-cursor: hand;
+    -fx-text-fill: black;
+
+}
+.nav-buttonWrap:hover{
+    -fx-cursor: hand;
+    -fx-background-color: rgba(44, 41, 41, 0.26);
+}
+.logout{
+    -fx-background-color: #86b2ea;
+    -fx-cursor: hand;
+    -fx-background-radius: 10px;
+}
+.logout:hover{
+    -fx-background-color: #abe09e;
+}
+.shadow{
+    -fx-effect: dropshadow(three-pass-box,rgba(0,0,0,4), 5,0,0,0);
+}
+.white-bg{
+    -fx-background-color: #fff;
+    -fx-background-radius: 8px;
+}
+.card{
+    -fx-background-color: linear-gradient(to bottom right, #236519, #2f64a2);
+}

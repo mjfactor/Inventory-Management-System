@@ -2,6 +2,7 @@ package com.example.invetorysystem;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -9,7 +10,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -57,11 +60,18 @@ public class HelloController {
                     alert.setTitle("Information Message");
                     alert.setHeaderText(null);
                     alert.setContentText("Successfully Login!");
+                    login_button.getScene().getWindow().hide();  // hide login form
                     Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("dashboard.fxml")));
                     Stage stage = new Stage();
                     Scene scene = new Scene(root);
+                    stage.initStyle(StageStyle.UNDECORATED);  // Remove Stage Buttons (Minimize, maximize, close)
                     stage.setScene(scene);
                     stage.show();
+
+                    // Appear on center
+                    Rectangle2D primScreenBounds = Screen.getPrimary().getVisualBounds();
+                    stage.setX((primScreenBounds.getWidth() - stage.getWidth()) / 2);
+                    stage.setY((primScreenBounds.getHeight() - stage.getHeight()) / 2);
 
                 }else{
                     alert = new Alert(Alert.AlertType.ERROR);
