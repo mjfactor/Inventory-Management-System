@@ -4,6 +4,7 @@ module com.example.invetorysystem {
 
     requires org.controlsfx.controls;
     requires org.kordamp.bootstrapfx.core;
+    requires java.desktop;
 
     opens com.example.invetorysystem to javafx.fxml;
     exports com.example.invetorysystem;
