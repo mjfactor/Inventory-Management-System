@@ -6,6 +6,7 @@ module com.example.invetorysystem {
     requires org.kordamp.bootstrapfx.core;
     requires java.desktop;
     requires java.sql;
+    requires mysql.connector.j;
 
     opens com.example.invetorysystem to javafx.fxml;
     exports com.example.invetorysystem;

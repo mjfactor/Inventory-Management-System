@@ -5,12 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2b1c4b3e-ed24-4a03-940c-14188ed82d64" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/JAR FILES/mysql-connector-j-8.0.33.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/JAR FILES/ojdbc11.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/invetorysystem/database.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/com/example/invetorysystem/dashboard.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/invetorysystem/HelloApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/invetorysystem/HelloApplication.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/invetorysystem/HelloController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/invetorysystem/HelloController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/invetorysystem/database.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/invetorysystem/database.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/module-info.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/com/example/invetorysystem/hello-view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/example/invetorysystem/login.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -22,6 +24,7 @@
       <list>
         <option value="CSS File" />
         <option value="Class" />
+        <option value="FxmlFile" />
       </list>
     </option>
   </component>
@@ -63,7 +66,7 @@
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Libraries",
+    "project.structure.last.edited": "Modules",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.4586207",
     "vue.rearranger.settings.migration": "true"
@@ -109,7 +112,7 @@
       <updated>1698846470523</updated>
       <workItem from="1698846471536" duration="2694000" />
       <workItem from="1698893508198" duration="3158000" />
-      <workItem from="1699146016441" duration="16236000" />
+      <workItem from="1699146016441" duration="20632000" />
     </task>
     <servers />
   </component>

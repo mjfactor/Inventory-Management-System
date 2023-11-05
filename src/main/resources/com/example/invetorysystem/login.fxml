@@ -9,7 +9,6 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 
-
 <StackPane alignment="TOP_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="551.0" prefWidth="752.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.invetorysystem.HelloController">
    <children>
       <AnchorPane fx:id="main_frame" prefHeight="200.0" prefWidth="200.0">
@@ -17,15 +16,15 @@
             <AnchorPane prefHeight="551.0" prefWidth="367.0" styleClass="left-form" stylesheets="@loginDesign.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" />
             <AnchorPane layoutX="368.0" layoutY="3.0" prefHeight="551.0" prefWidth="382.0" styleClass="right-form" stylesheets="@loginDesign.css" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
-                  <TextField fx:id="username" layoutX="74.0" layoutY="218.0" prefHeight="34.0" prefWidth="251.0" promptText="Username" />
+                  <TextField fx:id="username" layoutX="74.0" layoutY="218.0" onAction="#loginAdmin" prefHeight="34.0" prefWidth="251.0" promptText="Username" />
                   <FontAwesomeIconView fill="#1ab746" glyphName="USER" layoutX="178.0" layoutY="122.0" size="5em" wrappingWidth="42.40000000000009" />
                   <Label layoutX="78.0" layoutY="139.0" prefHeight="28.0" prefWidth="242.0" text="Welcome back admin!">
                      <font>
                         <Font name="Times New Roman Bold" size="24.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="password" layoutX="74.0" layoutY="273.0" prefHeight="34.0" prefWidth="251.0" promptText="Password" />
-                  <Button fx:id="login_button" layoutX="74.0" layoutY="330.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="251.0" styleClass="login-button" stylesheets="@loginDesign.css" text="Login">
+                  <TextField fx:id="password" layoutX="74.0" layoutY="273.0" onAction="#loginAdmin" prefHeight="34.0" prefWidth="251.0" promptText="Password" />
+                  <Button fx:id="login_button" layoutX="74.0" layoutY="330.0" mnemonicParsing="false" onAction="#loginAdmin" prefHeight="34.0" prefWidth="251.0" styleClass="login-button" stylesheets="@loginDesign.css" text="Login">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>

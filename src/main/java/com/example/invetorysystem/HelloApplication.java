@@ -19,8 +19,9 @@ public class HelloApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
 
+
         stage.initStyle(StageStyle.UNDECORATED); // Remove Stage Buttons (Minimize, maximize, close)
-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("login.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 752, 551);
 
         scene.setOnMousePressed(mouseEvent -> {
@@ -31,7 +32,7 @@ public class HelloApplication extends Application {
         scene.setOnMouseDragged(mouseEvent -> {
             stage.setX(mouseEvent.getScreenX() - x);
             stage.setY(mouseEvent.getScreenY() - y);
-            stage.setOpacity(.8);
+            stage.setOpacity(.9);
         });
         scene.setOnMouseReleased(mouseEvent -> {
             stage.setOpacity(1);
