@@ -5,23 +5,22 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.*;
-
-
-
 import java.io.IOException;
 
-public class HelloApplication extends Application {
+public class main extends Application {
+
+
     double x = 0;
     double y = 0;
     @Override
     public void start(Stage stage) throws IOException {
 
-
         stage.initStyle(StageStyle.UNDECORATED); // Remove Stage Buttons (Minimize, maximize, close)
-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("login.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(main.class.getResource("login.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 752, 551);
 
         scene.setOnMousePressed(mouseEvent -> {
@@ -47,7 +46,6 @@ public class HelloApplication extends Application {
         Rectangle2D primScreenBounds = Screen.getPrimary().getVisualBounds();
         stage.setX((primScreenBounds.getWidth() - stage.getWidth()) / 2);
         stage.setY((primScreenBounds.getHeight() - stage.getHeight()) / 2);
-
 
     }
 

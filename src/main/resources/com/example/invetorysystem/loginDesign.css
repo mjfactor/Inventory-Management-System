@@ -10,6 +10,10 @@
 .close:hover{
     -fx-background-color: #9a9494;
 }
+.eye{
+    -fx-cursor:hand;
+    -fx-background-color: transparent;
+}
 .login-button{
     -fx-background-color: linear-gradient(to bottom right, #8cea50, #97f397);
 }

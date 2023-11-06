@@ -4,43 +4,46 @@
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 
-<StackPane alignment="TOP_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="551.0" prefWidth="752.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.invetorysystem.HelloController">
+<StackPane alignment="TOP_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="551.0" prefWidth="752.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.invetorysystem.loginController">
    <children>
       <AnchorPane fx:id="main_frame" prefHeight="200.0" prefWidth="200.0">
          <children>
-            <AnchorPane prefHeight="551.0" prefWidth="367.0" styleClass="left-form" stylesheets="@loginDesign.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" />
+            <AnchorPane layoutY="-8.0" prefHeight="562.0" prefWidth="367.0" styleClass="left-form" stylesheets="@loginDesign.css" AnchorPane.bottomAnchor="-3.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="-8.0" />
             <AnchorPane layoutX="368.0" layoutY="3.0" prefHeight="551.0" prefWidth="382.0" styleClass="right-form" stylesheets="@loginDesign.css" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
                   <TextField fx:id="username" layoutX="74.0" layoutY="218.0" onAction="#loginAdmin" prefHeight="34.0" prefWidth="251.0" promptText="Username" />
-                  <FontAwesomeIconView fill="#1ab746" glyphName="USER" layoutX="178.0" layoutY="122.0" size="5em" wrappingWidth="42.40000000000009" />
                   <Label layoutX="78.0" layoutY="139.0" prefHeight="28.0" prefWidth="242.0" text="Welcome back admin!">
                      <font>
                         <Font name="Times New Roman Bold" size="24.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="password" layoutX="74.0" layoutY="273.0" onAction="#loginAdmin" prefHeight="34.0" prefWidth="251.0" promptText="Password" />
-                  <Button fx:id="login_button" layoutX="74.0" layoutY="330.0" mnemonicParsing="false" onAction="#loginAdmin" prefHeight="34.0" prefWidth="251.0" styleClass="login-button" stylesheets="@loginDesign.css" text="Login">
+                  <Button fx:id="login_button" layoutX="73.0" layoutY="351.0" mnemonicParsing="false" onAction="#loginAdmin" prefHeight="34.0" prefWidth="251.0" styleClass="login-button" stylesheets="@loginDesign.css" text="Login">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>
                   </Button>
-                  <Button fx:id="close" layoutX="322.0" layoutY="2.0" mnemonicParsing="false" onAction="#close" prefHeight="24.0" prefWidth="42.0" styleClass="close" stylesheets="@loginDesign.css" AnchorPane.rightAnchor="2.0" AnchorPane.topAnchor="2.0">
+                  <PasswordField fx:id="password" layoutX="74.0" layoutY="275.0" onAction="#loginAdmin" prefHeight="34.0" prefWidth="251.0" promptText="Password" />
+                  <Button fx:id="close" layoutX="342.0" layoutY="14.0" mnemonicParsing="false" onAction="#close" styleClass="close" stylesheets="@loginDesign.css" AnchorPane.rightAnchor="4.0" AnchorPane.topAnchor="4.0">
                      <graphic>
-                        <FontAwesomeIconView glyphName="CLOSE" text="">
-                           <cursor>
-                              <Cursor fx:constant="HAND" />
-                           </cursor>
-                        </FontAwesomeIconView>
+
                      </graphic>
-                     <cursor>
-                        <Cursor fx:constant="HAND" />
-                     </cursor>
+                     <graphic>
+                        <FontAwesomeIconView glyphName="CLOSE" />
+                     </graphic>
                   </Button>
+                  <FontAwesomeIconView glyphName="USER" layoutX="178.0" layoutY="117.0" size="5EM" />
+                  <Button layoutX="296.0" layoutY="282.0" mnemonicParsing="false" prefHeight="16.0" prefWidth="13.0" styleClass="eye" stylesheets="@loginDesign.css">
+                     <font>
+                        <Font size="6.0" />
+                     </font>
+                  </Button>
+                 
                </children>
             </AnchorPane>
          </children>
