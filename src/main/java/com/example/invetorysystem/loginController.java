@@ -35,8 +35,6 @@ public class loginController {
 
 
     public void loginAdmin(){
-
-
         String sql = "SELECT * FROM admin WHERE username = ? and password = ?";
         Connection connect = database.connectDb();
         try{

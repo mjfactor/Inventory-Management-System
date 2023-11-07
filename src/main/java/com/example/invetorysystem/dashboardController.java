@@ -1,18 +1,20 @@
 package com.example.invetorysystem;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 
-import java.awt.event.ActionEvent;
 import java.net.URL;
-import java.util.Objects;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
 import javafx.fxml.FXML;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Cursor;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.chart.AreaChart;
 import javafx.scene.chart.BarChart;
@@ -23,8 +25,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-
-import javax.swing.*;
 
 public class dashboardController implements Initializable {
     @FXML
@@ -190,6 +190,36 @@ public class dashboardController implements Initializable {
     private AnchorPane orders_form;
     @FXML
     private Button order_addBtn;
+
+
+    public ObservableList<productData> addProductsListData(){
+        ObservableList<productData> productList = FXCollections.observableArrayList();
+        String sql = "SELECT * FROM product";
+        Connection connect = database.connectDb();
+        try {
+            assert connect != null;
+            PreparedStatement prepare = connect.prepareStatement(sql);
+            ResultSet result = prepare.executeQuery();
+            productData prodD;
+            while(result.next()){
+                prodD = new productData(result.getInt("product_id")
+                        , result.getString("type")
+                        , result.getString("brand")
+                        , result.getString("productName")
+                        , result.getDouble("price")
+                        , result.getString("status")
+                        , result.getString("image")
+                        , result.getDate("date"));
+
+                productList.add(prodD);
+            }
+
+        }catch (Exception ignored){
+
+        }
+        return productList;
+    }
+
 
     public void switchForm(MouseEvent event){
         if(event.getSource() == home_btn || event.getSource() == home){

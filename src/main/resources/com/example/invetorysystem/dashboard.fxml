@@ -120,7 +120,7 @@
                <center>
                   <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                      <children>
-                        <AnchorPane fx:id="home_form" layoutX="32.8" prefHeight="812.0" prefWidth="1226.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="33.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <AnchorPane fx:id="home_form" layoutX="32.8" prefHeight="812.0" prefWidth="1226.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="33.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <children>
                               <AnchorPane layoutX="-10.0" prefHeight="264.0" prefWidth="1178.0" styleClass="white-bg" stylesheets="@dashboardDesign.css">
                                  <children>
@@ -179,7 +179,7 @@
                                           <String fx:value="shadow" />
                                        </styleClass>
                                        <children>
-                                          <AreaChart fx:id="home_incomedataChart" layoutX="12.0" layoutY="-56.0" prefHeight="502.0" prefWidth="726.0" style="-fx-font-size: 15;" title="Income Data Chart" AnchorPane.bottomAnchor="-12.0" AnchorPane.leftAnchor="12.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                          <AreaChart fx:id="home_incomedataChart" layoutX="12.0" layoutY="-56.0" prefHeight="502.0" prefWidth="726.0" style="-fx-font-size: 15;" styleClass="column-header" stylesheets="@dashboardDesign.css" title="Income Data Chart" AnchorPane.bottomAnchor="-12.0" AnchorPane.leftAnchor="12.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                             <xAxis>
                                               <CategoryAxis side="BOTTOM" />
                                             </xAxis>
@@ -314,7 +314,7 @@
                                     <String fx:value="shadow" />
                                  </styleClass>
                                  <children>
-                                    <TableView fx:id="addProduct_table" layoutX="11.0" layoutY="86.0" prefHeight="699.0" prefWidth="702.0">
+                                    <TableView fx:id="addProduct_table" layoutX="14.0" layoutY="80.0" prefHeight="699.0" prefWidth="702.0" styleClass="table-view1" stylesheets="@dashboardDesign.css">
                                       <columns>
                                         <TableColumn fx:id="column_addProduct_id" prefWidth="90.13330078125" style="-fx-font-size: 15;" text="Product ID" />
                                           <TableColumn fx:id="column_addProduct_type" prefWidth="90.13330078125" style="-fx-font-size: 15;" text="Type" />
@@ -337,7 +337,7 @@
                               </AnchorPane>
                            </children>
                         </AnchorPane>
-                        <AnchorPane fx:id="orders_form" layoutX="149.0" layoutY="124.0" prefHeight="812.0" prefWidth="1227.2" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <AnchorPane fx:id="orders_form" layoutX="149.0" layoutY="124.0" prefHeight="812.0" prefWidth="1227.2" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <children>
                               <AnchorPane layoutX="19.0" layoutY="3.0" prefHeight="789.0" prefWidth="726.0" stylesheets="@dashboardDesign.css">
                                  <styleClass>
@@ -345,7 +345,7 @@
                                     <String fx:value="shadow" />
                                  </styleClass>
                                  <children>
-                                    <TableView fx:id="order_table" layoutX="13.0" layoutY="14.0" prefHeight="763.0" prefWidth="702.0">
+                                    <TableView fx:id="order_table" layoutX="13.0" layoutY="14.0" prefHeight="763.0" prefWidth="702.0" styleClass="table-view1" stylesheets="@dashboardDesign.css">
                                       <columns>
                                         <TableColumn fx:id="com_order_type" prefWidth="75.0" style="-fx-font-size: 18;" text="Type" />
                                           <TableColumn fx:id="com_order_brand" prefWidth="75.0" style="-fx-font-size: 18;" text="Brand" />
