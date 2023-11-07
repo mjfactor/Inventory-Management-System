@@ -49,7 +49,7 @@
 .import-btn{
     -fx-background-color: #eee;
     -fx-text-fill: red;
-    -fx-font-size: 16px;
+
     -fx-cursor: hand;
 }
 .import-btn:hover{
