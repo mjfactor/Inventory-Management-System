@@ -5,11 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2b1c4b3e-ed24-4a03-940c-14188ed82d64" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/invetorysystem/getData.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/invetorysystem/dashboardController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/invetorysystem/dashboardController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/com/example/invetorysystem/dashboard.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/example/invetorysystem/dashboard.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/com/example/invetorysystem/dashboardDesign.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/example/invetorysystem/dashboardDesign.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -112,7 +109,7 @@
       <workItem from="1699146016441" duration="33004000" />
       <workItem from="1699192252413" duration="464000" />
       <workItem from="1699238058054" duration="30412000" />
-      <workItem from="1699335087502" duration="14101000" />
+      <workItem from="1699335087502" duration="14521000" />
     </task>
     <servers />
   </component>
