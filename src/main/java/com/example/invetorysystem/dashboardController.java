@@ -197,7 +197,9 @@ public class dashboardController implements Initializable {
         Alert alert;
         try {
             if (addProduct_name.getText().isEmpty()
-                    || addProduct_price.getText().isEmpty() ) {
+                    || addProduct_price.getText().isEmpty()
+                    || addProduct_status.getSelectionModel().getSelectedItem() == null
+                    || Objects.equals(addProduct_status.getSelectionModel().getSelectedItem(), "Choose") ) {
 
                 alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Error");
@@ -205,25 +207,37 @@ public class dashboardController implements Initializable {
                 alert.setContentText("Fill out all the blank fields");
                 alert.showAndWait();
             } else {
-                alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Success");
-                alert.setHeaderText(null);
-                alert.setContentText("Added Successfully");
-                alert.showAndWait();
+                String checkName = "SELECT productName FROM products WHERE productName = '" + addProduct_name.getText()+ "'";
                 assert connect != null;
-                PreparedStatement prepare = connect.prepareStatement(sql);
+                Statement statement = connect.createStatement();
+                ResultSet resultSet = statement.executeQuery(checkName);
+                if(resultSet.next()){
+                    alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Error");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Product "+ addProduct_name.getText() +" already exist");
+                    alert.showAndWait();
+                    clearTextField();
 
-                prepare.setString(1, addProduct_name.getText());
-                prepare.setString(2, addProduct_price.getText());
-                prepare.setString(3, addProduct_status.getSelectionModel().getSelectedItem());
+                }else{
+                    alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Success");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Successfully Added");
+                    alert.showAndWait();
+                    PreparedStatement prepare = connect.prepareStatement(sql);
+                    prepare.setString(1, addProduct_name.getText());
+                    prepare.setString(2, addProduct_price.getText());
+                    prepare.setString(3, addProduct_status.getSelectionModel().getSelectedItem());
 
-                Date date = new Date();
-                java.sql.Date sqlDate = new java.sql.Date(date.getTime());
-                prepare.setDate(4, sqlDate);
+                    Date date = new Date();
+                    java.sql.Date sqlDate = new java.sql.Date(date.getTime());
+                    prepare.setDate(4, sqlDate);
 
-                prepare.executeUpdate();
-                addProductShowListData();
-                clearTextField();
+                    prepare.executeUpdate();
+                    addProductShowListData();
+                    clearTextField();
+                }
 
             }
         }catch (Exception ignored){
@@ -233,11 +247,15 @@ public class dashboardController implements Initializable {
     public void addProductUpdate(){
         String sql = "UPDATE products SET productName = '" + addProduct_name.getText() + "', price = '" + addProduct_price.getText()+ "', status = '"
                 + addProduct_status.getSelectionModel().getSelectedItem() + "' WHERE id = '" + productId + "'";
+
         Connection connect = database.connectDb();
         Alert alert;
+
         try{
             if (addProduct_name.getText().isEmpty()
-                    || addProduct_price.getText().isEmpty() || addProduct_status.getSelectionModel().getSelectedItem() == null) {
+                    || addProduct_price.getText().isEmpty()
+                    || addProduct_status.getSelectionModel().getSelectedItem() == null
+                    || Objects.equals(addProduct_status.getSelectionModel().getSelectedItem(), "Choose")) {
                 alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Error");
                 alert.setHeaderText(null);
@@ -258,7 +276,7 @@ public class dashboardController implements Initializable {
                     alert = new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Success");
                     alert.setHeaderText(null);
-                    alert.setContentText("Added Successfully");
+                    alert.setContentText("Successfully Updated");
                     alert.showAndWait();
 
                     addProductShowListData();
@@ -275,7 +293,7 @@ public class dashboardController implements Initializable {
         Alert alert;
         try{
             if (addProduct_name.getText().isEmpty()
-                    || addProduct_price.getText().isEmpty() ) {
+                    || addProduct_price.getText().isEmpty()) {
                 alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Error");
                 alert.setHeaderText(null);
@@ -294,7 +312,7 @@ public class dashboardController implements Initializable {
                     alert = new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Success");
                     alert.setHeaderText(null);
-                    alert.setContentText("Deleted Successfully");
+                    alert.setContentText("Successfully Deleted");
                     alert.showAndWait();
 
                     addProductShowListData();
@@ -309,8 +327,8 @@ public class dashboardController implements Initializable {
     public void clearTextField(){
         addProduct_name.setText("");
         addProduct_price.setText("");
-        addProduct_status.getSelectionModel().getSelectedItem();
-    }
+        addProduct_status.setValue("Choose");
+    } // Clear all text-fields
 
     public void onlyNumInTextField(){
         addProduct_price.textProperty().addListener(new ChangeListener<String>() {
@@ -321,15 +339,15 @@ public class dashboardController implements Initializable {
                 }
             }
         });
-    }
+    } // Only numbers allow in Price textfield
 
-    public ObservableList<productData> addProductsListData(){
+
+    public ObservableList<productData> addProductsGetDataFromSQL(){
         ObservableList<productData> productList = FXCollections.observableArrayList();
         String sql = "SELECT * FROM products";
         Connection connect = database.connectDb();
         try {
             assert connect != null;
-            // DATABASE TOOL
             PreparedStatement prepare = connect.prepareStatement(sql);
             ResultSet result = prepare.executeQuery();
             productData prodD;
@@ -343,21 +361,21 @@ public class dashboardController implements Initializable {
                 productList.add(prodD);
             }
 
-        }catch (Exception ex){
-            ex.printStackTrace();
+        }catch (Exception ignored){
+
         }
         return productList;
-    }
+    } //Get the data from the SQL
 
     public void addProductShowListData(){
-        ObservableList<productData> addProductList = addProductsListData();
+        ObservableList<productData> addProductList = addProductsGetDataFromSQL();
         column_addProduct_id.setCellValueFactory(new PropertyValueFactory<productData, Integer>("productId"));
         column_addProduct_name.setCellValueFactory(new PropertyValueFactory<productData, String>("productName"));
         column_addProduct_price.setCellValueFactory(new PropertyValueFactory<productData, String>("price"));
         column_addProduct_status.setCellValueFactory(new PropertyValueFactory<productData, String>("status"));
         addProduct_table.setItems(addProductList);
 
-    }
+    } // Put the data from SQL to Table
 
     public void addProductsSelect(){
         productData prodD = addProduct_table.getSelectionModel().getSelectedItem();
@@ -368,10 +386,8 @@ public class dashboardController implements Initializable {
         productId = prodD.getProductId();
         addProduct_name.setText(prodD.getProductName());
         addProduct_price.setText(String.valueOf(prodD.getPrice()));
-
-
-
-    }
+        addProduct_status.setValue(prodD.getStatus());
+    } // if you clicked data from table, it will fill the text-fields and combobox
 
     private final String[] listStatus = {"Available", "Not Available"};
     public void addProductListStatus(){
