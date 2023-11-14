@@ -76,6 +76,9 @@
     -fx-background-color: transparent;
     -fx-size: 40px;
 }
+.price{
+    -fx-padding: 0px 0px 0px 23px;
+}
 
 
 

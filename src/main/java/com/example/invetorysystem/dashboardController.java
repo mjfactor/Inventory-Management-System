@@ -1,19 +1,18 @@
 package com.example.invetorysystem;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 
-import java.io.File;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.Date;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.ResourceBundle;
+import java.sql.Statement;
+import java.util.*;
 
 import javafx.fxml.FXML;
 import javafx.geometry.Rectangle2D;
@@ -23,11 +22,9 @@ import javafx.scene.chart.AreaChart;
 import javafx.scene.chart.BarChart;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.stage.FileChooser;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -36,18 +33,13 @@ public class dashboardController implements Initializable {
     @FXML
     private Button addProduct_add;
 
-    @FXML
-    private TextField addProduct_brand;
+
 
     @FXML
     private Button addProduct_button;
 
     @FXML
     private Button addProduct_delete;
-
-    @FXML
-    private TextField addProduct_id;
-
     @FXML
     private ImageView addProduct_image;
 
@@ -66,11 +58,11 @@ public class dashboardController implements Initializable {
     @FXML
     private TableView<productData> addProduct_table;
 
-    @FXML
-    private ComboBox<?> addProduct_type;
+
+
 
     @FXML
-    private ComboBox<?> addProduct_status;
+    private ComboBox<String> addProduct_status;
 
     @FXML
     private Button addProduct_update;
@@ -100,7 +92,7 @@ public class dashboardController implements Initializable {
     private TableColumn<productData, String> column_addProduct_name;
 
     @FXML
-    private TableColumn<productData, Double> column_addProduct_price;
+    private TableColumn<productData, String> column_addProduct_price;
 
     @FXML
     private TableColumn<productData, String> column_addProduct_status;
@@ -196,40 +188,39 @@ public class dashboardController implements Initializable {
     private AnchorPane orders_form;
     @FXML
     private Button order_addBtn;
+    public int productId;
 
     public void addProductsAdd(){
-        String sql = "INSERT INTO product (product_id, type, brand, productName, price, status, image, date)"
-                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-
+        String sql = "INSERT INTO products (productName, price, status, date)"
+                + "VALUES (?, ?, ?, ?)";
         Connection connect = database.connectDb();
+        Alert alert;
         try {
-            Alert alert;
+            if (addProduct_name.getText().isEmpty()
+                    || addProduct_price.getText().isEmpty() ) {
 
-            if (addProduct_id.getText().isEmpty() || addProduct_type.getSelectionModel().getSelectedItem() == null || addProduct_brand.getText().isEmpty() || addProduct_name.getText().isEmpty()
-                    || addProduct_price.getText().isEmpty() ||
-                    addProduct_status.getSelectionModel().getSelectedItem() == null || Objects.equals(getData.path, "")) {
                 alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("error");
+                alert.setTitle("Error");
                 alert.setHeaderText(null);
                 alert.setContentText("Fill out all the blank fields");
                 alert.showAndWait();
             } else {
+                alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Success");
+                alert.setHeaderText(null);
+                alert.setContentText("Added Successfully");
+                alert.showAndWait();
                 assert connect != null;
                 PreparedStatement prepare = connect.prepareStatement(sql);
-                prepare.setInt(1, Integer.parseInt(addProduct_id.getText()));
-                prepare.setString(2, (String) addProduct_type.getSelectionModel().getSelectedItem());
-                prepare.setString(3, addProduct_brand.getText());
-                prepare.setString(4, addProduct_name.getText());
-                prepare.setDouble(5, Double.parseDouble(addProduct_price.getText()));
-                prepare.setString(6, (String) addProduct_status.getSelectionModel().getSelectedItem());
 
-                String uri = getData.path;
-                uri = uri.replace("\\", "\\\\");
-                prepare.setString(7, uri);
+                prepare.setString(1, addProduct_name.getText());
+                prepare.setString(2, addProduct_price.getText());
+                prepare.setString(3, addProduct_status.getSelectionModel().getSelectedItem());
 
                 Date date = new Date();
                 java.sql.Date sqlDate = new java.sql.Date(date.getTime());
-                prepare.setDate(8, sqlDate);
+                prepare.setDate(4, sqlDate);
+
                 prepare.executeUpdate();
                 addProductShowListData();
                 clearTextField();
@@ -239,33 +230,102 @@ public class dashboardController implements Initializable {
         }
     }
 
+    public void addProductUpdate(){
+        String sql = "UPDATE products SET productName = '" + addProduct_name.getText() + "', price = '" + addProduct_price.getText()+ "', status = '"
+                + addProduct_status.getSelectionModel().getSelectedItem() + "' WHERE id = '" + productId + "'";
+        Connection connect = database.connectDb();
+        Alert alert;
+        try{
+            if (addProduct_name.getText().isEmpty()
+                    || addProduct_price.getText().isEmpty() || addProduct_status.getSelectionModel().getSelectedItem() == null) {
+                alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setHeaderText(null);
+                alert.setContentText("Fill out all the blank fields");
+                alert.showAndWait();
+            }else{
+                alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Sure?");
+                alert.setHeaderText(null);
+                alert.setContentText("Are you sure you want Update ID = " + productId);
+                Optional <ButtonType> option = alert.showAndWait();
+
+                if (option.get().equals(ButtonType.OK)){
+                    assert connect != null;
+                    Statement statement = connect.createStatement();
+                    statement.executeUpdate(sql);
+
+                    alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Success");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Added Successfully");
+                    alert.showAndWait();
+
+                    addProductShowListData();
+                    clearTextField();
+                }
+            }
+        }catch (Exception ignored){
+
+        }
+    }
+    public void addProductDelete(){
+        String sql = "DELETE from products WHERE id = '" + productId + "'";
+        Connection connect = database.connectDb();
+        Alert alert;
+        try{
+            if (addProduct_name.getText().isEmpty()
+                    || addProduct_price.getText().isEmpty() ) {
+                alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setHeaderText(null);
+                alert.setContentText("Fill out all the blank fields");
+                alert.showAndWait();
+            }else {
+                alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Sure?");
+                alert.setHeaderText(null);
+                alert.setContentText("Are you sure you want Delete ID = " + productId);
+                Optional<ButtonType> option = alert.showAndWait();
+                if (option.get().equals(ButtonType.OK)){
+                    assert connect != null;
+                    Statement statement = connect.createStatement();
+                    statement.executeUpdate(sql);
+                    alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Success");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Deleted Successfully");
+                    alert.showAndWait();
+
+                    addProductShowListData();
+                    clearTextField();
+                }
+            }
+        }catch (Exception ignored){
+
+        }
+    }
+
     public void clearTextField(){
-        addProduct_id.setText("");
-        addProduct_type.getSelectionModel().getSelectedItem();
-        addProduct_brand.setText("");
         addProduct_name.setText("");
         addProduct_price.setText("");
         addProduct_status.getSelectionModel().getSelectedItem();
-        addProduct_image.setImage(null);
-        getData.path = "";
     }
 
-    public void addProductsImportImage(){
-        FileChooser open = new FileChooser();
-        open.setTitle("Open image file");
-        open.getExtensionFilters().add(new FileChooser.ExtensionFilter("Image File", "*jpg" , "*png"));
-
-        File file = open.showOpenDialog(main_form.getScene().getWindow());
-        if(file != null){
-            getData.path = file.getAbsolutePath();
-            Image image = new Image(file.toURI().toString(), 172, 154, false, true);
-            addProduct_image.setImage(image);
-        }
+    public void onlyNumInTextField(){
+        addProduct_price.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observableValue, String s, String t1) {
+                if (!t1.matches("\\d*")) {
+                    addProduct_price.setText(t1.replaceAll("[^\\d]", ""));
+                }
+            }
+        });
     }
 
     public ObservableList<productData> addProductsListData(){
         ObservableList<productData> productList = FXCollections.observableArrayList();
-        String sql = "SELECT * FROM product";
+        String sql = "SELECT * FROM products";
         Connection connect = database.connectDb();
         try {
             assert connect != null;
@@ -274,40 +334,53 @@ public class dashboardController implements Initializable {
             ResultSet result = prepare.executeQuery();
             productData prodD;
             while(result.next()){
-                prodD = new productData(result.getInt("product_id")
-                        , result.getString("type")
-                        , result.getString("brand")
+                prodD = new productData(result.getInt("id")
                         , result.getString("productName")
-                        , result.getDouble("price")
+                        , result.getString("price")
                         , result.getString("status")
-                        , result.getString("image")
                         , result.getDate("date"));
 
                 productList.add(prodD);
             }
 
-        }catch (Exception ignored){
-
+        }catch (Exception ex){
+            ex.printStackTrace();
         }
         return productList;
     }
 
     public void addProductShowListData(){
         ObservableList<productData> addProductList = addProductsListData();
-        column_addProduct_id.setCellValueFactory(new PropertyValueFactory<>("productId"));
-        column_addProduct_type.setCellValueFactory(new PropertyValueFactory<>("type"));
-        column_addProduct_brand.setCellValueFactory(new PropertyValueFactory<>("brand"));
-        column_addProduct_name.setCellValueFactory(new PropertyValueFactory<>("productName"));
-        column_addProduct_price.setCellValueFactory(new PropertyValueFactory<>("price"));
-        column_addProduct_status.setCellValueFactory(new PropertyValueFactory<>("status"));
-
+        column_addProduct_id.setCellValueFactory(new PropertyValueFactory<productData, Integer>("productId"));
+        column_addProduct_name.setCellValueFactory(new PropertyValueFactory<productData, String>("productName"));
+        column_addProduct_price.setCellValueFactory(new PropertyValueFactory<productData, String>("price"));
+        column_addProduct_status.setCellValueFactory(new PropertyValueFactory<productData, String>("status"));
         addProduct_table.setItems(addProductList);
 
     }
 
     public void addProductsSelect(){
+        productData prodD = addProduct_table.getSelectionModel().getSelectedItem();
+        int num = addProduct_table.getSelectionModel().getSelectedIndex();
+        if((num - 1) <- 1){
+            return;
+        }
+        productId = prodD.getProductId();
+        addProduct_name.setText(prodD.getProductName());
+        addProduct_price.setText(String.valueOf(prodD.getPrice()));
+
+
 
     }
+
+    private final String[] listStatus = {"Available", "Not Available"};
+    public void addProductListStatus(){
+        List<String> listS = new ArrayList<>(Arrays.asList(listStatus));
+        ObservableList<String> listData = FXCollections.observableArrayList(listS);
+        addProduct_status.setItems(listData);
+    }
+
+
     public void switchForm(MouseEvent event){
         if(event.getSource() == home_btn || event.getSource() == home){
             home_form.setVisible(true);
@@ -324,8 +397,10 @@ public class dashboardController implements Initializable {
             home.setStyle("-fx-background-color: transparent");
             orders.setStyle("-fx-background-color: transparent");
             addProducts.setStyle("-fx-background-color: linear-gradient(to bottom right, #8cea50, #3ce03c)");
-            addProductShowListData();
 
+            addProductShowListData();
+          ;
+            addProductListStatus();
         }else if(event.getSource() == orders_btn || event.getSource() == orders){
             home_form.setVisible(false);
             orders_form.setVisible(true);
@@ -400,5 +475,6 @@ public class dashboardController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         addProductShowListData();
+        addProductListStatus();
     }
 }
