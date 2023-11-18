@@ -4,6 +4,8 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 
@@ -12,6 +14,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.text.NumberFormat;
 import java.util.*;
 
 import javafx.fxml.FXML;
@@ -188,12 +191,45 @@ public class dashboardController implements Initializable {
     private AnchorPane orders_form;
     @FXML
     private Button order_addBtn;
+    NumberFormat formatWithComma = NumberFormat.getNumberInstance(Locale.US);
     public int productId;
+    private ObservableList<productData> addProductList;
+    Connection connect;
+    PreparedStatement prepare;
+    ResultSet result;
+    Statement statement;
+    public void addProductsSearch(){
+        FilteredList<productData> filteredList = new FilteredList<>(addProductList, e -> true);
+        addProduct_search.textProperty().addListener((observable, oldValue, newValue) -> {
+            filteredList.setPredicate(productData -> {
+                if (newValue == null || newValue.isEmpty()) {
+                    return true;
+                }
+                String lowerCaseFilter = newValue.toLowerCase();
+                if (productData.getProductName().toLowerCase().contains(lowerCaseFilter)) {
+                    return true;
+                } else if (productData.getStatus().toLowerCase().contains(lowerCaseFilter)) {
+                    return true;
+                } else if (productData.getPrice().toLowerCase().contains(lowerCaseFilter)) {
+                    return true;
+                }else{
+                    return false;
+                }
 
+            });
+        });
+        SortedList<productData> sortedList = new SortedList<>(filteredList);
+        sortedList.comparatorProperty().bind(addProduct_table.comparatorProperty());
+        addProduct_table.setItems(sortedList);
+
+    }
     public void addProductsAdd(){
+        long priceLong = Long.parseLong(addProduct_price.getText());
+        String formattedPrice = formatWithComma.format(priceLong);
+        System.out.println(formattedPrice);
         String sql = "INSERT INTO products (productName, price, status, date)"
                 + "VALUES (?, ?, ?, ?)";
-        Connection connect = database.connectDb();
+        connect = database.connectDb();
         Alert alert;
         try {
             if (addProduct_name.getText().isEmpty()
@@ -207,17 +243,18 @@ public class dashboardController implements Initializable {
                 alert.setContentText("Fill out all the blank fields");
                 alert.showAndWait();
             } else {
+                // Check if product already exist
                 String checkName = "SELECT productName FROM products WHERE productName = '" + addProduct_name.getText()+ "'";
                 assert connect != null;
-                Statement statement = connect.createStatement();
-                ResultSet resultSet = statement.executeQuery(checkName);
-                if(resultSet.next()){
+                statement = connect.createStatement();
+                result = statement.executeQuery(checkName);
+                if(result.next()){
                     alert = new Alert(Alert.AlertType.ERROR);
                     alert.setTitle("Error");
                     alert.setHeaderText(null);
                     alert.setContentText("Product "+ addProduct_name.getText() +" already exist");
                     alert.showAndWait();
-                    clearTextField();
+                    addProduct_name.setText("");
 
                 }else{
                     alert = new Alert(Alert.AlertType.INFORMATION);
@@ -225,6 +262,7 @@ public class dashboardController implements Initializable {
                     alert.setHeaderText(null);
                     alert.setContentText("Successfully Added");
                     alert.showAndWait();
+
                     PreparedStatement prepare = connect.prepareStatement(sql);
                     prepare.setString(1, addProduct_name.getText());
                     prepare.setString(2, addProduct_price.getText());
@@ -248,7 +286,7 @@ public class dashboardController implements Initializable {
         String sql = "UPDATE products SET productName = '" + addProduct_name.getText() + "', price = '" + addProduct_price.getText()+ "', status = '"
                 + addProduct_status.getSelectionModel().getSelectedItem() + "' WHERE id = '" + productId + "'";
 
-        Connection connect = database.connectDb();
+        connect = database.connectDb();
         Alert alert;
 
         try{
@@ -270,7 +308,7 @@ public class dashboardController implements Initializable {
 
                 if (option.get().equals(ButtonType.OK)){
                     assert connect != null;
-                    Statement statement = connect.createStatement();
+                    statement = connect.createStatement();
                     statement.executeUpdate(sql);
 
                     alert = new Alert(Alert.AlertType.INFORMATION);
@@ -286,10 +324,10 @@ public class dashboardController implements Initializable {
         }catch (Exception ignored){
 
         }
-    }
+    } // Update product
     public void addProductDelete(){
         String sql = "DELETE from products WHERE id = '" + productId + "'";
-        Connection connect = database.connectDb();
+        connect = database.connectDb();
         Alert alert;
         try{
             if (addProduct_name.getText().isEmpty()
@@ -307,7 +345,7 @@ public class dashboardController implements Initializable {
                 Optional<ButtonType> option = alert.showAndWait();
                 if (option.get().equals(ButtonType.OK)){
                     assert connect != null;
-                    Statement statement = connect.createStatement();
+                    statement = connect.createStatement();
                     statement.executeUpdate(sql);
                     alert = new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Success");
@@ -322,7 +360,7 @@ public class dashboardController implements Initializable {
         }catch (Exception ignored){
 
         }
-    }
+    } // Delete product
 
     public void clearTextField(){
         addProduct_name.setText("");
@@ -341,15 +379,14 @@ public class dashboardController implements Initializable {
         });
     } // Only numbers allow in Price textfield
 
-
     public ObservableList<productData> addProductsGetDataFromSQL(){
         ObservableList<productData> productList = FXCollections.observableArrayList();
         String sql = "SELECT * FROM products";
-        Connection connect = database.connectDb();
+        connect = database.connectDb();
         try {
             assert connect != null;
-            PreparedStatement prepare = connect.prepareStatement(sql);
-            ResultSet result = prepare.executeQuery();
+            prepare = connect.prepareStatement(sql);
+            result = prepare.executeQuery();
             productData prodD;
             while(result.next()){
                 prodD = new productData(result.getInt("id")
@@ -368,7 +405,7 @@ public class dashboardController implements Initializable {
     } //Get the data from the SQL
 
     public void addProductShowListData(){
-        ObservableList<productData> addProductList = addProductsGetDataFromSQL();
+        addProductList = addProductsGetDataFromSQL();
         column_addProduct_id.setCellValueFactory(new PropertyValueFactory<productData, Integer>("productId"));
         column_addProduct_name.setCellValueFactory(new PropertyValueFactory<productData, String>("productName"));
         column_addProduct_price.setCellValueFactory(new PropertyValueFactory<productData, String>("price"));
@@ -415,8 +452,8 @@ public class dashboardController implements Initializable {
             addProducts.setStyle("-fx-background-color: linear-gradient(to bottom right, #8cea50, #3ce03c)");
 
             addProductShowListData();
-          ;
             addProductListStatus();
+            addProductsSearch();
         }else if(event.getSource() == orders_btn || event.getSource() == orders){
             home_form.setVisible(false);
             orders_form.setVisible(true);
