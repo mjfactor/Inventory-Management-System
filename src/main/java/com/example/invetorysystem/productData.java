@@ -1,8 +1,4 @@
 package com.example.invetorysystem;
-
-
-import javafx.collections.ObservableList;
-
 import java.util.Date;
 
 public class productData {

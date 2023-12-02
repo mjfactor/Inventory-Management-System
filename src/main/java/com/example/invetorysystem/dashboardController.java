@@ -198,6 +198,8 @@ public class dashboardController implements Initializable {
     PreparedStatement prepare;
     ResultSet result;
     Statement statement;
+    private final String[] listStatus = {"Available", "Not Available"};
+
     public void addProductsSearch(){
         FilteredList<productData> filteredList = new FilteredList<>(addProductList, e -> true);
         addProduct_search.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -222,7 +224,8 @@ public class dashboardController implements Initializable {
         sortedList.comparatorProperty().bind(addProduct_table.comparatorProperty());
         addProduct_table.setItems(sortedList);
 
-    }
+    } // Search product
+
     public void addProductsAdd(){
         long priceLong = Long.parseLong(addProduct_price.getText());
         String formattedPrice = formatWithComma.format(priceLong);
@@ -280,7 +283,7 @@ public class dashboardController implements Initializable {
             }
         }catch (Exception ignored){
         }
-    }
+    }  // Add product
 
     public void addProductUpdate(){
         String sql = "UPDATE products SET productName = '" + addProduct_name.getText() + "', price = '" + addProduct_price.getText()+ "', status = '"
@@ -325,6 +328,7 @@ public class dashboardController implements Initializable {
 
         }
     } // Update product
+
     public void addProductDelete(){
         String sql = "DELETE from products WHERE id = '" + productId + "'";
         connect = database.connectDb();
@@ -426,13 +430,35 @@ public class dashboardController implements Initializable {
         addProduct_status.setValue(prodD.getStatus());
     } // if you clicked data from table, it will fill the text-fields and combobox
 
-    private final String[] listStatus = {"Available", "Not Available"};
     public void addProductListStatus(){
         List<String> listS = new ArrayList<>(Arrays.asList(listStatus));
         ObservableList<String> listData = FXCollections.observableArrayList(listS);
         addProduct_status.setItems(listData);
-    }
+    } // Add the data to combobox
 
+
+    public ObservableList<customerData> orderListData(){
+        ObservableList<customerData> orderList = FXCollections.observableArrayList();
+        String sql = "SELECT * FROM customer WHERE customer_id = ''";
+        return orderList;
+    }
+    private int customerId = 0;
+    public void customerId(){
+        String sql = "SELECT * FROM customer";
+        connect = database.connectDb();
+        try{
+            assert connect != null;
+            prepare = connect.prepareStatement(sql);
+            result = prepare.executeQuery();
+
+            int checkId = 0;
+            while(result.next()){
+                checkId = result.getInt("customer_id");
+            }
+        }catch (Exception ignored){
+
+        }
+    } // Get the last customer id
 
     public void switchForm(MouseEvent event){
         if(event.getSource() == home_btn || event.getSource() == home){
@@ -463,7 +489,7 @@ public class dashboardController implements Initializable {
             addProducts.setStyle("-fx-background-color: transparent");
         }
 
-    }
+    }  // Switch between forms
 
     private double x = 0;
     private double y = 0;
@@ -514,20 +540,21 @@ public class dashboardController implements Initializable {
         }catch (Exception e){
             e.printStackTrace();
         }
-    }
+    } // Logout
 
     public void minimize(){
 
         Stage stage = (Stage)main_form.getScene().getWindow();
         stage.setIconified(true);
-    }
+    } // Minimize
+
     public void close(){
         System.exit(0);
-    }
+    } // Close
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         addProductShowListData();
         addProductListStatus();
-    }
+    } // Initialize
 }
