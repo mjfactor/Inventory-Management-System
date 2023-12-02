@@ -6,6 +6,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 
@@ -161,10 +162,10 @@ public class dashboardController implements Initializable {
     private Button order_payBtn;
 
     @FXML
-    private ComboBox<?> order_productName;
+    private ComboBox<String> order_productName;
 
     @FXML
-    private ComboBox<?> order_productType;
+    private ComboBox<String> order_productType;
 
     @FXML
     private Spinner<?> order_quantity;
@@ -190,6 +191,8 @@ public class dashboardController implements Initializable {
     @FXML
     private AnchorPane orders_form;
     @FXML
+    private TextField order_customName;
+    @FXML
     private Button order_addBtn;
     NumberFormat formatWithComma = NumberFormat.getNumberInstance(Locale.US);
     public int productId;
@@ -199,6 +202,7 @@ public class dashboardController implements Initializable {
     ResultSet result;
     Statement statement;
     private final String[] listStatus = {"Available", "Not Available"};
+    private final String[] type = {"Pre-Made", "Customized"};
 
     public void addProductsSearch(){
         FilteredList<productData> filteredList = new FilteredList<>(addProductList, e -> true);
@@ -434,7 +438,14 @@ public class dashboardController implements Initializable {
         List<String> listS = new ArrayList<>(Arrays.asList(listStatus));
         ObservableList<String> listData = FXCollections.observableArrayList(listS);
         addProduct_status.setItems(listData);
-    } // Add the data to combobox
+    } // Add the data to combobox (Status)
+
+    public void typeOfPurchased(){
+        order_productType.getItems().removeAll(order_productType.getItems());
+        order_productType.getItems().addAll("Pre-Made", "Customized");
+        order_productType.getSelectionModel().select("Choose");
+    } // Add the data to combobox (Type of Purchased)
+
 
 
     public ObservableList<customerData> orderListData(){
@@ -487,6 +498,7 @@ public class dashboardController implements Initializable {
             home.setStyle("-fx-background-color: transparent");
             orders.setStyle("-fx-background-color: linear-gradient(to bottom right, #8cea50, #3ce03c)");
             addProducts.setStyle("-fx-background-color: transparent");
+            typeOfPurchased();
         }
 
     }  // Switch between forms
@@ -494,7 +506,17 @@ public class dashboardController implements Initializable {
     private double x = 0;
     private double y = 0;
 
-
+    public void orderSet(ActionEvent e){
+        if (order_productType.getSelectionModel().getSelectedItem().equalsIgnoreCase("Pre-Made")) {
+            order_productName.setVisible(true);
+            order_customName.setVisible(false);
+            order_customName.setText("");
+        } else if (order_productType.getSelectionModel().getSelectedItem().equalsIgnoreCase("Customized")) {
+            order_productName.setVisible(false);
+            order_productName.getSelectionModel().select("Choose");
+            order_customName.setVisible(true);
+        }
+    }
     public void logout(){
         try {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -552,9 +574,11 @@ public class dashboardController implements Initializable {
         System.exit(0);
     } // Close
 
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         addProductShowListData();
         addProductListStatus();
+        typeOfPurchased();
     } // Initialize
 }

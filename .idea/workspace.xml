@@ -5,11 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2b1c4b3e-ed24-4a03-940c-14188ed82d64" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/invetorysystem/customerData.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/invetorysystem/dashboardController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/invetorysystem/dashboardController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/invetorysystem/productData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/invetorysystem/productData.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/com/example/invetorysystem/dashboard.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/example/invetorysystem/dashboard.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -128,6 +125,7 @@
       <workItem from="1700362837650" duration="1053000" />
       <workItem from="1701223832217" duration="1225000" />
       <workItem from="1701432296086" duration="4774000" />
+      <workItem from="1701515574534" duration="5379000" />
     </task>
     <servers />
   </component>
@@ -142,7 +140,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="java-method">
           <url>file://$PROJECT_DIR$/src/main/java/com/example/invetorysystem/dashboardController.java</url>
-          <line>445</line>
+          <line>456</line>
           <properties class="com.example.invetorysystem.dashboardController" method="customerId">
             <option name="EMULATED" value="true" />
             <option name="WATCH_EXIT" value="false" />
@@ -151,7 +149,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-method">
           <url>file://$PROJECT_DIR$/src/main/java/com/example/invetorysystem/dashboardController.java</url>
-          <line>439</line>
+          <line>450</line>
           <properties class="com.example.invetorysystem.dashboardController" method="orderListData">
             <option name="EMULATED" value="true" />
             <option name="WATCH_EXIT" value="false" />

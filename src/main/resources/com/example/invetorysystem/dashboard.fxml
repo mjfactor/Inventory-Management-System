@@ -327,13 +327,13 @@
                                           <Font size="23.0" />
                                        </font>
                                     </Label>
-                                    <ComboBox fx:id="order_productType" layoutX="206.0" layoutY="60.0" prefHeight="38.0" prefWidth="163.0" promptText="Choose" style="-fx-font-size: 15;" styleClass="text-field" stylesheets="@dashboardDesign.css" />
-                                    <Label layoutX="41.0" layoutY="131.0" prefHeight="34.0" prefWidth="163.0" text="Product Name:">
+                                    <ComboBox fx:id="order_productType" layoutX="209.0" layoutY="61.0" onAction="#orderSet" prefHeight="38.0" prefWidth="163.0" promptText="Choose" style="-fx-font-size: 15;" styleClass="text-field" stylesheets="@dashboardDesign.css" />
+                                    <Label layoutX="41.0" layoutY="131.0" prefHeight="34.0" prefWidth="157.0" text="Product Name:">
                                        <font>
                                           <Font size="23.0" />
                                        </font>
                                     </Label>
-                                    <ComboBox fx:id="order_productName" layoutX="212.0" layoutY="128.0" prefHeight="38.0" prefWidth="163.0" promptText="Choose" style="-fx-font-size: 15;" styleClass="text-field" stylesheets="@dashboardDesign.css" />
+                                    <ComboBox fx:id="order_productName" layoutX="209.0" layoutY="128.0" prefHeight="38.0" prefWidth="166.0" promptText="Choose" style="-fx-font-size: 15;" styleClass="text-field" stylesheets="@dashboardDesign.css" />
                                     <Label layoutX="96.0" layoutY="195.0" prefHeight="34.0" prefWidth="100.0" text="Quantity:">
                                        <font>
                                           <Font size="23.0" />
@@ -386,6 +386,7 @@
                                           <Font size="17.0" />
                                        </font>
                                     </Button>
+                                    <TextField fx:id="order_customName" layoutX="209.0" layoutY="126.0" prefHeight="40.0" prefWidth="167.0" visible="false" />
                                  </children>
                               </AnchorPane>
                            </children>
