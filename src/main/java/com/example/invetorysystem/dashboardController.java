@@ -11,12 +11,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 
 import java.net.URL;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
+import java.text.Format;
 import java.text.NumberFormat;
 import java.util.*;
+import java.util.Date;
+import java.util.concurrent.atomic.AtomicReference;
 
 import javafx.fxml.FXML;
 import javafx.geometry.Rectangle2D;
@@ -87,7 +87,7 @@ public class dashboardController implements Initializable {
     private Button close;
 
     @FXML
-    private TableColumn<productData, String> column_addProduct_brand;
+    private TextField customer_name;
 
     @FXML
     private TableColumn<productData, Integer> column_addProduct_id;
@@ -102,22 +102,20 @@ public class dashboardController implements Initializable {
     private TableColumn<productData, String> column_addProduct_status;
 
     @FXML
-    private TableColumn<productData, String> column_addProduct_type;
+    private TableColumn<customerData, String> com_order_customerName;
+    @FXML
+    private TableColumn<customerData, String> com_order_name;
 
     @FXML
-    private TableColumn<?, ?> com_order_brand;
+    private TableColumn<customerData, String> com_order_price;
 
     @FXML
-    private TableColumn<?, ?> com_order_name;
+    private TableColumn<customerData, String> com_order_quantity;
 
     @FXML
-    private TableColumn<?, ?> com_order_price;
+    private TableColumn<customerData, String> com_order_type;
 
-    @FXML
-    private TableColumn<?, ?> com_order_quantity;
 
-    @FXML
-    private TableColumn<?, ?> com_order_type;
 
     @FXML
     private AnchorPane home;
@@ -168,7 +166,7 @@ public class dashboardController implements Initializable {
     private ComboBox<String> order_productType;
 
     @FXML
-    private Spinner<?> order_quantity;
+    private Spinner<Integer> order_quantity;
 
     @FXML
     private Button order_recieptBtn;
@@ -177,7 +175,7 @@ public class dashboardController implements Initializable {
     private Button order_resettBtn;
 
     @FXML
-    private TableView<?> order_table;
+    private TableView<customerData> order_table;
 
     @FXML
     private Label order_total;
@@ -188,21 +186,31 @@ public class dashboardController implements Initializable {
     @FXML
     private Button orders_btn;
 
+
+    @FXML
+    private Button orders_clear;
+    @FXML
+    private Button orders_reset;
+
     @FXML
     private AnchorPane orders_form;
     @FXML
     private TextField order_customName;
     @FXML
     private Button order_addBtn;
+
     NumberFormat formatWithComma = NumberFormat.getNumberInstance(Locale.US);
+
+
     public int productId;
     private ObservableList<productData> addProductList;
+    private ObservableList<customerData> orderList;
     Connection connect;
     PreparedStatement prepare;
     ResultSet result;
     Statement statement;
-    private final String[] listStatus = {"Available", "Not Available"};
-    private final String[] type = {"Pre-Made", "Customized"};
+
+
 
     public void addProductsSearch(){
         FilteredList<productData> filteredList = new FilteredList<>(addProductList, e -> true);
@@ -216,11 +224,7 @@ public class dashboardController implements Initializable {
                     return true;
                 } else if (productData.getStatus().toLowerCase().contains(lowerCaseFilter)) {
                     return true;
-                } else if (productData.getPrice().toLowerCase().contains(lowerCaseFilter)) {
-                    return true;
-                }else{
-                    return false;
-                }
+                } else return productData.getPrice().toLowerCase().contains(lowerCaseFilter);
 
             });
         });
@@ -229,13 +233,10 @@ public class dashboardController implements Initializable {
         addProduct_table.setItems(sortedList);
 
     } // Search product
-
     public void addProductsAdd(){
-        long priceLong = Long.parseLong(addProduct_price.getText());
-        String formattedPrice = formatWithComma.format(priceLong);
-        System.out.println(formattedPrice);
-        String sql = "INSERT INTO products (productName, price, status, date)"
-                + "VALUES (?, ?, ?, ?)";
+
+        String sql = "INSERT INTO products (productName, price, price_int, status, date)"
+                + "VALUES (?, ?, ?, ?, ?)";
         connect = database.connectDb();
         Alert alert;
         try {
@@ -270,14 +271,15 @@ public class dashboardController implements Initializable {
                     alert.setContentText("Successfully Added");
                     alert.showAndWait();
 
-                    PreparedStatement prepare = connect.prepareStatement(sql);
+                    prepare = connect.prepareStatement(sql);
                     prepare.setString(1, addProduct_name.getText());
-                    prepare.setString(2, addProduct_price.getText());
-                    prepare.setString(3, addProduct_status.getSelectionModel().getSelectedItem());
+                    prepare.setString(2,  "₱"+formatPrice(addProduct_price.getText()));
+                    prepare.setInt( 3, Integer.parseInt(addProduct_price.getText()));
+                    prepare.setString(4, addProduct_status.getSelectionModel().getSelectedItem());
 
                     Date date = new Date();
                     java.sql.Date sqlDate = new java.sql.Date(date.getTime());
-                    prepare.setDate(4, sqlDate);
+                    prepare.setDate(5, sqlDate);
 
                     prepare.executeUpdate();
                     addProductShowListData();
@@ -288,9 +290,8 @@ public class dashboardController implements Initializable {
         }catch (Exception ignored){
         }
     }  // Add product
-
     public void addProductUpdate(){
-        String sql = "UPDATE products SET productName = '" + addProduct_name.getText() + "', price = '" + addProduct_price.getText()+ "', status = '"
+        String sql = "UPDATE products SET productName = '" + addProduct_name.getText() + "', price = '" + "₱"+formatPrice(addProduct_price.getText())+ "', price_int = '" + Integer.parseInt(addProduct_price.getText()) + "', status = '"
                 + addProduct_status.getSelectionModel().getSelectedItem() + "' WHERE id = '" + productId + "'";
 
         connect = database.connectDb();
@@ -332,7 +333,6 @@ public class dashboardController implements Initializable {
 
         }
     } // Update product
-
     public void addProductDelete(){
         String sql = "DELETE from products WHERE id = '" + productId + "'";
         connect = database.connectDb();
@@ -369,24 +369,6 @@ public class dashboardController implements Initializable {
 
         }
     } // Delete product
-
-    public void clearTextField(){
-        addProduct_name.setText("");
-        addProduct_price.setText("");
-        addProduct_status.setValue("Choose");
-    } // Clear all text-fields
-
-    public void onlyNumInTextField(){
-        addProduct_price.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observableValue, String s, String t1) {
-                if (!t1.matches("\\d*")) {
-                    addProduct_price.setText(t1.replaceAll("[^\\d]", ""));
-                }
-            }
-        });
-    } // Only numbers allow in Price textfield
-
     public ObservableList<productData> addProductsGetDataFromSQL(){
         ObservableList<productData> productList = FXCollections.observableArrayList();
         String sql = "SELECT * FROM products";
@@ -400,9 +382,9 @@ public class dashboardController implements Initializable {
                 prodD = new productData(result.getInt("id")
                         , result.getString("productName")
                         , result.getString("price")
+                        , result.getInt("price_int")
                         , result.getString("status")
                         , result.getDate("date"));
-
                 productList.add(prodD);
             }
 
@@ -410,67 +392,366 @@ public class dashboardController implements Initializable {
 
         }
         return productList;
-    } //Get the data from the SQL
-
+    } // Get the data from SQL (Products)
     public void addProductShowListData(){
         addProductList = addProductsGetDataFromSQL();
-        column_addProduct_id.setCellValueFactory(new PropertyValueFactory<productData, Integer>("productId"));
-        column_addProduct_name.setCellValueFactory(new PropertyValueFactory<productData, String>("productName"));
-        column_addProduct_price.setCellValueFactory(new PropertyValueFactory<productData, String>("price"));
-        column_addProduct_status.setCellValueFactory(new PropertyValueFactory<productData, String>("status"));
+        column_addProduct_id.setCellValueFactory(new PropertyValueFactory<>("productId"));
+        column_addProduct_name.setCellValueFactory(new PropertyValueFactory<>("productName"));
+        column_addProduct_price.setCellValueFactory(new PropertyValueFactory<>("price"));
+        column_addProduct_status.setCellValueFactory(new PropertyValueFactory<>("status"));
         addProduct_table.setItems(addProductList);
 
-    } // Put the data from SQL to Table
-
+    } // Put the data from SQL to Table (Products)
     public void addProductsSelect(){
+
         productData prodD = addProduct_table.getSelectionModel().getSelectedItem();
         int num = addProduct_table.getSelectionModel().getSelectedIndex();
         if((num - 1) <- 1){
             return;
         }
+
         productId = prodD.getProductId();
         addProduct_name.setText(prodD.getProductName());
-        addProduct_price.setText(String.valueOf(prodD.getPrice()));
+        addProduct_price.setText(String.valueOf(prodD.getPrice_int()));
         addProduct_status.setValue(prodD.getStatus());
-    } // if you clicked data from table, it will fill the text-fields and combobox
-
+    } // if you clicked data from table, it will fill the text-fields and combobox (Products)
     public void addProductListStatus(){
-        List<String> listS = new ArrayList<>(Arrays.asList(listStatus));
-        ObservableList<String> listData = FXCollections.observableArrayList(listS);
-        addProduct_status.setItems(listData);
-    } // Add the data to combobox (Status)
-
-    public void typeOfPurchased(){
-        order_productType.getItems().removeAll(order_productType.getItems());
-        order_productType.getItems().addAll("Pre-Made", "Customized");
-        order_productType.getSelectionModel().select("Choose");
-    } // Add the data to combobox (Type of Purchased)
+        addProduct_status.getItems().removeAll(addProduct_status.getItems());
+        addProduct_status.getItems().addAll("Available", "Not Available");
+        addProduct_status.getSelectionModel().select("Choose");
+    } // Add the data to combobox (Status) (Products)
 
 
-
-    public ObservableList<customerData> orderListData(){
-        ObservableList<customerData> orderList = FXCollections.observableArrayList();
-        String sql = "SELECT * FROM customer WHERE customer_id = ''";
-        return orderList;
-    }
-    private int customerId = 0;
-    public void customerId(){
-        String sql = "SELECT * FROM customer";
+    public void checkIfCurrentTableEmpty(){
+        String sql = "SELECT COUNT(*) FROM customer";
         connect = database.connectDb();
         try{
             assert connect != null;
             prepare = connect.prepareStatement(sql);
             result = prepare.executeQuery();
-
-            int checkId = 0;
+            int count = 0;
             while(result.next()){
-                checkId = result.getInt("customer_id");
+                count = result.getInt("COUNT(*)");
+            }
+            if(count != 0){
+                orderResetTable();
+                orderClear();
+                orderShowListData();
+
             }
         }catch (Exception ignored){
 
         }
-    } // Get the last customer id
+    } // Check if the table is empty (Home)
 
+    public void typeOfPurchased(){
+        order_productType.getItems().removeAll(order_productType.getItems());
+        order_productType.getItems().addAll("Pre-Made", "Customized");
+        order_productType.getSelectionModel().select("Pre-Made");
+    } // Add the data to combobox (Type of Purchased) (Order)
+    public void orderPreMade(){
+        String SQL = "SELECT productName FROM products WHERE status = 'Available'";
+        connect = database.connectDb();
+
+        try{
+            assert connect != null;
+            prepare = connect.prepareStatement(SQL);
+            result = prepare.executeQuery();
+
+            ObservableList<String> list = FXCollections.observableArrayList();
+
+            while(result.next()){
+                list.add(result.getString("productName"));
+            }
+            order_productName.setItems(list);
+        }catch (Exception ignored){
+
+        }
+    } // Add the data to combobox (Pre-Made) (Order)
+    public ObservableList<customerData> orderListData(){
+        ObservableList<customerData> listData = FXCollections.observableArrayList();
+        String sql = "SELECT * FROM customer";
+        connect = database.connectDb();
+
+        try{
+            customerData customerID;
+            assert connect != null;
+            prepare = connect.prepareStatement(sql);
+            result = prepare.executeQuery();
+
+            while(result.next()){
+                customerID = new customerData
+                        (result.getString("customerName")
+                        , result.getString("type")
+                        , result.getString("productName")
+                        , result.getInt("quantity")
+                        , result.getString("price")
+                        , result.getInt("price_int")
+                        , result.getDate("date"));
+                listData.add(customerID);
+            }
+        }catch (Exception ignored){
+
+        }
+        return listData;
+    } // Get the data from SQL (Order)
+    public void orderResetTable(){
+        String sql = "DELETE FROM customer";
+        connect = database.connectDb();
+        Alert alert;
+        try {
+            alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Sure?");
+            alert.setHeaderText(null);
+            alert.setContentText("This will remove all the data in the table. Are you sure?");
+            Optional<ButtonType> option = alert.showAndWait();
+            if (option.get().equals(ButtonType.OK)){
+                assert connect != null;
+                statement = connect.createStatement();
+                statement.executeUpdate(sql);
+            }
+        }catch (Exception ignored){
+
+        }
+    }
+    public void orderClear(){
+        customer_name.setEditable(true);
+        customer_name.setDisable(false);
+        customer_name.setText("");
+        order_productType.getSelectionModel().select("Pre-Made");
+        order_productName.getSelectionModel().select("");
+        order_customName.setText("");
+        order_quantity.getValueFactory().setValue(1);
+    } // Reset all text-fields and combobox (Order)
+
+    public void orderShowListData(){
+        orderList = orderListData();
+        com_order_type.setCellValueFactory(new PropertyValueFactory<>("type"));
+        com_order_name.setCellValueFactory(new PropertyValueFactory<>("productName"));
+        com_order_quantity.setCellValueFactory(new PropertyValueFactory<>("quantity"));
+        com_order_price.setCellValueFactory(new PropertyValueFactory<>("price"));
+        order_table.setItems(orderList);
+    } // Put the data from SQL to Table (Order)
+    public void orderSet(ActionEvent e){
+        if (order_productType.getSelectionModel().getSelectedItem().equalsIgnoreCase("Pre-Made")) {
+            order_customName.setVisible(false);
+            order_customName.setText("");
+            order_productName.setVisible(true);
+
+        } else if (order_productType.getSelectionModel().getSelectedItem().equalsIgnoreCase("Customized")) {
+            order_productName.setVisible(false);
+            order_productName.getSelectionModel().select("");
+            order_customName.setVisible(true);
+        }
+    } // Set the visibility of text-field and combobox (Order)
+    public void orderSpinner(){
+        SpinnerValueFactory <Integer> valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 1000, 1);
+        order_quantity.setValueFactory(valueFactory);
+    } // Set the value of spinner (Order)
+    public void ordersAdd(){
+        int qty = order_quantity.getValue();
+        String sql = "INSERT INTO customer (customerName, type, productName, quantity, price, price_int, date)"
+                + "VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+        connect = database.connectDb();
+        try{
+            if(order_productType.getSelectionModel().getSelectedItem().equalsIgnoreCase("Pre-Made")) {
+                if(customer_name.getText().isEmpty()
+                        || order_productName.getSelectionModel().getSelectedItem() == null
+                        || order_productType.getSelectionModel().getSelectedItem() == null
+                        || order_quantity.getValue() == 0) {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Error");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Fill out all the blank fields");
+                    alert.showAndWait();
+                }else{
+                    assert connect != null;
+                    prepare = connect.prepareStatement(sql);
+
+                    prepare.setString(1, customer_name.getText());
+                    prepare.setString(2, order_productType.getSelectionModel().getSelectedItem());
+                    if(order_productType.getSelectionModel().getSelectedItem().equalsIgnoreCase("Pre-Made")) {
+                        prepare.setString(3, order_productName.getSelectionModel().getSelectedItem());
+                    } else if(order_productType.getSelectionModel().getSelectedItem().equalsIgnoreCase("Customized")){
+                        prepare.setString(3, order_customName.getText());
+                    }
+                    prepare.setString(4, String.valueOf(qty));
+
+                    String checkData = "SELECT price_int FROM products WHERE productName = '"
+                            + order_productName.getSelectionModel().getSelectedItem() + "'";
+                    statement = connect.createStatement();
+                    result = statement.executeQuery(checkData);
+
+                    int priceInt = 0;
+                    while(result.next()){
+                        priceInt = result.getInt("price_int");
+                    }
+                    String priceString = String.valueOf(qty * priceInt);  // Compute the price
+                    prepare.setString(5, formatPrice(priceString));
+
+                    int total = qty * priceInt;
+                    prepare.setInt(6, total);
+
+                    Date date = new Date();
+                    java.sql.Date sqlDate = new java.sql.Date(date.getTime());
+                    prepare.setDate(7, sqlDate);
+
+                    prepare.executeUpdate();
+                    customer_name.setEditable(false);
+                    customer_name.setDisable(true);
+                    orderShowListData();
+                    System.out.println("Successfully Added");
+                }
+            } else if(order_productType.getSelectionModel().getSelectedItem().equalsIgnoreCase("Customized")){
+                if(customer_name.getText().isEmpty()
+                        || order_customName.getText().isEmpty()
+                        || order_productType.getSelectionModel().getSelectedItem() == null
+                        || order_quantity.getValue() == 0) {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Error");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Fill out all the blank fields");
+                    alert.showAndWait();
+                }else{
+                    assert connect != null;
+                    prepare = connect.prepareStatement(sql);
+
+                    prepare.setString(1, customer_name.getText());
+                    prepare.setString(2, order_productType.getSelectionModel().getSelectedItem());
+                    if(order_productType.getSelectionModel().getSelectedItem().equalsIgnoreCase("Pre-Made")) {
+                        prepare.setString(3, order_productName.getSelectionModel().getSelectedItem());
+                    } else if(order_productType.getSelectionModel().getSelectedItem().equalsIgnoreCase("Customized")){
+                        prepare.setString(3, order_customName.getText());
+                    }
+                    prepare.setString(4, String.valueOf(qty));
+
+                    String checkData = "SELECT price_int FROM products WHERE productName = '"
+                            + order_productName.getSelectionModel().getSelectedItem() + "'";
+                    statement = connect.createStatement();
+                    result = statement.executeQuery(checkData);
+
+                    int priceInt = 0;
+                    while(result.next()){
+                        priceInt = result.getInt("price_int");
+                    }
+                    String priceString = String.valueOf(qty * priceInt);  // Compute the price
+                    prepare.setString(5, formatPrice(priceString));
+
+                    int total = qty * priceInt;
+                    prepare.setInt(6, total);
+
+                    Date date = new Date();
+                    java.sql.Date sqlDate = new java.sql.Date(date.getTime());
+                    prepare.setDate(7, sqlDate);
+
+                    prepare.executeUpdate();
+                    customer_name.setEditable(false);
+                    customer_name.setDisable(true);
+                    orderShowListData();
+                    System.out.println("Successfully Added");
+                }
+            }
+
+        }catch (Exception ignored){
+
+        }
+    } // Add order
+    public void orderDisplayTotal(){
+        String sql = "SELECT SUM(price_int) FROM customer WHERE customerName = '"
+                + customer_name.getText() + "'";
+        connect = database.connectDb();
+        try{
+            assert connect != null;
+            prepare = connect.prepareStatement(sql);
+            result = prepare.executeQuery();
+            String total = "";
+            while(result.next()){
+                total = result.getString("SUM(price)");
+            }
+            order_total.setText(total);
+
+        }catch (Exception ignored){
+
+        }
+    }
+
+
+    public String formatPrice(String price){
+        long priceLong = Long.parseLong(price);
+        return formatWithComma.format(priceLong);
+    }
+    public void onlyNumInTextField(){
+        addProduct_price.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observableValue, String s, String t1) {
+                if (!t1.matches("\\d*")) {
+                    addProduct_price.setText(t1.replaceAll("[^\\d]", ""));
+                }
+            }
+        });
+    } // Only numbers allow in Price text-field
+    public void clearTextField(){
+        addProduct_name.setText("");
+        addProduct_price.setText("");
+        addProductListStatus();
+    } // Clear all text-fields
+    public void logout(){
+        checkIfCurrentTableEmpty();
+        AtomicReference<Double> x = new AtomicReference<>((double) 0);
+        AtomicReference<Double> y = new AtomicReference<>((double) 0);
+        try {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Confirmation Message");
+            alert.setHeaderText(null);
+            alert.setContentText("Are you sure you want to logout?");
+
+
+            Optional<ButtonType> option = alert.showAndWait();
+
+            assert option.orElse(null) != null;
+            if (option.orElse(null).equals(ButtonType.OK)){
+                logout.getScene().getWindow().hide();
+                FXMLLoader fxmlLoader = new FXMLLoader(main.class.getResource("login.fxml"));
+                Stage stage = new Stage();
+                Scene scene = new Scene(fxmlLoader.load(), 752, 551);
+                stage.initStyle(StageStyle.UNDECORATED);
+
+                scene.setOnMousePressed(mouseEvent -> {
+                    x.set(mouseEvent.getSceneX());
+                    y.set(mouseEvent.getSceneY());
+                    scene.setCursor(Cursor.CLOSED_HAND);
+                });
+                scene.setOnMouseDragged(mouseEvent -> {
+                    stage.setX(mouseEvent.getScreenX() - x.get());
+                    stage.setY(mouseEvent.getScreenY() - y.get());
+                    stage.setOpacity(.9);
+                });
+                scene.setOnMouseReleased(mouseEvent -> {
+                    stage.setOpacity(1);
+                    scene.setCursor(Cursor.DEFAULT);
+                });
+
+                stage.initStyle(StageStyle.TRANSPARENT);
+                stage.setScene(scene);
+                stage.show();
+                Rectangle2D primScreenBounds = Screen.getPrimary().getVisualBounds();
+                stage.setX((primScreenBounds.getWidth() - stage.getWidth()) / 2);
+                stage.setY((primScreenBounds.getHeight() - stage.getHeight()) / 2);
+            }else{
+                return;
+            }
+
+        }catch (Exception ignored){
+
+        }
+
+    } // Logout
+    public void minimize(){
+
+        Stage stage = (Stage)main_form.getScene().getWindow();
+        stage.setIconified(true);
+    } // Minimize
     public void switchForm(MouseEvent event){
         if(event.getSource() == home_btn || event.getSource() == home){
             home_form.setVisible(true);
@@ -498,87 +779,28 @@ public class dashboardController implements Initializable {
             home.setStyle("-fx-background-color: transparent");
             orders.setStyle("-fx-background-color: linear-gradient(to bottom right, #8cea50, #3ce03c)");
             addProducts.setStyle("-fx-background-color: transparent");
-            typeOfPurchased();
+            orderShowListData(); // Put the data from SQL to Table (Order)
+            typeOfPurchased(); // Add the data to combobox (Type of Purchased)
+            orderPreMade(); // Add the data to combobox (Pre-Made)
+            orderSpinner(); // Set the value of spinner (Order)
+
         }
 
     }  // Switch between forms
-
-    private double x = 0;
-    private double y = 0;
-
-    public void orderSet(ActionEvent e){
-        if (order_productType.getSelectionModel().getSelectedItem().equalsIgnoreCase("Pre-Made")) {
-            order_productName.setVisible(true);
-            order_customName.setVisible(false);
-            order_customName.setText("");
-        } else if (order_productType.getSelectionModel().getSelectedItem().equalsIgnoreCase("Customized")) {
-            order_productName.setVisible(false);
-            order_productName.getSelectionModel().select("Choose");
-            order_customName.setVisible(true);
-        }
-    }
-    public void logout(){
-        try {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Confirmation Message");
-            alert.setHeaderText(null);
-            alert.setContentText("Are you sure you want to logout?");
-
-
-            Optional<ButtonType> option = alert.showAndWait();
-
-            if (option.get().equals(ButtonType.OK)){
-                logout.getScene().getWindow().hide();
-                FXMLLoader fxmlLoader = new FXMLLoader(main.class.getResource("login.fxml"));
-                Stage stage = new Stage();
-                Scene scene = new Scene(fxmlLoader.load(), 752, 551);
-                stage.initStyle(StageStyle.UNDECORATED);
-
-                scene.setOnMousePressed(mouseEvent -> {
-                    x = mouseEvent.getSceneX();
-                    y = mouseEvent.getSceneY();
-                    scene.setCursor(Cursor.CLOSED_HAND);
-                });
-                scene.setOnMouseDragged(mouseEvent -> {
-                    stage.setX(mouseEvent.getScreenX() - x);
-                    stage.setY(mouseEvent.getScreenY() - y);
-                    stage.setOpacity(.9);
-                });
-                scene.setOnMouseReleased(mouseEvent -> {
-                    stage.setOpacity(1);
-                    scene.setCursor(Cursor.DEFAULT);
-                });
-
-                stage.initStyle(StageStyle.TRANSPARENT);
-                stage.setScene(scene);
-                stage.show();
-                Rectangle2D primScreenBounds = Screen.getPrimary().getVisualBounds();
-                stage.setX((primScreenBounds.getWidth() - stage.getWidth()) / 2);
-                stage.setY((primScreenBounds.getHeight() - stage.getHeight()) / 2);
-            }else{
-                return;
-            }
-
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-    } // Logout
-
-    public void minimize(){
-
-        Stage stage = (Stage)main_form.getScene().getWindow();
-        stage.setIconified(true);
-    } // Minimize
-
     public void close(){
+        checkIfCurrentTableEmpty();
         System.exit(0);
     } // Close
 
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        addProductShowListData();
-        addProductListStatus();
-        typeOfPurchased();
+        addProductShowListData(); // Put the data from SQL to Table
+        addProductListStatus(); // Add the data to combobox (Status)
+        typeOfPurchased(); // Add the data to combobox (Type of Purchased)
+        orderPreMade(); // Add the data to combobox (Pre-Made)
+        orderSpinner(); // Set the value of spinner (Order)
+        orderShowListData(); // Put the data from SQL to Table (Order)
+
     } // Initialize
 }

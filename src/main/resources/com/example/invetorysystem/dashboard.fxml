@@ -259,7 +259,7 @@
                                           <Font size="21.0" />
                                        </font>
                                     </Label>
-                                    <ComboBox fx:id="addProduct_status" layoutX="200.0" layoutY="392.0" onAction="#addProductListStatus" prefHeight="34.0" prefWidth="201.0" promptText="Choose" style="-fx-font-size: 15;" styleClass="text-field" stylesheets="@dashboardDesign.css" />
+                                    <ComboBox fx:id="addProduct_status" layoutX="200.0" layoutY="392.0" prefHeight="34.0" prefWidth="201.0" promptText="Choose" style="-fx-font-size: 15;" styleClass="text-field" stylesheets="@dashboardDesign.css" />
                                     <Label layoutX="209.0" layoutY="453.0" text="₱">
                                        <font>
                                           <Font size="16.0" />
@@ -296,16 +296,15 @@
                         </AnchorPane>
                         <AnchorPane fx:id="orders_form" layoutX="149.0" layoutY="124.0" prefHeight="812.0" prefWidth="1227.2" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <children>
-                              <AnchorPane layoutX="19.0" layoutY="3.0" prefHeight="789.0" prefWidth="726.0" stylesheets="@dashboardDesign.css">
+                              <AnchorPane layoutX="19.0" layoutY="3.0" prefHeight="790.0" prefWidth="684.0" stylesheets="@dashboardDesign.css">
                                  <styleClass>
                                     <String fx:value="white-bg" />
                                     <String fx:value="shadow" />
                                  </styleClass>
                                  <children>
-                                    <TableView fx:id="order_table" layoutX="13.0" layoutY="14.0" prefHeight="763.0" prefWidth="702.0" styleClass="table-view1" stylesheets="@dashboardDesign.css">
+                                    <TableView fx:id="order_table" layoutX="13.0" layoutY="14.0" onSort="#orderShowListData" prefHeight="763.0" prefWidth="655.0" styleClass="table-view1" stylesheets="@dashboardDesign.css">
                                       <columns>
                                         <TableColumn fx:id="com_order_type" prefWidth="75.0" style="-fx-font-size: 18;" text="Type" />
-                                          <TableColumn fx:id="com_order_brand" prefWidth="75.0" style="-fx-font-size: 18;" text="Brand" />
                                           <TableColumn fx:id="com_order_name" prefWidth="125.33331298828125" style="-fx-font-size: 18;" text="Product Name" />
                                           <TableColumn fx:id="com_order_quantity" prefWidth="82.66668701171875" style="-fx-font-size: 18;" text="Quantity" />
                                           <TableColumn fx:id="com_order_price" prefWidth="75.0" style="-fx-font-size: 18;" text="Price" />
@@ -316,30 +315,30 @@
                                     </TableView>
                                  </children>
                               </AnchorPane>
-                              <AnchorPane layoutX="781.0" layoutY="6.0" prefHeight="786.0" prefWidth="430.0" stylesheets="@dashboardDesign.css">
+                              <AnchorPane layoutX="723.0" layoutY="6.0" prefHeight="786.0" prefWidth="488.0" stylesheets="@dashboardDesign.css">
                                  <styleClass>
                                     <String fx:value="white-bg" />
                                     <String fx:value="shadow" />
                                  </styleClass>
                                  <children>
-                                    <Label layoutX="51.0" layoutY="63.0" prefHeight="34.0" prefWidth="146.0" text="Product type:">
+                                    <Label layoutX="46.0" layoutY="120.0" prefHeight="34.0" prefWidth="146.0" text="Product type:">
                                        <font>
                                           <Font size="23.0" />
                                        </font>
                                     </Label>
-                                    <ComboBox fx:id="order_productType" layoutX="209.0" layoutY="61.0" onAction="#orderSet" prefHeight="38.0" prefWidth="163.0" promptText="Choose" style="-fx-font-size: 15;" styleClass="text-field" stylesheets="@dashboardDesign.css" />
-                                    <Label layoutX="41.0" layoutY="131.0" prefHeight="34.0" prefWidth="157.0" text="Product Name:">
+                                    <ComboBox fx:id="order_productType" layoutX="204.0" layoutY="118.0" onAction="#orderSet" prefHeight="38.0" prefWidth="163.0" style="-fx-font-size: 15;" styleClass="text-field" stylesheets="@dashboardDesign.css" />
+                                    <Label layoutX="36.0" layoutY="188.0" prefHeight="34.0" prefWidth="157.0" text="Product Name:">
                                        <font>
                                           <Font size="23.0" />
                                        </font>
                                     </Label>
-                                    <ComboBox fx:id="order_productName" layoutX="209.0" layoutY="128.0" prefHeight="38.0" prefWidth="166.0" promptText="Choose" style="-fx-font-size: 15;" styleClass="text-field" stylesheets="@dashboardDesign.css" />
-                                    <Label layoutX="96.0" layoutY="195.0" prefHeight="34.0" prefWidth="100.0" text="Quantity:">
+                                    <ComboBox fx:id="order_productName" layoutX="204.0" layoutY="185.0" prefHeight="38.0" prefWidth="166.0" style="-fx-font-size: 15;" styleClass="text-field" stylesheets="@dashboardDesign.css" />
+                                    <Label layoutX="91.0" layoutY="252.0" prefHeight="34.0" prefWidth="100.0" text="Quantity:">
                                        <font>
                                           <Font size="23.0" />
                                        </font>
                                     </Label>
-                                    <Spinner fx:id="order_quantity" layoutX="209.0" layoutY="196.0" prefHeight="34.0" prefWidth="161.0" />
+                                    <Spinner fx:id="order_quantity" layoutX="204.0" layoutY="253.0" prefHeight="34.0" prefWidth="161.0" />
                                     <Label layoutX="121.0" layoutY="397.0" prefHeight="46.0" prefWidth="75.0" text="Total:">
                                        <font>
                                           <Font size="30.0" />
@@ -381,12 +380,28 @@
                                           <Font size="17.0" />
                                        </font>
                                     </Button>
-                                    <Button fx:id="order_addBtn" layoutX="101.0" layoutY="258.0" mnemonicParsing="false" prefHeight="48.0" prefWidth="221.0" text="Add">
+                                    <Button fx:id="order_addBtn" layoutX="242.0" layoutY="319.0" mnemonicParsing="false" onAction="#ordersAdd" prefHeight="48.0" prefWidth="87.0" text="Add">
                                        <font>
                                           <Font size="17.0" />
                                        </font>
                                     </Button>
-                                    <TextField fx:id="order_customName" layoutX="209.0" layoutY="126.0" prefHeight="40.0" prefWidth="167.0" visible="false" />
+                                    <TextField fx:id="order_customName" layoutX="204.0" layoutY="185.0" prefHeight="40.0" prefWidth="167.0" promptText="Custom Product" visible="false" />
+                                    <Label layoutX="62.0" layoutY="59.0" prefHeight="34.0" prefWidth="116.0" text="Customer:">
+                                       <font>
+                                          <Font size="23.0" />
+                                       </font>
+                                    </Label>
+                                    <TextField fx:id="customer_name" layoutX="205.0" layoutY="60.0" prefHeight="34.0" prefWidth="162.0" />
+                                    <Button fx:id="order_clear" layoutX="335.0" layoutY="318.0" mnemonicParsing="false" onAction="#orderClear" prefHeight="49.0" prefWidth="86.0" text="Clear">
+                                       <font>
+                                          <Font size="17.0" />
+                                       </font>
+                                    </Button>
+                                    <Button fx:id="order_reset" layoutX="25.0" layoutY="322.0" mnemonicParsing="false" onAction="#checkIfCurrentTableEmpty" prefHeight="42.0" prefWidth="131.0" style="-fx-background-color: Red;" text="Reset Table">
+                                       <font>
+                                          <Font size="17.0" />
+                                       </font>
+                                    </Button>
                                  </children>
                               </AnchorPane>
                            </children>
