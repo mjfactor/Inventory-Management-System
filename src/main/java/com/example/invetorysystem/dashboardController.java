@@ -598,10 +598,11 @@ public class dashboardController implements Initializable {
                     prepare.setDate(7, sqlDate);
 
                     prepare.executeUpdate();
+                    orderDisplayTotal();
                     customer_name.setEditable(false);
                     customer_name.setDisable(true);
                     orderShowListData();
-                    System.out.println("Successfully Added");
+
                 }
             } else if(order_productType.getSelectionModel().getSelectedItem().equalsIgnoreCase("Customized")){
                 if(customer_name.getText().isEmpty()
@@ -646,10 +647,11 @@ public class dashboardController implements Initializable {
                     prepare.setDate(7, sqlDate);
 
                     prepare.executeUpdate();
+                    orderDisplayTotal();
                     customer_name.setEditable(false);
                     customer_name.setDisable(true);
                     orderShowListData();
-                    System.out.println("Successfully Added");
+
                 }
             }
 
@@ -665,11 +667,11 @@ public class dashboardController implements Initializable {
             assert connect != null;
             prepare = connect.prepareStatement(sql);
             result = prepare.executeQuery();
-            String total = "";
+            int total = 0;
             while(result.next()){
-                total = result.getString("SUM(price)");
+                total = result.getInt("SUM(price_int)");
             }
-            order_total.setText(total);
+            order_total.setText("₱"+formatPrice(String.valueOf(total)));
 
         }catch (Exception ignored){
 
@@ -783,7 +785,7 @@ public class dashboardController implements Initializable {
             typeOfPurchased(); // Add the data to combobox (Type of Purchased)
             orderPreMade(); // Add the data to combobox (Pre-Made)
             orderSpinner(); // Set the value of spinner (Order)
-
+            orderDisplayTotal(); // Display the total price (Order)
         }
 
     }  // Switch between forms
@@ -801,6 +803,7 @@ public class dashboardController implements Initializable {
         orderPreMade(); // Add the data to combobox (Pre-Made)
         orderSpinner(); // Set the value of spinner (Order)
         orderShowListData(); // Put the data from SQL to Table (Order)
+        orderDisplayTotal(); // Display the total price (Order)
 
     } // Initialize
 }
