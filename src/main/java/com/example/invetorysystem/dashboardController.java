@@ -12,7 +12,6 @@ import javafx.fxml.Initializable;
 
 import java.net.URL;
 import java.sql.*;
-import java.text.Format;
 import java.text.NumberFormat;
 import java.util.*;
 import java.util.Date;
@@ -151,7 +150,10 @@ public class dashboardController implements Initializable {
     private TextField order_amount;
 
     @FXML
-    private Label order_balance;
+    private Label order_balanceLabel;
+
+    @FXML
+    private Label custom_priceLabel;
 
     @FXML
     private ComboBox<?> order_brandName;
@@ -178,7 +180,7 @@ public class dashboardController implements Initializable {
     private TableView<customerData> order_table;
 
     @FXML
-    private Label order_total;
+    private Label order_totalLabel;
 
     @FXML
     private AnchorPane orders;
@@ -196,6 +198,8 @@ public class dashboardController implements Initializable {
     private AnchorPane orders_form;
     @FXML
     private TextField order_customName;
+    @FXML
+    private TextField order_customPrice;
     @FXML
     private Button order_addBtn;
 
@@ -422,28 +426,154 @@ public class dashboardController implements Initializable {
     } // Add the data to combobox (Status) (Products)
 
 
-    public void checkIfCurrentTableEmpty(){
+    public int checkIfCurrentTableEmpty() throws SQLException {
         String sql = "SELECT COUNT(*) FROM customer";
         connect = database.connectDb();
-        try{
-            assert connect != null;
-            prepare = connect.prepareStatement(sql);
-            result = prepare.executeQuery();
-            int count = 0;
-            while(result.next()){
-                count = result.getInt("COUNT(*)");
-            }
-            if(count != 0){
-                orderResetTable();
+        assert connect != null;
+        prepare = connect.prepareStatement(sql);
+        result = prepare.executeQuery();
+        int count = 0;
+        while(result.next()){
+            count = result.getInt("COUNT(*)");
+        }
+        return count;
+
+
+    } // Check if the table is empty (Home)
+    public void orderResetTable(){
+        String sql = "DELETE FROM customer";
+        connect = database.connectDb();
+        Alert alert;
+        try {
+            alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Sure?");
+            alert.setHeaderText(null);
+            alert.setContentText("This will remove all the data in the table. Are you sure?");
+            Optional<ButtonType> option = alert.showAndWait();
+            if (option.get().equals(ButtonType.OK)){
+                assert connect != null;
+                statement = connect.createStatement();
+                statement.executeUpdate(sql);
                 orderClear();
                 orderShowListData();
+            }else if (option.get().equals(ButtonType.CANCEL)){
 
             }
         }catch (Exception ignored){
 
         }
-    } // Check if the table is empty (Home)
+    }
+    public void orderResetTablewithoutAsking(){
+        String sql = "DELETE FROM customer";
+        connect = database.connectDb();
+        try {
+            assert connect != null;
+            statement = connect.createStatement();
+            statement.executeUpdate(sql);
+            orderClear();
+            orderShowListData();
+        }catch (Exception ignored){
 
+        }
+    }
+    public void ordersAdd(){
+
+        int qty = order_quantity.getValue();
+        String sql = "INSERT INTO customer (customerName, type, productName, quantity, price, price_int, date)"
+                + "VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+        connect = database.connectDb();
+        try{
+            if(order_productType.getSelectionModel().getSelectedItem().equalsIgnoreCase("Pre-Made")) {
+                if(customer_name.getText().isEmpty()
+                        || order_productName.getSelectionModel().getSelectedItem() == null
+                        || order_productType.getSelectionModel().getSelectedItem() == null
+                        || order_quantity.getValue() == 0) {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Error");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Fill out all the blank fields");
+                    alert.showAndWait();
+                }else{
+                    assert connect != null;
+                    prepare = connect.prepareStatement(sql);
+
+                    prepare.setString(1, customer_name.getText());
+                    prepare.setString(2, order_productType.getSelectionModel().getSelectedItem());
+                    prepare.setString(3, order_productName.getSelectionModel().getSelectedItem());
+                    prepare.setString(4, String.valueOf(qty));
+
+                    String checkData = "SELECT price_int FROM products WHERE productName = '"
+                            + order_productName.getSelectionModel().getSelectedItem() + "'";
+                    statement = connect.createStatement();
+                    result = statement.executeQuery(checkData);
+                    int priceInt = 0;
+                    while(result.next()){
+                        priceInt = result.getInt("price_int");
+                    }
+                    String priceString = String.valueOf(qty * priceInt);  // Compute the price
+                    prepare.setString(5, formatPrice(priceString));
+
+                    int total = qty * priceInt;
+                    prepare.setInt(6, total);
+
+                    Date date = new Date();
+                    java.sql.Date sqlDate = new java.sql.Date(date.getTime());
+                    prepare.setDate(7, sqlDate);
+
+                    prepare.executeUpdate();
+                    orderDisplayTotal();
+                    customer_name.setEditable(false);
+                    customer_name.setDisable(true);
+                    orderShowListData();
+
+                }
+            } else if(order_productType.getSelectionModel().getSelectedItem().equalsIgnoreCase("Customized")){
+                if(customer_name.getText().isEmpty()
+                        || order_customName.getText().isEmpty()
+                        || order_customPrice.getText().isEmpty()
+                        || order_productType.getSelectionModel().getSelectedItem() == null
+                        || order_quantity.getValue() == 0) {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Error");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Fill out all the blank fields");
+                    alert.showAndWait();
+                }else{
+                    assert connect != null;
+                    prepare = connect.prepareStatement(sql);
+
+                    prepare.setString(1, customer_name.getText());
+                    prepare.setString(2, order_productType.getSelectionModel().getSelectedItem());
+                    prepare.setString(3, order_customName.getText());
+
+                    prepare.setString(4, String.valueOf(qty));
+
+                    int priceInt = Integer.parseInt(order_customPrice.getText());
+
+                    var priceString = String.valueOf(qty * priceInt);  // Compute the price
+                    prepare.setString(5, formatPrice(priceString));
+
+                    int total = qty * priceInt;
+                    prepare.setInt(6, total);
+
+                    Date date = new Date();
+                    java.sql.Date sqlDate = new java.sql.Date(date.getTime());
+                    prepare.setDate(7, sqlDate);
+
+                    prepare.executeUpdate();
+                    orderDisplayTotal();
+                    customer_name.setEditable(false);
+                    customer_name.setDisable(true);
+                    orderShowListData();
+
+                }
+            }
+
+        }catch (Exception ignored){
+
+        }
+    } // Add order
     public void typeOfPurchased(){
         order_productType.getItems().removeAll(order_productType.getItems());
         order_productType.getItems().addAll("Pre-Made", "Customized");
@@ -482,12 +612,12 @@ public class dashboardController implements Initializable {
             while(result.next()){
                 customerID = new customerData
                         (result.getString("customerName")
-                        , result.getString("type")
-                        , result.getString("productName")
-                        , result.getInt("quantity")
-                        , result.getString("price")
-                        , result.getInt("price_int")
-                        , result.getDate("date"));
+                                , result.getString("type")
+                                , result.getString("productName")
+                                , result.getInt("quantity")
+                                , result.getString("price")
+                                , result.getInt("price_int")
+                                , result.getDate("date"));
                 listData.add(customerID);
             }
         }catch (Exception ignored){
@@ -495,25 +625,7 @@ public class dashboardController implements Initializable {
         }
         return listData;
     } // Get the data from SQL (Order)
-    public void orderResetTable(){
-        String sql = "DELETE FROM customer";
-        connect = database.connectDb();
-        Alert alert;
-        try {
-            alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Sure?");
-            alert.setHeaderText(null);
-            alert.setContentText("This will remove all the data in the table. Are you sure?");
-            Optional<ButtonType> option = alert.showAndWait();
-            if (option.get().equals(ButtonType.OK)){
-                assert connect != null;
-                statement = connect.createStatement();
-                statement.executeUpdate(sql);
-            }
-        }catch (Exception ignored){
 
-        }
-    }
     public void orderClear(){
         customer_name.setEditable(true);
         customer_name.setDisable(false);
@@ -522,8 +634,9 @@ public class dashboardController implements Initializable {
         order_productName.getSelectionModel().select("");
         order_customName.setText("");
         order_quantity.getValueFactory().setValue(1);
+        order_customPrice.setText("");
+        order_totalLabel.setText("₱0");
     } // Reset all text-fields and combobox (Order)
-
     public void orderShowListData(){
         orderList = orderListData();
         com_order_type.setCellValueFactory(new PropertyValueFactory<>("type"));
@@ -537,128 +650,21 @@ public class dashboardController implements Initializable {
             order_customName.setVisible(false);
             order_customName.setText("");
             order_productName.setVisible(true);
-
+            order_customPrice.setDisable(true);
+            custom_priceLabel.setDisable(true);
         } else if (order_productType.getSelectionModel().getSelectedItem().equalsIgnoreCase("Customized")) {
             order_productName.setVisible(false);
             order_productName.getSelectionModel().select("");
             order_customName.setVisible(true);
+            order_customPrice.setDisable(false);
+            custom_priceLabel.setDisable(false);
+
         }
     } // Set the visibility of text-field and combobox (Order)
     public void orderSpinner(){
         SpinnerValueFactory <Integer> valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 1000, 1);
         order_quantity.setValueFactory(valueFactory);
     } // Set the value of spinner (Order)
-    public void ordersAdd(){
-        int qty = order_quantity.getValue();
-        String sql = "INSERT INTO customer (customerName, type, productName, quantity, price, price_int, date)"
-                + "VALUES (?, ?, ?, ?, ?, ?, ?)";
-
-        connect = database.connectDb();
-        try{
-            if(order_productType.getSelectionModel().getSelectedItem().equalsIgnoreCase("Pre-Made")) {
-                if(customer_name.getText().isEmpty()
-                        || order_productName.getSelectionModel().getSelectedItem() == null
-                        || order_productType.getSelectionModel().getSelectedItem() == null
-                        || order_quantity.getValue() == 0) {
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setTitle("Error");
-                    alert.setHeaderText(null);
-                    alert.setContentText("Fill out all the blank fields");
-                    alert.showAndWait();
-                }else{
-                    assert connect != null;
-                    prepare = connect.prepareStatement(sql);
-
-                    prepare.setString(1, customer_name.getText());
-                    prepare.setString(2, order_productType.getSelectionModel().getSelectedItem());
-                    if(order_productType.getSelectionModel().getSelectedItem().equalsIgnoreCase("Pre-Made")) {
-                        prepare.setString(3, order_productName.getSelectionModel().getSelectedItem());
-                    } else if(order_productType.getSelectionModel().getSelectedItem().equalsIgnoreCase("Customized")){
-                        prepare.setString(3, order_customName.getText());
-                    }
-                    prepare.setString(4, String.valueOf(qty));
-
-                    String checkData = "SELECT price_int FROM products WHERE productName = '"
-                            + order_productName.getSelectionModel().getSelectedItem() + "'";
-                    statement = connect.createStatement();
-                    result = statement.executeQuery(checkData);
-
-                    int priceInt = 0;
-                    while(result.next()){
-                        priceInt = result.getInt("price_int");
-                    }
-                    String priceString = String.valueOf(qty * priceInt);  // Compute the price
-                    prepare.setString(5, formatPrice(priceString));
-
-                    int total = qty * priceInt;
-                    prepare.setInt(6, total);
-
-                    Date date = new Date();
-                    java.sql.Date sqlDate = new java.sql.Date(date.getTime());
-                    prepare.setDate(7, sqlDate);
-
-                    prepare.executeUpdate();
-                    orderDisplayTotal();
-                    customer_name.setEditable(false);
-                    customer_name.setDisable(true);
-                    orderShowListData();
-
-                }
-            } else if(order_productType.getSelectionModel().getSelectedItem().equalsIgnoreCase("Customized")){
-                if(customer_name.getText().isEmpty()
-                        || order_customName.getText().isEmpty()
-                        || order_productType.getSelectionModel().getSelectedItem() == null
-                        || order_quantity.getValue() == 0) {
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setTitle("Error");
-                    alert.setHeaderText(null);
-                    alert.setContentText("Fill out all the blank fields");
-                    alert.showAndWait();
-                }else{
-                    assert connect != null;
-                    prepare = connect.prepareStatement(sql);
-
-                    prepare.setString(1, customer_name.getText());
-                    prepare.setString(2, order_productType.getSelectionModel().getSelectedItem());
-                    if(order_productType.getSelectionModel().getSelectedItem().equalsIgnoreCase("Pre-Made")) {
-                        prepare.setString(3, order_productName.getSelectionModel().getSelectedItem());
-                    } else if(order_productType.getSelectionModel().getSelectedItem().equalsIgnoreCase("Customized")){
-                        prepare.setString(3, order_customName.getText());
-                    }
-                    prepare.setString(4, String.valueOf(qty));
-
-                    String checkData = "SELECT price_int FROM products WHERE productName = '"
-                            + order_productName.getSelectionModel().getSelectedItem() + "'";
-                    statement = connect.createStatement();
-                    result = statement.executeQuery(checkData);
-
-                    int priceInt = 0;
-                    while(result.next()){
-                        priceInt = result.getInt("price_int");
-                    }
-                    String priceString = String.valueOf(qty * priceInt);  // Compute the price
-                    prepare.setString(5, formatPrice(priceString));
-
-                    int total = qty * priceInt;
-                    prepare.setInt(6, total);
-
-                    Date date = new Date();
-                    java.sql.Date sqlDate = new java.sql.Date(date.getTime());
-                    prepare.setDate(7, sqlDate);
-
-                    prepare.executeUpdate();
-                    orderDisplayTotal();
-                    customer_name.setEditable(false);
-                    customer_name.setDisable(true);
-                    orderShowListData();
-
-                }
-            }
-
-        }catch (Exception ignored){
-
-        }
-    } // Add order
     public void orderDisplayTotal(){
         String sql = "SELECT SUM(price_int) FROM customer WHERE customerName = '"
                 + customer_name.getText() + "'";
@@ -671,8 +677,7 @@ public class dashboardController implements Initializable {
             while(result.next()){
                 total = result.getInt("SUM(price_int)");
             }
-            order_total.setText("₱"+formatPrice(String.valueOf(total)));
-
+            order_totalLabel.setText("₱"+formatPrice(String.valueOf(total)));
         }catch (Exception ignored){
 
         }
@@ -692,65 +697,113 @@ public class dashboardController implements Initializable {
                 }
             }
         });
+        order_customPrice.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observableValue, String s, String t1){
+                if (!t1.matches("\\d*")) {
+                    order_customPrice.setText(t1.replaceAll("[^\\d]", ""));
+                }
+            }
+        });
     } // Only numbers allow in Price text-field
     public void clearTextField(){
         addProduct_name.setText("");
         addProduct_price.setText("");
         addProductListStatus();
     } // Clear all text-fields
-    public void logout(){
-        checkIfCurrentTableEmpty();
-        AtomicReference<Double> x = new AtomicReference<>((double) 0);
-        AtomicReference<Double> y = new AtomicReference<>((double) 0);
-        try {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+    public void logout() throws SQLException {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        if(checkIfCurrentTableEmpty() != 0) {
             alert.setTitle("Confirmation Message");
             alert.setHeaderText(null);
-            alert.setContentText("Are you sure you want to logout?");
-
-
+            alert.setContentText("This will logout and remove all the data in the table. Are you sure?");
             Optional<ButtonType> option = alert.showAndWait();
+            if (option.get().equals(ButtonType.OK)) {
+                orderResetTablewithoutAsking();
+                AtomicReference<Double> x = new AtomicReference<>((double) 0);
+                AtomicReference<Double> y = new AtomicReference<>((double) 0);
+                try {
+                    logout.getScene().getWindow().hide();
+                    FXMLLoader fxmlLoader = new FXMLLoader(main.class.getResource("login.fxml"));
+                    Stage stage = new Stage();
+                    Scene scene = new Scene(fxmlLoader.load(), 752, 551);
+                    stage.initStyle(StageStyle.UNDECORATED);
 
-            assert option.orElse(null) != null;
-            if (option.orElse(null).equals(ButtonType.OK)){
-                logout.getScene().getWindow().hide();
-                FXMLLoader fxmlLoader = new FXMLLoader(main.class.getResource("login.fxml"));
-                Stage stage = new Stage();
-                Scene scene = new Scene(fxmlLoader.load(), 752, 551);
-                stage.initStyle(StageStyle.UNDECORATED);
+                    scene.setOnMousePressed(mouseEvent -> {
+                        x.set(mouseEvent.getSceneX());
+                        y.set(mouseEvent.getSceneY());
+                        scene.setCursor(Cursor.CLOSED_HAND);
+                    });
+                    scene.setOnMouseDragged(mouseEvent -> {
+                        stage.setX(mouseEvent.getScreenX() - x.get());
+                        stage.setY(mouseEvent.getScreenY() - y.get());
+                        stage.setOpacity(.9);
+                    });
+                    scene.setOnMouseReleased(mouseEvent -> {
+                        stage.setOpacity(1);
+                        scene.setCursor(Cursor.DEFAULT);
+                    });
 
-                scene.setOnMousePressed(mouseEvent -> {
-                    x.set(mouseEvent.getSceneX());
-                    y.set(mouseEvent.getSceneY());
-                    scene.setCursor(Cursor.CLOSED_HAND);
-                });
-                scene.setOnMouseDragged(mouseEvent -> {
-                    stage.setX(mouseEvent.getScreenX() - x.get());
-                    stage.setY(mouseEvent.getScreenY() - y.get());
-                    stage.setOpacity(.9);
-                });
-                scene.setOnMouseReleased(mouseEvent -> {
-                    stage.setOpacity(1);
-                    scene.setCursor(Cursor.DEFAULT);
-                });
+                    stage.initStyle(StageStyle.TRANSPARENT);
+                    stage.setScene(scene);
+                    stage.show();
+                    Rectangle2D primScreenBounds = Screen.getPrimary().getVisualBounds();
+                    stage.setX((primScreenBounds.getWidth() - stage.getWidth()) / 2);
+                    stage.setY((primScreenBounds.getHeight() - stage.getHeight()) / 2);
+                }catch (Exception ignored){
 
-                stage.initStyle(StageStyle.TRANSPARENT);
-                stage.setScene(scene);
-                stage.show();
-                Rectangle2D primScreenBounds = Screen.getPrimary().getVisualBounds();
-                stage.setX((primScreenBounds.getWidth() - stage.getWidth()) / 2);
-                stage.setY((primScreenBounds.getHeight() - stage.getHeight()) / 2);
-            }else{
-                return;
+                }
             }
+        } else if (checkIfCurrentTableEmpty() == 0) {
+            AtomicReference<Double> x = new AtomicReference<>((double) 0);
+            AtomicReference<Double> y = new AtomicReference<>((double) 0);
+            try {
+                alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Confirmation Message");
+                alert.setHeaderText(null);
+                alert.setContentText("Are you sure you want to logout?");
+                Optional<ButtonType> option1 = alert.showAndWait();
+                assert option1.orElse(null) != null;
+                if (option1.orElse(null).equals(ButtonType.OK)){
+                    logout.getScene().getWindow().hide();
+                    FXMLLoader fxmlLoader = new FXMLLoader(main.class.getResource("login.fxml"));
+                    Stage stage = new Stage();
+                    Scene scene = new Scene(fxmlLoader.load(), 752, 551);
+                    stage.initStyle(StageStyle.UNDECORATED);
 
-        }catch (Exception ignored){
+                    scene.setOnMousePressed(mouseEvent -> {
+                        x.set(mouseEvent.getSceneX());
+                        y.set(mouseEvent.getSceneY());
+                        scene.setCursor(Cursor.CLOSED_HAND);
+                    });
+                    scene.setOnMouseDragged(mouseEvent -> {
+                        stage.setX(mouseEvent.getScreenX() - x.get());
+                        stage.setY(mouseEvent.getScreenY() - y.get());
+                        stage.setOpacity(.9);
+                    });
+                    scene.setOnMouseReleased(mouseEvent -> {
+                        stage.setOpacity(1);
+                        scene.setCursor(Cursor.DEFAULT);
+                    });
 
+                    stage.initStyle(StageStyle.TRANSPARENT);
+                    stage.setScene(scene);
+                    stage.show();
+                    Rectangle2D primScreenBounds = Screen.getPrimary().getVisualBounds();
+                    stage.setX((primScreenBounds.getWidth() - stage.getWidth()) / 2);
+                    stage.setY((primScreenBounds.getHeight() - stage.getHeight()) / 2);
+                }else{
+                    return;
+                }
+
+            }catch (Exception ignored){
+
+            }
         }
+
 
     } // Logout
     public void minimize(){
-
         Stage stage = (Stage)main_form.getScene().getWindow();
         stage.setIconified(true);
     } // Minimize
@@ -789,9 +842,27 @@ public class dashboardController implements Initializable {
         }
 
     }  // Switch between forms
-    public void close(){
-        checkIfCurrentTableEmpty();
-        System.exit(0);
+    public void close() throws SQLException {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        if(checkIfCurrentTableEmpty() != 0) {
+            alert.setTitle("Confirmation Message");
+            alert.setHeaderText(null);
+            alert.setContentText("You still have the data in the table. Are you sure you want to exit?");
+            Optional<ButtonType> option = alert.showAndWait();
+            if (option.get().equals(ButtonType.OK)) {
+                orderResetTablewithoutAsking();
+                System.exit(0);
+            }
+        }else if(checkIfCurrentTableEmpty() == 0){
+            alert.setTitle("Confirmation Message");
+            alert.setHeaderText(null);
+            alert.setContentText("Are you sure you want to exit?");
+            Optional<ButtonType> option = alert.showAndWait();
+            if (option.get().equals(ButtonType.OK)) {
+                System.exit(0);
+            }
+        }
+
     } // Close
 
 
