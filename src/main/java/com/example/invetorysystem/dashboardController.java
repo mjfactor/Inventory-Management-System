@@ -37,7 +37,6 @@ public class dashboardController implements Initializable {
     private Button addProduct_add;
 
 
-
     @FXML
     private Button addProduct_button;
 
@@ -60,8 +59,6 @@ public class dashboardController implements Initializable {
 
     @FXML
     private TableView<productData> addProduct_table;
-
-
 
 
     @FXML
@@ -113,7 +110,6 @@ public class dashboardController implements Initializable {
 
     @FXML
     private TableColumn<customerData, String> com_order_type;
-
 
 
     @FXML
@@ -215,8 +211,7 @@ public class dashboardController implements Initializable {
     Statement statement;
 
 
-
-    public void addProductsSearch(){
+    public void addProductsSearch() {
         FilteredList<productData> filteredList = new FilteredList<>(addProductList, e -> true);
         addProduct_search.textProperty().addListener((observable, oldValue, newValue) -> {
             filteredList.setPredicate(productData -> {
@@ -237,7 +232,8 @@ public class dashboardController implements Initializable {
         addProduct_table.setItems(sortedList);
 
     } // Search product
-    public void addProductsAdd(){
+
+    public void addProductsAdd() {
 
         String sql = "INSERT INTO products (productName, price, price_int, status, date)"
                 + "VALUES (?, ?, ?, ?, ?)";
@@ -247,7 +243,7 @@ public class dashboardController implements Initializable {
             if (addProduct_name.getText().isEmpty()
                     || addProduct_price.getText().isEmpty()
                     || addProduct_status.getSelectionModel().getSelectedItem() == null
-                    || Objects.equals(addProduct_status.getSelectionModel().getSelectedItem(), "Choose") ) {
+                    || Objects.equals(addProduct_status.getSelectionModel().getSelectedItem(), "Choose")) {
 
                 alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Error");
@@ -256,19 +252,19 @@ public class dashboardController implements Initializable {
                 alert.showAndWait();
             } else {
                 // Check if product already exist
-                String checkName = "SELECT productName FROM products WHERE productName = '" + addProduct_name.getText()+ "'";
+                String checkName = "SELECT productName FROM products WHERE productName = '" + addProduct_name.getText() + "'";
                 assert connect != null;
                 statement = connect.createStatement();
                 result = statement.executeQuery(checkName);
-                if(result.next()){
+                if (result.next()) {
                     alert = new Alert(Alert.AlertType.ERROR);
                     alert.setTitle("Error");
                     alert.setHeaderText(null);
-                    alert.setContentText("Product "+ addProduct_name.getText() +" already exist");
+                    alert.setContentText("Product " + addProduct_name.getText() + " already exist");
                     alert.showAndWait();
                     addProduct_name.setText("");
 
-                }else{
+                } else {
                     alert = new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Success");
                     alert.setHeaderText(null);
@@ -277,8 +273,8 @@ public class dashboardController implements Initializable {
 
                     prepare = connect.prepareStatement(sql);
                     prepare.setString(1, addProduct_name.getText());
-                    prepare.setString(2,  "₱"+formatPrice(addProduct_price.getText()));
-                    prepare.setInt( 3, Integer.parseInt(addProduct_price.getText()));
+                    prepare.setString(2, "₱" + formatPrice(addProduct_price.getText()));
+                    prepare.setInt(3, Integer.parseInt(addProduct_price.getText()));
                     prepare.setString(4, addProduct_status.getSelectionModel().getSelectedItem());
 
                     Date date = new Date();
@@ -291,17 +287,18 @@ public class dashboardController implements Initializable {
                 }
 
             }
-        }catch (Exception ignored){
+        } catch (Exception ignored) {
         }
     }  // Add product
-    public void addProductUpdate(){
-        String sql = "UPDATE products SET productName = '" + addProduct_name.getText() + "', price = '" + "₱"+formatPrice(addProduct_price.getText())+ "', price_int = '" + Integer.parseInt(addProduct_price.getText()) + "', status = '"
+
+    public void addProductUpdate() {
+        String sql = "UPDATE products SET productName = '" + addProduct_name.getText() + "', price = '" + "₱" + formatPrice(addProduct_price.getText()) + "', price_int = '" + Integer.parseInt(addProduct_price.getText()) + "', status = '"
                 + addProduct_status.getSelectionModel().getSelectedItem() + "' WHERE id = '" + productId + "'";
 
         connect = database.connectDb();
         Alert alert;
 
-        try{
+        try {
             if (addProduct_name.getText().isEmpty()
                     || addProduct_price.getText().isEmpty()
                     || addProduct_status.getSelectionModel().getSelectedItem() == null
@@ -311,14 +308,14 @@ public class dashboardController implements Initializable {
                 alert.setHeaderText(null);
                 alert.setContentText("Fill out all the blank fields");
                 alert.showAndWait();
-            }else{
+            } else {
                 alert = new Alert(Alert.AlertType.CONFIRMATION);
                 alert.setTitle("Sure?");
                 alert.setHeaderText(null);
                 alert.setContentText("Are you sure you want Update ID = " + productId);
-                Optional <ButtonType> option = alert.showAndWait();
+                Optional<ButtonType> option = alert.showAndWait();
 
-                if (option.get().equals(ButtonType.OK)){
+                if (option.get().equals(ButtonType.OK)) {
                     assert connect != null;
                     statement = connect.createStatement();
                     statement.executeUpdate(sql);
@@ -333,15 +330,16 @@ public class dashboardController implements Initializable {
                     clearTextField();
                 }
             }
-        }catch (Exception ignored){
+        } catch (Exception ignored) {
 
         }
     } // Update product
-    public void addProductDelete(){
+
+    public void addProductDelete() {
         String sql = "DELETE from products WHERE id = '" + productId + "'";
         connect = database.connectDb();
         Alert alert;
-        try{
+        try {
             if (addProduct_name.getText().isEmpty()
                     || addProduct_price.getText().isEmpty()) {
                 alert = new Alert(Alert.AlertType.ERROR);
@@ -349,13 +347,13 @@ public class dashboardController implements Initializable {
                 alert.setHeaderText(null);
                 alert.setContentText("Fill out all the blank fields");
                 alert.showAndWait();
-            }else {
+            } else {
                 alert = new Alert(Alert.AlertType.CONFIRMATION);
                 alert.setTitle("Sure?");
                 alert.setHeaderText(null);
                 alert.setContentText("Are you sure you want Delete ID = " + productId);
                 Optional<ButtonType> option = alert.showAndWait();
-                if (option.get().equals(ButtonType.OK)){
+                if (option.get().equals(ButtonType.OK)) {
                     assert connect != null;
                     statement = connect.createStatement();
                     statement.executeUpdate(sql);
@@ -369,11 +367,12 @@ public class dashboardController implements Initializable {
                     clearTextField();
                 }
             }
-        }catch (Exception ignored){
+        } catch (Exception ignored) {
 
         }
     } // Delete product
-    public ObservableList<productData> addProductsGetDataFromSQL(){
+
+    public ObservableList<productData> addProductsGetDataFromSQL() {
         ObservableList<productData> productList = FXCollections.observableArrayList();
         String sql = "SELECT * FROM products";
         connect = database.connectDb();
@@ -382,7 +381,7 @@ public class dashboardController implements Initializable {
             prepare = connect.prepareStatement(sql);
             result = prepare.executeQuery();
             productData prodD;
-            while(result.next()){
+            while (result.next()) {
                 prodD = new productData(result.getInt("id")
                         , result.getString("productName")
                         , result.getString("price")
@@ -392,12 +391,13 @@ public class dashboardController implements Initializable {
                 productList.add(prodD);
             }
 
-        }catch (Exception ignored){
+        } catch (Exception ignored) {
 
         }
         return productList;
     } // Get the data from SQL (Products)
-    public void addProductShowListData(){
+
+    public void addProductShowListData() {
         addProductList = addProductsGetDataFromSQL();
         column_addProduct_id.setCellValueFactory(new PropertyValueFactory<>("productId"));
         column_addProduct_name.setCellValueFactory(new PropertyValueFactory<>("productName"));
@@ -406,11 +406,12 @@ public class dashboardController implements Initializable {
         addProduct_table.setItems(addProductList);
 
     } // Put the data from SQL to Table (Products)
-    public void addProductsSelect(){
+
+    public void addProductsSelect() {
 
         productData prodD = addProduct_table.getSelectionModel().getSelectedItem();
         int num = addProduct_table.getSelectionModel().getSelectedIndex();
-        if((num - 1) <- 1){
+        if ((num - 1) < -1) {
             return;
         }
 
@@ -419,73 +420,74 @@ public class dashboardController implements Initializable {
         addProduct_price.setText(String.valueOf(prodD.getPrice_int()));
         addProduct_status.setValue(prodD.getStatus());
     } // if you clicked data from table, it will fill the text-fields and combobox (Products)
-    public void addProductListStatus(){
+
+    public void addProductListStatus() {
         addProduct_status.getItems().removeAll(addProduct_status.getItems());
         addProduct_status.getItems().addAll("Available", "Not Available");
         addProduct_status.getSelectionModel().select("Choose");
     } // Add the data to combobox (Status) (Products)
 
 
-    public int checkIfCurrentTableEmpty() throws SQLException {
-        String sql = "SELECT COUNT(*) FROM customer";
-        connect = database.connectDb();
-        assert connect != null;
-        prepare = connect.prepareStatement(sql);
-        result = prepare.executeQuery();
-        int count = 0;
-        while(result.next()){
-            count = result.getInt("COUNT(*)");
+    public int getQtyFromCustomer() throws SQLException {
+        String getQty = "SELECT quantity FROM customer";
+        statement = connect.createStatement();
+        result = statement.executeQuery(getQty);
+        int qty = 0;
+
+        while (result.next()) {
+            qty = result.getInt("quantity");
         }
-        return count;
-
-
-    } // Check if the table is empty (Home)
-    public void orderResetTable(){
-        String sql = "DELETE FROM customer";
-        connect = database.connectDb();
-        Alert alert;
-        try {
-            alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Sure?");
-            alert.setHeaderText(null);
-            alert.setContentText("This will remove all the data in the table. Are you sure?");
-            Optional<ButtonType> option = alert.showAndWait();
-            if (option.get().equals(ButtonType.OK)){
-                assert connect != null;
-                statement = connect.createStatement();
-                statement.executeUpdate(sql);
-                orderClear();
-                orderShowListData();
-            }else if (option.get().equals(ButtonType.CANCEL)){
-
-            }
-        }catch (Exception ignored){
-
-        }
+        return qty;
     }
-    public void orderResetTablewithoutAsking(){
-        String sql = "DELETE FROM customer";
-        connect = database.connectDb();
-        try {
-            assert connect != null;
-            statement = connect.createStatement();
-            statement.executeUpdate(sql);
-            orderClear();
-            orderShowListData();
-        }catch (Exception ignored){
+
+    public int getPriceFromCustomer() throws SQLException {
+        String getPrice = "SELECT price_int FROM customer";
+        statement = connect.createStatement();
+        result = statement.executeQuery(getPrice);
+        int price_int = 0;
+
+        while (result.next()) {
+            price_int = result.getInt("price_int");
 
         }
+        return price_int;
     }
-    public void ordersAdd(){
 
+    public int getPriceFromProducts() throws SQLException {
+        String getPrice = "SELECT price_int FROM products WHERE productName = '"
+                + order_productName.getSelectionModel().getSelectedItem() + "'";
+        statement = connect.createStatement();
+        result = statement.executeQuery(getPrice);
+        int price_int = 0;
+        while (result.next()) {
+            price_int = result.getInt("price_int");
+
+        }
+        return price_int;
+    }
+
+    public String getNameFromProductsToCompare() throws SQLException {
+        String getName = "SELECT productName FROM products WHERE productName = '"
+                + order_customName.getText() + "'";
+        statement = connect.createStatement();
+        result = statement.executeQuery(getName);
+        String name = "";
+        while (result.next()) {
+            name = result.getString("productName");
+        }
+        return name;
+    }
+
+    public void ordersAdd() {
+        int priceInt = 0;
         int qty = order_quantity.getValue();
         String sql = "INSERT INTO customer (customerName, type, productName, quantity, price, price_int, date)"
                 + "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         connect = database.connectDb();
-        try{
-            if(order_productType.getSelectionModel().getSelectedItem().equalsIgnoreCase("Pre-Made")) {
-                if(customer_name.getText().isEmpty()
+        try {
+            if (order_productType.getSelectionModel().getSelectedItem().equalsIgnoreCase("Pre-Made")) {
+                if (customer_name.getText().isEmpty()
                         || order_productName.getSelectionModel().getSelectedItem() == null
                         || order_productType.getSelectionModel().getSelectedItem() == null
                         || order_quantity.getValue() == 0) {
@@ -494,42 +496,57 @@ public class dashboardController implements Initializable {
                     alert.setHeaderText(null);
                     alert.setContentText("Fill out all the blank fields");
                     alert.showAndWait();
-                }else{
+                } else {
+                    // Put it in the same row if the product already exist
+                    String checkName = "SELECT productName FROM customer WHERE productName = '" + order_productName.getSelectionModel().getSelectedItem() + "'";
                     assert connect != null;
-                    prepare = connect.prepareStatement(sql);
-
-                    prepare.setString(1, customer_name.getText());
-                    prepare.setString(2, order_productType.getSelectionModel().getSelectedItem());
-                    prepare.setString(3, order_productName.getSelectionModel().getSelectedItem());
-                    prepare.setString(4, String.valueOf(qty));
-
-                    String checkData = "SELECT price_int FROM products WHERE productName = '"
-                            + order_productName.getSelectionModel().getSelectedItem() + "'";
                     statement = connect.createStatement();
-                    result = statement.executeQuery(checkData);
-                    int priceInt = 0;
-                    while(result.next()){
-                        priceInt = result.getInt("price_int");
+                    result = statement.executeQuery(checkName);
+                    if (result.next()) {
+                        String totalQTY = String.valueOf(getQtyFromCustomer() + qty);
+                        int totalPrice = getPriceFromCustomer() + (qty * getPriceFromProducts());
+                        String update = "UPDATE customer SET quantity = '" + totalQTY + "', price = '" + "₱" + formatPrice(String.valueOf(totalPrice)) + "', price_int = '" + totalPrice +
+                                "' WHERE customerName = '" + customer_name.getText() + "' AND productName = '" + order_productName.getSelectionModel().getSelectedItem() + "'";
+                        statement = connect.createStatement();
+                        statement.executeUpdate(update);
+                        orderShowListData();
+                        orderDisplayTotal();
+                    } else {
+                        // If product doesn't exist
+                        assert connect != null;
+                        prepare = connect.prepareStatement(sql);
+                        prepare.setString(1, customer_name.getText());
+                        prepare.setString(2, order_productType.getSelectionModel().getSelectedItem());
+                        prepare.setString(3, order_productName.getSelectionModel().getSelectedItem());
+                        prepare.setString(4, String.valueOf(qty));
+
+                        String checkData = "SELECT price_int FROM products WHERE productName = '"
+                                + order_productName.getSelectionModel().getSelectedItem() + "'";
+                        statement = connect.createStatement();
+                        result = statement.executeQuery(checkData);
+                        while (result.next()) {
+                            priceInt = result.getInt("price_int");
+                        }
+                        String priceString = String.valueOf(qty * priceInt);  // Compute the price
+                        prepare.setString(5, "₱" + formatPrice(priceString));
+
+                        int total = qty * priceInt;
+                        prepare.setInt(6, total);
+
+                        Date date = new Date();
+                        java.sql.Date sqlDate = new java.sql.Date(date.getTime());
+                        prepare.setDate(7, sqlDate);
+
+                        prepare.executeUpdate();
+                        orderDisplayTotal();
+                        customer_name.setEditable(false);
+                        customer_name.setDisable(true);
+                        orderShowListData();
                     }
-                    String priceString = String.valueOf(qty * priceInt);  // Compute the price
-                    prepare.setString(5, formatPrice(priceString));
-
-                    int total = qty * priceInt;
-                    prepare.setInt(6, total);
-
-                    Date date = new Date();
-                    java.sql.Date sqlDate = new java.sql.Date(date.getTime());
-                    prepare.setDate(7, sqlDate);
-
-                    prepare.executeUpdate();
-                    orderDisplayTotal();
-                    customer_name.setEditable(false);
-                    customer_name.setDisable(true);
-                    orderShowListData();
 
                 }
-            } else if(order_productType.getSelectionModel().getSelectedItem().equalsIgnoreCase("Customized")){
-                if(customer_name.getText().isEmpty()
+            } else if (order_productType.getSelectionModel().getSelectedItem().equalsIgnoreCase("Customized")) {
+                if (customer_name.getText().isEmpty()
                         || order_customName.getText().isEmpty()
                         || order_customPrice.getText().isEmpty()
                         || order_productType.getSelectionModel().getSelectedItem() == null
@@ -539,77 +556,79 @@ public class dashboardController implements Initializable {
                     alert.setHeaderText(null);
                     alert.setContentText("Fill out all the blank fields");
                     alert.showAndWait();
-                }else{
-                    assert connect != null;
-                    prepare = connect.prepareStatement(sql);
+                } else {
+                    // Check if product already exist
+                    if (order_customName.getText().equalsIgnoreCase(getNameFromProductsToCompare())) {
+                        Alert alert = new Alert(Alert.AlertType.ERROR);
+                        alert.setTitle("Error");
+                        alert.setHeaderText(null);
+                        alert.setContentText("Product " + order_customName.getText() + " is in the Pre-Made list");
+                        alert.showAndWait();
+                        order_customName.setText("");
+                    } else {
+                        // Put it in the same row if the product already exist
+                        String checkName = "SELECT productName FROM customer WHERE productName = '" + order_customName.getText() + "'";
+                        assert connect != null;
+                        statement = connect.createStatement();
+                        result = statement.executeQuery(checkName);
+                        if (result.next()) {
+                            String totalQTY = String.valueOf(getQtyFromCustomer() + qty);
+                            int totalPrice = getPriceFromCustomer() + (qty * Integer.parseInt(order_customPrice.getText()));
+                            String update = "UPDATE customer SET quantity = '" + totalQTY + "', price = '" + "₱" + formatPrice(String.valueOf(totalPrice)) + "', price_int = '" + totalPrice +
+                                    "' WHERE customerName = '" + customer_name.getText() + "' AND productName = '" + order_customName.getText() + "'";
+                            statement = connect.createStatement();
+                            statement.executeUpdate(update);
+                            orderShowListData();
+                            orderDisplayTotal();
+                        } else {
+                            assert connect != null;
+                            prepare = connect.prepareStatement(sql);
 
-                    prepare.setString(1, customer_name.getText());
-                    prepare.setString(2, order_productType.getSelectionModel().getSelectedItem());
-                    prepare.setString(3, order_customName.getText());
+                            prepare.setString(1, customer_name.getText());
+                            prepare.setString(2, order_productType.getSelectionModel().getSelectedItem());
+                            prepare.setString(3, order_customName.getText());
 
-                    prepare.setString(4, String.valueOf(qty));
+                            prepare.setString(4, String.valueOf(qty));
 
-                    int priceInt = Integer.parseInt(order_customPrice.getText());
+                            priceInt = Integer.parseInt(order_customPrice.getText());
 
-                    var priceString = String.valueOf(qty * priceInt);  // Compute the price
-                    prepare.setString(5, formatPrice(priceString));
+                            var priceString = String.valueOf(qty * priceInt);  // Compute the price
+                            prepare.setString(5,"₱"+formatPrice(priceString));
 
-                    int total = qty * priceInt;
-                    prepare.setInt(6, total);
+                            int total = qty * priceInt;
+                            prepare.setInt(6, total);
 
-                    Date date = new Date();
-                    java.sql.Date sqlDate = new java.sql.Date(date.getTime());
-                    prepare.setDate(7, sqlDate);
+                            Date date = new Date();
+                            java.sql.Date sqlDate = new java.sql.Date(date.getTime());
+                            prepare.setDate(7, sqlDate);
 
-                    prepare.executeUpdate();
-                    orderDisplayTotal();
-                    customer_name.setEditable(false);
-                    customer_name.setDisable(true);
-                    orderShowListData();
-
+                            prepare.executeUpdate();
+                            orderDisplayTotal();
+                            customer_name.setEditable(false);
+                            customer_name.setDisable(true);
+                            orderShowListData();
+                        }
+                    }
                 }
             }
 
-        }catch (Exception ignored){
+        } catch (Exception ignored) {
 
         }
     } // Add order
-    public void typeOfPurchased(){
-        order_productType.getItems().removeAll(order_productType.getItems());
-        order_productType.getItems().addAll("Pre-Made", "Customized");
-        order_productType.getSelectionModel().select("Pre-Made");
-    } // Add the data to combobox (Type of Purchased) (Order)
-    public void orderPreMade(){
-        String SQL = "SELECT productName FROM products WHERE status = 'Available'";
-        connect = database.connectDb();
 
-        try{
-            assert connect != null;
-            prepare = connect.prepareStatement(SQL);
-            result = prepare.executeQuery();
-
-            ObservableList<String> list = FXCollections.observableArrayList();
-
-            while(result.next()){
-                list.add(result.getString("productName"));
-            }
-            order_productName.setItems(list);
-        }catch (Exception ignored){
-
-        }
-    } // Add the data to combobox (Pre-Made) (Order)
-    public ObservableList<customerData> orderListData(){
+    public ObservableList<customerData> orderListData() {
         ObservableList<customerData> listData = FXCollections.observableArrayList();
         String sql = "SELECT * FROM customer";
         connect = database.connectDb();
 
-        try{
+        try {
             customerData customerID;
             assert connect != null;
             prepare = connect.prepareStatement(sql);
             result = prepare.executeQuery();
 
-            while(result.next()){
+            while (result.next()) {
                 customerID = new customerData
                         (result.getString("customerName")
                                 , result.getString("type")
@@ -620,24 +639,13 @@ public class dashboardController implements Initializable {
                                 , result.getDate("date"));
                 listData.add(customerID);
             }
-        }catch (Exception ignored){
+        } catch (Exception ignored) {
 
         }
         return listData;
     } // Get the data from SQL (Order)
 
-    public void orderClear(){
-        customer_name.setEditable(true);
-        customer_name.setDisable(false);
-        customer_name.setText("");
-        order_productType.getSelectionModel().select("Pre-Made");
-        order_productName.getSelectionModel().select("");
-        order_customName.setText("");
-        order_quantity.getValueFactory().setValue(1);
-        order_customPrice.setText("");
-        order_totalLabel.setText("₱0");
-    } // Reset all text-fields and combobox (Order)
-    public void orderShowListData(){
+    public void orderShowListData() {
         orderList = orderListData();
         com_order_type.setCellValueFactory(new PropertyValueFactory<>("type"));
         com_order_name.setCellValueFactory(new PropertyValueFactory<>("productName"));
@@ -645,12 +653,14 @@ public class dashboardController implements Initializable {
         com_order_price.setCellValueFactory(new PropertyValueFactory<>("price"));
         order_table.setItems(orderList);
     } // Put the data from SQL to Table (Order)
-    public void orderSet(ActionEvent e){
+
+    public void orderSet(ActionEvent e) {
         if (order_productType.getSelectionModel().getSelectedItem().equalsIgnoreCase("Pre-Made")) {
             order_customName.setVisible(false);
             order_customName.setText("");
             order_productName.setVisible(true);
             order_customPrice.setDisable(true);
+            order_customPrice.setText("");
             custom_priceLabel.setDisable(true);
         } else if (order_productType.getSelectionModel().getSelectedItem().equalsIgnoreCase("Customized")) {
             order_productName.setVisible(false);
@@ -661,34 +671,128 @@ public class dashboardController implements Initializable {
 
         }
     } // Set the visibility of text-field and combobox (Order)
-    public void orderSpinner(){
-        SpinnerValueFactory <Integer> valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 1000, 1);
-        order_quantity.setValueFactory(valueFactory);
-    } // Set the value of spinner (Order)
-    public void orderDisplayTotal(){
+
+    public void orderDisplayTotal() {
         String sql = "SELECT SUM(price_int) FROM customer WHERE customerName = '"
                 + customer_name.getText() + "'";
         connect = database.connectDb();
-        try{
+        try {
             assert connect != null;
             prepare = connect.prepareStatement(sql);
             result = prepare.executeQuery();
             int total = 0;
-            while(result.next()){
+            while (result.next()) {
                 total = result.getInt("SUM(price_int)");
             }
-            order_totalLabel.setText("₱"+formatPrice(String.valueOf(total)));
-        }catch (Exception ignored){
+            order_totalLabel.setText("₱" + formatPrice(String.valueOf(total)));
+        } catch (Exception ignored) {
 
         }
-    }
+    }  // Display the total price (Order)
+
+    public void orderResetTable() {
+        String sql = "DELETE FROM customer";
+        connect = database.connectDb();
+        Alert alert;
+        try {
+            alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Sure?");
+            alert.setHeaderText(null);
+            alert.setContentText("This will remove all the data in the table. Are you sure?");
+            Optional<ButtonType> option = alert.showAndWait();
+            if (option.get().equals(ButtonType.OK)) {
+                assert connect != null;
+                statement = connect.createStatement();
+                statement.executeUpdate(sql);
+                orderClear();
+                orderShowListData();
+            } else {
+                option.get();
+            }
+        } catch (Exception ignored) {
+
+        }
+    }  // Reset the table with yes or no (Order)
+
+    public void orderResetTableWithoutAsking() {
+        String sql = "DELETE FROM customer";
+        connect = database.connectDb();
+        try {
+            assert connect != null;
+            statement = connect.createStatement();
+            statement.executeUpdate(sql);
+            orderClear();
+            orderShowListData();
+        } catch (Exception ignored) {
+
+        }
+    }  // Reset the table without yes or no (Order)
+
+    public void typeOfPurchased() {
+        order_productType.getItems().removeAll(order_productType.getItems());
+        order_productType.getItems().addAll("Pre-Made", "Customized");
+        order_productType.getSelectionModel().select("Pre-Made");
+    } // Add the data to combobox (Type of Purchased) (Order)
+
+    public void orderPreMade() {
+        String SQL = "SELECT productName FROM products WHERE status = 'Available'";
+        connect = database.connectDb();
+
+        try {
+            assert connect != null;
+            prepare = connect.prepareStatement(SQL);
+            result = prepare.executeQuery();
+
+            ObservableList<String> list = FXCollections.observableArrayList();
+
+            while (result.next()) {
+                list.add(result.getString("productName"));
+            }
+            order_productName.setItems(list);
+        } catch (Exception ignored) {
+
+        }
+    } // Add the data to combobox (Pre-Made) (Order)
+
+    public void orderSpinner() {
+        SpinnerValueFactory<Integer> valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 1000, 1);
+        order_quantity.setValueFactory(valueFactory);
+    } // Set the value of spinner (Order)
+
+    public void orderClear() {
+        customer_name.setEditable(true);
+        customer_name.setDisable(false);
+        customer_name.setText("");
+        order_productType.getSelectionModel().select("Pre-Made");
+        order_productName.getSelectionModel().select("");
+        order_customName.setText("");
+        order_quantity.getValueFactory().setValue(1);
+        order_customPrice.setText("");
+        order_totalLabel.setText("₱0");
+    } // Reset all text-fields and combobox (Order)
 
 
-    public String formatPrice(String price){
+    public int checkIfCurrentTableEmpty() throws SQLException {
+        String sql = "SELECT COUNT(*) FROM customer";
+        connect = database.connectDb();
+        assert connect != null;
+        prepare = connect.prepareStatement(sql);
+        result = prepare.executeQuery();
+        int count = 0;
+        while (result.next()) {
+            count = result.getInt("COUNT(*)");
+        }
+        return count;
+
+
+    } // Check if the table is empty (Home)
+
+    public String formatPrice(String price) {
         long priceLong = Long.parseLong(price);
         return formatWithComma.format(priceLong);
     }
-    public void onlyNumInTextField(){
+
+    public void onlyNumInTextField() {
         addProduct_price.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observableValue, String s, String t1) {
@@ -699,27 +803,29 @@ public class dashboardController implements Initializable {
         });
         order_customPrice.textProperty().addListener(new ChangeListener<String>() {
             @Override
-            public void changed(ObservableValue<? extends String> observableValue, String s, String t1){
+            public void changed(ObservableValue<? extends String> observableValue, String s, String t1) {
                 if (!t1.matches("\\d*")) {
                     order_customPrice.setText(t1.replaceAll("[^\\d]", ""));
                 }
             }
         });
     } // Only numbers allow in Price text-field
-    public void clearTextField(){
+
+    public void clearTextField() {
         addProduct_name.setText("");
         addProduct_price.setText("");
         addProductListStatus();
     } // Clear all text-fields
+
     public void logout() throws SQLException {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        if(checkIfCurrentTableEmpty() != 0) {
+        if (checkIfCurrentTableEmpty() != 0) {
             alert.setTitle("Confirmation Message");
             alert.setHeaderText(null);
             alert.setContentText("This will logout and remove all the data in the table. Are you sure?");
             Optional<ButtonType> option = alert.showAndWait();
             if (option.get().equals(ButtonType.OK)) {
-                orderResetTablewithoutAsking();
+                orderResetTableWithoutAsking();
                 AtomicReference<Double> x = new AtomicReference<>((double) 0);
                 AtomicReference<Double> y = new AtomicReference<>((double) 0);
                 try {
@@ -750,7 +856,7 @@ public class dashboardController implements Initializable {
                     Rectangle2D primScreenBounds = Screen.getPrimary().getVisualBounds();
                     stage.setX((primScreenBounds.getWidth() - stage.getWidth()) / 2);
                     stage.setY((primScreenBounds.getHeight() - stage.getHeight()) / 2);
-                }catch (Exception ignored){
+                } catch (Exception ignored) {
 
                 }
             }
@@ -764,7 +870,7 @@ public class dashboardController implements Initializable {
                 alert.setContentText("Are you sure you want to logout?");
                 Optional<ButtonType> option1 = alert.showAndWait();
                 assert option1.orElse(null) != null;
-                if (option1.orElse(null).equals(ButtonType.OK)){
+                if (option1.orElse(null).equals(ButtonType.OK)) {
                     logout.getScene().getWindow().hide();
                     FXMLLoader fxmlLoader = new FXMLLoader(main.class.getResource("login.fxml"));
                     Stage stage = new Stage();
@@ -792,23 +898,25 @@ public class dashboardController implements Initializable {
                     Rectangle2D primScreenBounds = Screen.getPrimary().getVisualBounds();
                     stage.setX((primScreenBounds.getWidth() - stage.getWidth()) / 2);
                     stage.setY((primScreenBounds.getHeight() - stage.getHeight()) / 2);
-                }else{
+                } else {
                     return;
                 }
 
-            }catch (Exception ignored){
+            } catch (Exception ignored) {
 
             }
         }
 
 
     } // Logout
-    public void minimize(){
-        Stage stage = (Stage)main_form.getScene().getWindow();
+
+    public void minimize() {
+        Stage stage = (Stage) main_form.getScene().getWindow();
         stage.setIconified(true);
     } // Minimize
-    public void switchForm(MouseEvent event){
-        if(event.getSource() == home_btn || event.getSource() == home){
+
+    public void switchForm(MouseEvent event) {
+        if (event.getSource() == home_btn || event.getSource() == home) {
             home_form.setVisible(true);
             orders_form.setVisible(false);
             addProducts_form.setVisible(false);
@@ -816,7 +924,7 @@ public class dashboardController implements Initializable {
             orders.setStyle("-fx-background-color: transparent");
             addProducts.setStyle("-fx-background-color: transparent");
 
-        }else if(event.getSource() == addProducts_btn || event.getSource() == addProducts){
+        } else if (event.getSource() == addProducts_btn || event.getSource() == addProducts) {
             home_form.setVisible(false);
             orders_form.setVisible(false);
             addProducts_form.setVisible(true);
@@ -827,7 +935,7 @@ public class dashboardController implements Initializable {
             addProductShowListData();
             addProductListStatus();
             addProductsSearch();
-        }else if(event.getSource() == orders_btn || event.getSource() == orders){
+        } else if (event.getSource() == orders_btn || event.getSource() == orders) {
             home_form.setVisible(false);
             orders_form.setVisible(true);
             addProducts_form.setVisible(false);
@@ -842,18 +950,19 @@ public class dashboardController implements Initializable {
         }
 
     }  // Switch between forms
+
     public void close() throws SQLException {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        if(checkIfCurrentTableEmpty() != 0) {
+        if (checkIfCurrentTableEmpty() != 0) {
             alert.setTitle("Confirmation Message");
             alert.setHeaderText(null);
             alert.setContentText("You still have the data in the table. Are you sure you want to exit?");
             Optional<ButtonType> option = alert.showAndWait();
             if (option.get().equals(ButtonType.OK)) {
-                orderResetTablewithoutAsking();
+                orderResetTableWithoutAsking();
                 System.exit(0);
             }
-        }else if(checkIfCurrentTableEmpty() == 0){
+        } else if (checkIfCurrentTableEmpty() == 0) {
             alert.setTitle("Confirmation Message");
             alert.setHeaderText(null);
             alert.setContentText("Are you sure you want to exit?");
