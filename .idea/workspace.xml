@@ -6,7 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="2b1c4b3e-ed24-4a03-940c-14188ed82d64" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/invetorysystem/dashboardController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/invetorysystem/dashboardController.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -131,7 +130,8 @@
       <workItem from="1701568378879" duration="28787000" />
       <workItem from="1701655971800" duration="5907000" />
       <workItem from="1701693093377" duration="1384000" />
-      <workItem from="1701776154672" duration="7624000" />
+      <workItem from="1701776154672" duration="9031000" />
+      <workItem from="1701846968074" duration="444000" />
     </task>
     <servers />
   </component>

@@ -359,7 +359,7 @@
                                           <Font size="27.0" />
                                        </font>
                                     </Label>
-                                    <TextField fx:id="order_amount" layoutX="223.0" layoutY="467.0" prefHeight="41.0" prefWidth="162.0" styleClass="price" stylesheets="@dashboardDesign.css">
+                                    <TextField fx:id="order_amount" layoutX="223.0" layoutY="467.0" onKeyTyped="#onlyNumInTextField" prefHeight="41.0" prefWidth="162.0" styleClass="price" stylesheets="@dashboardDesign.css">
                                        <font>
                                           <Font size="15.0" />
                                        </font></TextField>
