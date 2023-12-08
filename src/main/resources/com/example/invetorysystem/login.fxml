@@ -3,6 +3,7 @@
 <?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
@@ -28,7 +29,7 @@
                         <Cursor fx:constant="HAND" />
                      </cursor>
                   </Button>
-                  <PasswordField fx:id="password" layoutX="74.0" layoutY="275.0" onAction="#loginAdmin" prefHeight="34.0" prefWidth="251.0" promptText="Password" />
+                  <PasswordField fx:id="password" layoutX="74.0" layoutY="275.0" onAction="#loginAdmin" onKeyTyped="#makePasswordDontReadSpace" prefHeight="34.0" prefWidth="251.0" promptText="Password" />
                   <Button fx:id="close" layoutX="342.0" layoutY="14.0" mnemonicParsing="false" onAction="#close" styleClass="close" stylesheets="@loginDesign.css" AnchorPane.rightAnchor="4.0" AnchorPane.topAnchor="4.0">
                      <graphic>
 
@@ -38,11 +39,8 @@
                      </graphic>
                   </Button>
                   <FontAwesomeIconView glyphName="USER" layoutX="178.0" layoutY="117.0" size="5EM" />
-                  <Button layoutX="296.0" layoutY="282.0" mnemonicParsing="false" prefHeight="16.0" prefWidth="13.0" styleClass="eye" stylesheets="@loginDesign.css">
-                     <font>
-                        <Font size="6.0" />
-                     </font>
-                  </Button>
+                  <TextField fx:id="password_show" layoutX="74.0" layoutY="275.0" prefHeight="34.0" prefWidth="251.0" visible="false" />
+                  <CheckBox fx:id="password_checkBox" layoutX="75.0" layoutY="317.0" mnemonicParsing="false" prefHeight="18.0" prefWidth="112.0" text="Show Password" />
                  
                </children>
             </AnchorPane>

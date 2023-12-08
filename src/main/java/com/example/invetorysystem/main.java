@@ -12,8 +12,6 @@ import javafx.stage.*;
 import java.io.IOException;
 
 public class main extends Application {
-
-
     double x = 0;
     double y = 0;
     @Override

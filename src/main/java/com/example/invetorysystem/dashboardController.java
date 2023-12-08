@@ -25,6 +25,7 @@ import javafx.scene.chart.AreaChart;
 import javafx.scene.chart.BarChart;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.skin.TableHeaderRow;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -252,7 +253,8 @@ public class dashboardController implements Initializable {
                 alert.showAndWait();
             } else {
                 // Check if product already exist
-                String checkName = "SELECT productName FROM products WHERE productName = '" + addProduct_name.getText() + "'";
+
+                String checkName = "SELECT * FROM products WHERE productName LIKE '" + addProduct_name.getText() + "%"+ "'";
                 assert connect != null;
                 statement = connect.createStatement();
                 result = statement.executeQuery(checkName);
@@ -289,6 +291,7 @@ public class dashboardController implements Initializable {
             }
         } catch (Exception ignored) {
         }
+
     }  // Add product
 
     public void addProductUpdate() {
@@ -336,6 +339,7 @@ public class dashboardController implements Initializable {
     } // Update product
 
     public void addProductDelete() {
+
         String sql = "DELETE from products WHERE id = '" + productId + "'";
         connect = database.connectDb();
         Alert alert;
@@ -345,7 +349,7 @@ public class dashboardController implements Initializable {
                 alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Error");
                 alert.setHeaderText(null);
-                alert.setContentText("Fill out all the blank fields");
+                alert.setContentText("Click on the table to delete");
                 alert.showAndWait();
             } else {
                 alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -371,7 +375,16 @@ public class dashboardController implements Initializable {
 
         }
     } // Delete product
-
+    public void makeTableNotReOrderable() {
+        addProduct_table.skinProperty().addListener((obs, oldSkin, newSkin) -> {
+            final TableHeaderRow header = (TableHeaderRow) addProduct_table.lookup("TableHeaderRow");
+            header.reorderingProperty().addListener((o, oldVal, newVal) -> header.setReordering(false));
+        });
+        order_table.skinProperty().addListener((obs, oldSkin, newSkin) -> {
+            final TableHeaderRow header = (TableHeaderRow) order_table.lookup("TableHeaderRow");
+            header.reorderingProperty().addListener((o, oldVal, newVal) -> header.setReordering(false));
+        });
+    } // Make the table not reorder able (Products)
     public ObservableList<productData> addProductsGetDataFromSQL() {
         ObservableList<productData> productList = FXCollections.observableArrayList();
         String sql = "SELECT * FROM products";
@@ -809,6 +822,15 @@ public class dashboardController implements Initializable {
                 }
             }
         });
+        order_amount.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observableValue, String s, String t1) {
+                if (!t1.matches("\\d*")) {
+                    order_amount.setText(t1.replaceAll("[^\\d]", ""));
+                }
+            }
+        });
+
     } // Only numbers allow in Price text-field
 
     public void clearTextField() {
@@ -984,6 +1006,9 @@ public class dashboardController implements Initializable {
         orderSpinner(); // Set the value of spinner (Order)
         orderShowListData(); // Put the data from SQL to Table (Order)
         orderDisplayTotal(); // Display the total price (Order)
+        makeTableNotReOrderable();
+
+
 
     } // Initialize
 }

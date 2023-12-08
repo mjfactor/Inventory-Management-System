@@ -6,6 +6,11 @@
   <component name="ChangeListManager">
     <list default="true" id="2b1c4b3e-ed24-4a03-940c-14188ed82d64" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/invetorysystem/dashboardController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/invetorysystem/dashboardController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/invetorysystem/loginController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/invetorysystem/loginController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/invetorysystem/main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/invetorysystem/main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/com/example/invetorysystem/dashboard.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/example/invetorysystem/dashboard.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/com/example/invetorysystem/login.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/example/invetorysystem/login.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -55,7 +60,7 @@
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
     &quot;jdk.selected.JAVA_MODULE&quot;: &quot;21&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/Java/INTELIj projects/inventory/JAR FILES/ojdbc11.jar&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/emjay/Downloads/PROJECTS/INTELEJI Projects/invetory-system&quot;,
     &quot;list.type.of.created.stylesheet&quot;: &quot;CSS&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
@@ -131,12 +136,29 @@
       <workItem from="1701655971800" duration="5907000" />
       <workItem from="1701693093377" duration="1384000" />
       <workItem from="1701776154672" duration="9031000" />
-      <workItem from="1701846968074" duration="444000" />
+      <workItem from="1701846968074" duration="984000" />
+      <workItem from="1701847994850" duration="70000" />
+      <workItem from="1701848081047" duration="135000" />
+      <workItem from="1701850867238" duration="476000" />
+      <workItem from="1701855592030" duration="32000" />
+      <workItem from="1701961181638" duration="2581000" />
+      <workItem from="1702009441194" duration="7566000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
