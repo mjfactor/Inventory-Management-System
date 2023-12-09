@@ -441,55 +441,7 @@ public class dashboardController implements Initializable {
     } // Add the data to combobox (Status) (Products)
 
 
-    public int getQtyFromCustomer() throws SQLException {
-        String getQty = "SELECT quantity FROM customer";
-        statement = connect.createStatement();
-        result = statement.executeQuery(getQty);
-        int qty = 0;
 
-        while (result.next()) {
-            qty = result.getInt("quantity");
-        }
-        return qty;
-    }
-
-    public int getPriceFromCustomer() throws SQLException {
-        String getPrice = "SELECT price_int FROM customer";
-        statement = connect.createStatement();
-        result = statement.executeQuery(getPrice);
-        int price_int = 0;
-
-        while (result.next()) {
-            price_int = result.getInt("price_int");
-
-        }
-        return price_int;
-    }
-
-    public int getPriceFromProducts() throws SQLException {
-        String getPrice = "SELECT price_int FROM products WHERE productName = '"
-                + order_productName.getSelectionModel().getSelectedItem() + "'";
-        statement = connect.createStatement();
-        result = statement.executeQuery(getPrice);
-        int price_int = 0;
-        while (result.next()) {
-            price_int = result.getInt("price_int");
-
-        }
-        return price_int;
-    }
-
-    public String getNameFromProductsToCompare() throws SQLException {
-        String getName = "SELECT productName FROM products WHERE productName = '"
-                + order_customName.getText() + "'";
-        statement = connect.createStatement();
-        result = statement.executeQuery(getName);
-        String name = "";
-        while (result.next()) {
-            name = result.getString("productName");
-        }
-        return name;
-    }
 
     public void ordersAdd() {
         int priceInt = 0;
@@ -685,7 +637,7 @@ public class dashboardController implements Initializable {
         }
     } // Set the visibility of text-field and combobox (Order)
 
-    public void orderDisplayTotal() {
+    public String orderDisplayTotal() {
         String sql = "SELECT SUM(price_int) FROM customer WHERE customerName = '"
                 + customer_name.getText() + "'";
         connect = database.connectDb();
@@ -698,9 +650,12 @@ public class dashboardController implements Initializable {
                 total = result.getInt("SUM(price_int)");
             }
             order_totalLabel.setText("₱" + formatPrice(String.valueOf(total)));
+
         } catch (Exception ignored) {
 
         }
+
+        return order_totalLabel.getText();
     }  // Display the total price (Order)
 
     public void orderResetTable() {
@@ -782,9 +737,103 @@ public class dashboardController implements Initializable {
         order_quantity.getValueFactory().setValue(1);
         order_customPrice.setText("");
         order_totalLabel.setText("₱0");
+        order_amount.setText("");
     } // Reset all text-fields and combobox (Order)
 
+    public void pay(){
+        String sql = "INSERT INTO customer_receipt (customer_name, paid, total, total_int, date)"
+                + "VALUES (?, ?, ?, ?, ?)";
+        connect = database.connectDb();
+        Alert alert;
+        try {
+            if (order_amount.getText().isEmpty()) {
+                alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setHeaderText(null);
+                alert.setContentText("Enter the amount");
+                alert.showAndWait();
+            } else {
+                alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Sure?");
+                alert.setHeaderText(null);
+                alert.setContentText("Are you sure you want this to process?");
+                Optional<ButtonType> option = alert.showAndWait();
+                if (option.get().equals(ButtonType.OK)) {
 
+                    assert connect != null;
+                    prepare = connect.prepareStatement(sql);
+                    prepare.setString(1, customer_name.getText());
+                    prepare.setString(2, "₱" + formatPrice(order_amount.getText()));
+                    prepare.setString(3, order_totalLabel.getText());
+                    prepare.setInt(4, Integer.parseInt(order_totalLabel.getText().substring(1).replaceAll(",", "")));
+
+                    Date date = new Date();
+                    java.sql.Date sqlDate = new java.sql.Date(date.getTime());
+                    prepare.setDate(5, sqlDate);
+
+                    prepare.executeUpdate();
+                    orderResetTableWithoutAsking();
+                    orderClear();
+                    orderShowListData();
+                    orderDisplayTotal();
+                }
+            }
+        } catch (Exception ignored) {
+
+        }
+    }
+
+
+
+    public int getQtyFromCustomer() throws SQLException {
+        String getQty = "SELECT quantity FROM customer";
+        statement = connect.createStatement();
+        result = statement.executeQuery(getQty);
+        int qty = 0;
+
+        while (result.next()) {
+            qty = result.getInt("quantity");
+        }
+        return qty;
+    }
+
+    public int getPriceFromCustomer() throws SQLException {
+        String getPrice = "SELECT price_int FROM customer";
+        statement = connect.createStatement();
+        result = statement.executeQuery(getPrice);
+        int price_int = 0;
+
+        while (result.next()) {
+            price_int = result.getInt("price_int");
+
+        }
+        return price_int;
+    }
+
+    public int getPriceFromProducts() throws SQLException {
+        String getPrice = "SELECT price_int FROM products WHERE productName = '"
+                + order_productName.getSelectionModel().getSelectedItem() + "'";
+        statement = connect.createStatement();
+        result = statement.executeQuery(getPrice);
+        int price_int = 0;
+        while (result.next()) {
+            price_int = result.getInt("price_int");
+
+        }
+        return price_int;
+    }
+
+    public String getNameFromProductsToCompare() throws SQLException {
+        String getName = "SELECT productName FROM products WHERE productName = '"
+                + order_customName.getText() + "'";
+        statement = connect.createStatement();
+        result = statement.executeQuery(getName);
+        String name = "";
+        while (result.next()) {
+            name = result.getString("productName");
+        }
+        return name;
+    }
     public int checkIfCurrentTableEmpty() throws SQLException {
         String sql = "SELECT COUNT(*) FROM customer";
         connect = database.connectDb();

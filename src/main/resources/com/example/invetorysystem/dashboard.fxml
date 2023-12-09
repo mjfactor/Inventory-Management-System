@@ -373,7 +373,7 @@
                                           <Font size="17.0" />
                                        </font>
                                     </Button>
-                                    <Button fx:id="order_payBtn" layoutX="251.0" layoutY="625.0" mnemonicParsing="false" prefHeight="48.0" prefWidth="119.0" text="Pay">
+                                    <Button fx:id="order_payBtn" layoutX="251.0" layoutY="625.0" mnemonicParsing="false" onAction="#pay" prefHeight="48.0" prefWidth="119.0" text="Pay">
                                        <font>
                                           <Font size="17.0" />
                                        </font>

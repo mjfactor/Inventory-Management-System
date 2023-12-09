@@ -114,7 +114,6 @@ public class loginController implements Initializable {
     }
     public void loginWhenEnterIsPressed(){
         login_button.defaultButtonProperty().bind(new SimpleBooleanProperty(true));
-
     }
 
     // Exit Button
