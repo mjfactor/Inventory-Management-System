@@ -5,9 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2b1c4b3e-ed24-4a03-940c-14188ed82d64" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/invetorysystem/dashboardController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/invetorysystem/dashboardController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/invetorysystem/loginController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/invetorysystem/loginController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/com/example/invetorysystem/dashboard.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/example/invetorysystem/dashboard.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -142,6 +142,9 @@
       <workItem from="1701961181638" duration="2581000" />
       <workItem from="1702009441194" duration="7998000" />
       <workItem from="1702102429500" duration="4454000" />
+      <workItem from="1702180426905" duration="6372000" />
+      <workItem from="1702196443018" duration="6992000" />
+      <workItem from="1702206772728" duration="994000" />
     </task>
     <servers />
   </component>

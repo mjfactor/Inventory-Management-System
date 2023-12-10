@@ -178,6 +178,8 @@ public class dashboardController implements Initializable {
 
     @FXML
     private Label order_totalLabel;
+    @FXML
+    private Label order_change;
 
     @FXML
     private AnchorPane orders;
@@ -375,16 +377,7 @@ public class dashboardController implements Initializable {
 
         }
     } // Delete product
-    public void makeTableNotReOrderable() {
-        addProduct_table.skinProperty().addListener((obs, oldSkin, newSkin) -> {
-            final TableHeaderRow header = (TableHeaderRow) addProduct_table.lookup("TableHeaderRow");
-            header.reorderingProperty().addListener((o, oldVal, newVal) -> header.setReordering(false));
-        });
-        order_table.skinProperty().addListener((obs, oldSkin, newSkin) -> {
-            final TableHeaderRow header = (TableHeaderRow) order_table.lookup("TableHeaderRow");
-            header.reorderingProperty().addListener((o, oldVal, newVal) -> header.setReordering(false));
-        });
-    } // Make the table not reorder able (Products)
+
     public ObservableList<productData> addProductsGetDataFromSQL() {
         ObservableList<productData> productList = FXCollections.observableArrayList();
         String sql = "SELECT * FROM products";
@@ -576,6 +569,7 @@ public class dashboardController implements Initializable {
                     }
                 }
             }
+            ifTotalIsZero();
 
         } catch (Exception ignored) {
 
@@ -673,10 +667,13 @@ public class dashboardController implements Initializable {
                 statement = connect.createStatement();
                 statement.executeUpdate(sql);
                 orderClear();
+                ifTotalIsZero();
                 orderShowListData();
             } else {
                 option.get();
             }
+
+
         } catch (Exception ignored) {
 
         }
@@ -726,7 +723,6 @@ public class dashboardController implements Initializable {
         SpinnerValueFactory<Integer> valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 1000, 1);
         order_quantity.setValueFactory(valueFactory);
     } // Set the value of spinner (Order)
-
     public void orderClear() {
         customer_name.setEditable(true);
         customer_name.setDisable(false);
@@ -738,11 +734,44 @@ public class dashboardController implements Initializable {
         order_customPrice.setText("");
         order_totalLabel.setText("₱0");
         order_amount.setText("");
-    } // Reset all text-fields and combobox (Order)
 
-    public void pay(){
-        String sql = "INSERT INTO customer_receipt (customer_name, paid, total, total_int, date)"
-                + "VALUES (?, ?, ?, ?, ?)";
+        ifTotalIsZero();
+    } // Reset all text-fields and combobox (Order)
+    public void ifTotalIsZero(){
+        if (order_totalLabel.getText().equalsIgnoreCase("₱0")){
+            order_amount.setDisable(true);
+            order_payBtn.setDisable(true);
+        }else if (!order_totalLabel.getText().equalsIgnoreCase("₱0")){
+            order_amount.setDisable(false);
+            order_payBtn.setDisable(false);
+        }
+    } // If the total is zero, disable the pay button (Order)
+    public void calculateBalanceAndChange(){
+        int balance = 0;
+        int change = 0;
+        if (order_amount.getText().isEmpty()){
+            order_balanceLabel.setText("₱0");
+        }else{
+            int total = Integer.parseInt(order_totalLabel.getText().substring(1).replaceAll(",", ""));
+            int amount = Integer.parseInt(order_amount.getText());
+            balance = total - amount;
+            change = amount - total;
+            if (balance < 0 ) { // If the balance is negative, it will display the change
+                order_balanceLabel.setText("₱0");
+            }else{
+                order_balanceLabel.setText("₱" + formatPrice(String.valueOf(balance)));
+            }
+            if (change < 0){ // If the change is negative, it will display the balance
+                order_change.setText("₱0");
+            }else{
+                order_change.setText("₱" + formatPrice(String.valueOf(change)));
+            }
+
+        }
+    } // Calculate the balance (Order)
+    public void orderPay(){
+        String sql = "INSERT INTO customer_receipt (customer_name, total, paid, balance, total_int, balance_int,    date)"
+                + "VALUES (?, ?, ?, ?, ?, ?, ?)";
         connect = database.connectDb();
         Alert alert;
         try {
@@ -763,28 +792,43 @@ public class dashboardController implements Initializable {
                     assert connect != null;
                     prepare = connect.prepareStatement(sql);
                     prepare.setString(1, customer_name.getText());
-                    prepare.setString(2, "₱" + formatPrice(order_amount.getText()));
-                    prepare.setString(3, order_totalLabel.getText());
-                    prepare.setInt(4, Integer.parseInt(order_totalLabel.getText().substring(1).replaceAll(",", "")));
+                    prepare.setString(2, order_totalLabel.getText());
+                    prepare.setString(3, "₱" + formatPrice(order_amount.getText()));
+                    prepare.setString(4, order_balanceLabel.getText());
+                    prepare.setInt(5, Integer.parseInt(order_totalLabel.getText().substring(1).replaceAll(",", "")));
+                    prepare.setInt(6, Integer.parseInt(order_balanceLabel.getText().substring(1).replaceAll(",", "")));
 
                     Date date = new Date();
                     java.sql.Date sqlDate = new java.sql.Date(date.getTime());
-                    prepare.setDate(5, sqlDate);
+                    prepare.setDate(7, sqlDate);
 
                     prepare.executeUpdate();
                     orderResetTableWithoutAsking();
                     orderClear();
                     orderShowListData();
                     orderDisplayTotal();
+
                 }
             }
+
+
         } catch (Exception ignored) {
 
         }
-    }
+
+    } // Pay the order (Order)
 
 
-
+    public void makeTableNotReOrder() {
+        addProduct_table.skinProperty().addListener((obs, oldSkin, newSkin) -> {
+            final TableHeaderRow header = (TableHeaderRow) addProduct_table.lookup("TableHeaderRow");
+            header.reorderingProperty().addListener((o, oldVal, newVal) -> header.setReordering(false));
+        });
+        order_table.skinProperty().addListener((obs, oldSkin, newSkin) -> {
+            final TableHeaderRow header = (TableHeaderRow) order_table.lookup("TableHeaderRow");
+            header.reorderingProperty().addListener((o, oldVal, newVal) -> header.setReordering(false));
+        });
+    } // Make the table not reorder able (Products) (Order)
     public int getQtyFromCustomer() throws SQLException {
         String getQty = "SELECT quantity FROM customer";
         statement = connect.createStatement();
@@ -796,7 +840,6 @@ public class dashboardController implements Initializable {
         }
         return qty;
     }
-
     public int getPriceFromCustomer() throws SQLException {
         String getPrice = "SELECT price_int FROM customer";
         statement = connect.createStatement();
@@ -809,7 +852,6 @@ public class dashboardController implements Initializable {
         }
         return price_int;
     }
-
     public int getPriceFromProducts() throws SQLException {
         String getPrice = "SELECT price_int FROM products WHERE productName = '"
                 + order_productName.getSelectionModel().getSelectedItem() + "'";
@@ -822,7 +864,6 @@ public class dashboardController implements Initializable {
         }
         return price_int;
     }
-
     public String getNameFromProductsToCompare() throws SQLException {
         String getName = "SELECT productName FROM products WHERE productName = '"
                 + order_customName.getText() + "'";
@@ -848,12 +889,10 @@ public class dashboardController implements Initializable {
 
 
     } // Check if the table is empty (Home)
-
     public String formatPrice(String price) {
         long priceLong = Long.parseLong(price);
         return formatWithComma.format(priceLong);
     }
-
     public void onlyNumInTextField() {
         addProduct_price.textProperty().addListener(new ChangeListener<String>() {
             @Override
@@ -880,14 +919,13 @@ public class dashboardController implements Initializable {
             }
         });
 
-    } // Only numbers allow in Price text-field
 
+    } // Only numbers allow in Price text-field
     public void clearTextField() {
         addProduct_name.setText("");
         addProduct_price.setText("");
         addProductListStatus();
     } // Clear all text-fields
-
     public void logout() throws SQLException {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         if (checkIfCurrentTableEmpty() != 0) {
@@ -980,12 +1018,10 @@ public class dashboardController implements Initializable {
 
 
     } // Logout
-
     public void minimize() {
         Stage stage = (Stage) main_form.getScene().getWindow();
         stage.setIconified(true);
     } // Minimize
-
     public void switchForm(MouseEvent event) {
         if (event.getSource() == home_btn || event.getSource() == home) {
             home_form.setVisible(true);
@@ -1021,7 +1057,6 @@ public class dashboardController implements Initializable {
         }
 
     }  // Switch between forms
-
     public void close() throws SQLException {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         if (checkIfCurrentTableEmpty() != 0) {
@@ -1055,8 +1090,16 @@ public class dashboardController implements Initializable {
         orderSpinner(); // Set the value of spinner (Order)
         orderShowListData(); // Put the data from SQL to Table (Order)
         orderDisplayTotal(); // Display the total price (Order)
-        makeTableNotReOrderable();
+        makeTableNotReOrder(); // Make the table not reorder able (Products) (Order)
+        onlyNumInTextField(); // Only numbers allow in Price text-field
+        ifTotalIsZero(); // If total is zero, disable the pay button and amount text-field
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+            @Override
+            public void run() {
+                orderResetTableWithoutAsking();
 
+            }
+        });
 
 
     } // Initialize
