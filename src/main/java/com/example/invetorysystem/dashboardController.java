@@ -575,7 +575,6 @@ public class dashboardController implements Initializable {
 
         }
     } // Add order
-
     public ObservableList<customerData> orderListData() {
         ObservableList<customerData> listData = FXCollections.observableArrayList();
         String sql = "SELECT * FROM customer";
@@ -603,7 +602,6 @@ public class dashboardController implements Initializable {
         }
         return listData;
     } // Get the data from SQL (Order)
-
     public void orderShowListData() {
         orderList = orderListData();
         com_order_type.setCellValueFactory(new PropertyValueFactory<>("type"));
@@ -612,7 +610,6 @@ public class dashboardController implements Initializable {
         com_order_price.setCellValueFactory(new PropertyValueFactory<>("price"));
         order_table.setItems(orderList);
     } // Put the data from SQL to Table (Order)
-
     public void orderSet(ActionEvent e) {
         if (order_productType.getSelectionModel().getSelectedItem().equalsIgnoreCase("Pre-Made")) {
             order_customName.setVisible(false);
@@ -630,7 +627,6 @@ public class dashboardController implements Initializable {
 
         }
     } // Set the visibility of text-field and combobox (Order)
-
     public String orderDisplayTotal() {
         String sql = "SELECT SUM(price_int) FROM customer WHERE customerName = '"
                 + customer_name.getText() + "'";
@@ -651,7 +647,6 @@ public class dashboardController implements Initializable {
 
         return order_totalLabel.getText();
     }  // Display the total price (Order)
-
     public void orderResetTable() {
         String sql = "DELETE FROM customer";
         connect = database.connectDb();
@@ -678,7 +673,6 @@ public class dashboardController implements Initializable {
 
         }
     }  // Reset the table with yes or no (Order)
-
     public void orderResetTableWithoutAsking() {
         String sql = "DELETE FROM customer";
         connect = database.connectDb();
@@ -692,13 +686,11 @@ public class dashboardController implements Initializable {
 
         }
     }  // Reset the table without yes or no (Order)
-
     public void typeOfPurchased() {
         order_productType.getItems().removeAll(order_productType.getItems());
         order_productType.getItems().addAll("Pre-Made", "Customized");
         order_productType.getSelectionModel().select("Pre-Made");
     } // Add the data to combobox (Type of Purchased) (Order)
-
     public void orderPreMade() {
         String SQL = "SELECT productName FROM products WHERE status = 'Available'";
         connect = database.connectDb();
@@ -718,7 +710,6 @@ public class dashboardController implements Initializable {
 
         }
     } // Add the data to combobox (Pre-Made) (Order)
-
     public void orderSpinner() {
         SpinnerValueFactory<Integer> valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 1000, 1);
         order_quantity.setValueFactory(valueFactory);
