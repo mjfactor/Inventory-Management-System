@@ -26,7 +26,6 @@ import javafx.scene.chart.BarChart;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.skin.TableHeaderRow;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Screen;
@@ -36,15 +35,11 @@ import javafx.stage.StageStyle;
 public class dashboardController implements Initializable {
     @FXML
     private Button addProduct_add;
-
-
     @FXML
     private Button addProduct_button;
 
     @FXML
     private Button addProduct_delete;
-    @FXML
-    private ImageView addProduct_image;
 
     @FXML
     private TextField addProduct_name;
@@ -60,7 +55,6 @@ public class dashboardController implements Initializable {
 
     @FXML
     private TableView<productData> addProduct_table;
-
 
     @FXML
     private ComboBox<String> addProduct_status;
@@ -111,20 +105,53 @@ public class dashboardController implements Initializable {
 
     @FXML
     private TableColumn<customerData, String> com_order_type;
+    @FXML
+    private TableColumn <historyData, String> history_column_costumerName;
+    @FXML
+    private TableColumn <historyData, String> history_column_total;
+    @FXML
+    private TableColumn <historyData, String> history_column_paid;
+    @FXML
+    private TableColumn <historyData, String> history_column_change;
+    @FXML
+    private TableColumn <historyData, Date> history_column_date;
+    @FXML
+    private TableColumn <historyData, Integer> history_column_transactionNumber;
+    @FXML
+    private TableView<historyData> history_fullyPaidTable;
+    @FXML
+    private TableView<historyData> history_withBalanceTable;
+    @FXML
+    private TableColumn<historyData, Integer> history_withBalance_column_transactionNumber;
+    @FXML
+    private TableColumn<historyData, String> history_withBalance_column_balance;
 
+    @FXML
+    private TableColumn<historyData, String> history_withBalance_column_costumerName;
+
+    @FXML
+    private TableColumn<historyData, Date> history_withBalance_column_date;
+
+    @FXML
+    private TableColumn<historyData, String> history_withBalance_column_paid;
+
+    @FXML
+    private TableColumn<historyData, String> history_withBalance_column_total;
 
     @FXML
     private AnchorPane home;
-
     @FXML
     private Label home_availableProducts;
 
     @FXML
     private Button home_btn;
+    @FXML
+    private Button history_btn;
 
     @FXML
     private AnchorPane home_form;
-
+    @FXML
+    private AnchorPane history;
     @FXML
     private AreaChart<?, ?> home_incomedataChart;
 
@@ -180,38 +207,39 @@ public class dashboardController implements Initializable {
     private Label order_totalLabel;
     @FXML
     private Label order_change;
-
     @FXML
     private AnchorPane orders;
-
     @FXML
     private Button orders_btn;
-
-
     @FXML
     private Button orders_clear;
     @FXML
     private Button orders_reset;
-
     @FXML
     private AnchorPane orders_form;
+    @FXML
+    private AnchorPane history_form;
     @FXML
     private TextField order_customName;
     @FXML
     private TextField order_customPrice;
     @FXML
     private Button order_addBtn;
-
+    @FXML
+    private CheckBox history_fullyPaid;
+    @FXML
+    private CheckBox history_notFullyPaid;
     NumberFormat formatWithComma = NumberFormat.getNumberInstance(Locale.US);
-
-
     public int productId;
     private ObservableList<productData> addProductList;
-    private ObservableList<customerData> orderList;
+    private ObservableList<historyData> historyWithBalanceList;
     Connection connect;
     PreparedStatement prepare;
     ResultSet result;
     Statement statement;
+
+    public dashboardController() {
+    }
 
 
     public void addProductsSearch() {
@@ -600,14 +628,16 @@ public class dashboardController implements Initializable {
         } catch (Exception ignored) {
 
         }
+
         return listData;
     } // Get the data from SQL (Order)
     public void orderShowListData() {
-        orderList = orderListData();
+        ObservableList<customerData> orderList = orderListData();
         com_order_type.setCellValueFactory(new PropertyValueFactory<>("type"));
         com_order_name.setCellValueFactory(new PropertyValueFactory<>("productName"));
         com_order_quantity.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         com_order_price.setCellValueFactory(new PropertyValueFactory<>("price"));
+
         order_table.setItems(orderList);
     } // Put the data from SQL to Table (Order)
     public void orderSet(ActionEvent e) {
@@ -737,6 +767,7 @@ public class dashboardController implements Initializable {
             order_payBtn.setDisable(false);
         }
     } // If the total is zero, disable the pay button (Order)
+
     public void calculateBalanceAndChange(){
         int balance = 0;
         int change = 0;
@@ -761,8 +792,8 @@ public class dashboardController implements Initializable {
         }
     } // Calculate the balance (Order)
     public void orderPay(){
-        String sql = "INSERT INTO customer_receipt (customer_name, total, paid, balance, total_int, balance_int,    date)"
-                + "VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO customer_receipt (customer_name, total, paid, change_string, balance, total_int, balance_int, change_int, date)"
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         connect = database.connectDb();
         Alert alert;
         try {
@@ -785,13 +816,14 @@ public class dashboardController implements Initializable {
                     prepare.setString(1, customer_name.getText());
                     prepare.setString(2, order_totalLabel.getText());
                     prepare.setString(3, "₱" + formatPrice(order_amount.getText()));
-                    prepare.setString(4, order_balanceLabel.getText());
-                    prepare.setInt(5, Integer.parseInt(order_totalLabel.getText().substring(1).replaceAll(",", "")));
-                    prepare.setInt(6, Integer.parseInt(order_balanceLabel.getText().substring(1).replaceAll(",", "")));
-
+                    prepare.setString(4, order_change.getText());
+                    prepare.setString(5, order_balanceLabel.getText());
+                    prepare.setInt(6, Integer.parseInt(order_totalLabel.getText().substring(1).replaceAll(",", "")));
+                    prepare.setInt(7, Integer.parseInt(order_balanceLabel.getText().substring(1).replaceAll(",", "")));
+                    prepare.setInt(8, Integer.parseInt(order_change.getText().substring(1).replaceAll(",", "")));
                     Date date = new Date();
                     java.sql.Date sqlDate = new java.sql.Date(date.getTime());
-                    prepare.setDate(7, sqlDate);
+                    prepare.setDate(9, sqlDate);
 
                     prepare.executeUpdate();
                     orderResetTableWithoutAsking();
@@ -808,6 +840,105 @@ public class dashboardController implements Initializable {
         }
 
     } // Pay the order (Order)
+
+
+
+    public void historyFullyPaid(){
+        if (history_fullyPaid.isSelected()) {
+            history_notFullyPaid.setSelected(false);
+            history_fullyPaidTable.setVisible(true);
+            history_withBalanceTable.setVisible(false);
+        }
+    }
+    public void historyNotFullyPaid(){
+        if (history_notFullyPaid.isSelected()) {
+            history_fullyPaid.setSelected(false);
+            history_withBalanceTable.setVisible(true);
+            history_fullyPaidTable.setVisible(false);
+        }
+    }
+    public ObservableList<historyData> historyNoBalanceList() {
+        ObservableList<historyData> listData = FXCollections.observableArrayList();
+        String sql = "SELECT * FROM customer_receipt WHERE balance_int = 0";
+        connect = database.connectDb();
+
+        try {
+            historyData historyID;
+            assert connect != null;
+            prepare = connect.prepareStatement(sql);
+            result = prepare.executeQuery();
+
+            while (result.next()) {
+                historyID = new historyData
+                        (result.getInt("transaction_id"),
+                                result.getString("customer_name")
+                                , result.getString("total")
+                                , result.getString("paid")
+                                , result.getString("change_string")
+                                , result.getString("balance")
+                                , result.getInt("total_int")
+                                , result.getInt("balance_int")
+                                , result.getInt("change_int")
+                                , result.getDate("date"));
+                listData.add(historyID);
+            }
+        } catch (Exception ignored) {
+
+        }
+        return listData;
+    } // Get the data from SQL (History)
+    public ObservableList<historyData> historyWithBalanceList() {
+        ObservableList<historyData> listData = FXCollections.observableArrayList();
+        String sql = "SELECT * FROM customer_receipt WHERE balance_int != 0";
+        connect = database.connectDb();
+        try {
+            historyData historyID;
+            assert connect != null;
+            prepare = connect.prepareStatement(sql);
+            result = prepare.executeQuery();
+
+            while (result.next()) {
+                historyID = new historyData
+                        (result.getInt("transaction_id"),
+                                result.getString("customer_name")
+                                , result.getString("total")
+                                , result.getString("paid")
+                                , result.getString("change_string")
+                                , result.getString("balance")
+                                , result.getInt("total_int")
+                                , result.getInt("balance_int")
+                                , result.getInt("change_int")
+                                , result.getDate("date"));
+                listData.add(historyID);
+            }
+        } catch (Exception ignored) {
+
+        }
+        return listData;
+    } // Get the data from SQL (History)
+    public void historyShowNoBalanceData() {
+        ObservableList<historyData> historyFullyPaidList = historyNoBalanceList();
+        history_column_transactionNumber.setCellValueFactory(new PropertyValueFactory<>("transaction_id"));
+        history_column_costumerName.setCellValueFactory(new PropertyValueFactory<>("customer_name"));
+        history_column_total.setCellValueFactory(new PropertyValueFactory<>("total"));
+        history_column_paid.setCellValueFactory(new PropertyValueFactory<>("paid"));
+        history_column_change.setCellValueFactory(new PropertyValueFactory<>("change_string"));
+        history_column_date.setCellValueFactory(new PropertyValueFactory<>("date"));
+        history_fullyPaidTable.setItems(historyFullyPaidList);
+    } // Put the data from SQL with no balance to Table (History)
+    public void historyShowWithBalanceData() {
+        ObservableList<historyData> historyWithBalanceList = historyWithBalanceList();
+        history_withBalance_column_transactionNumber.setCellValueFactory(new PropertyValueFactory<>("transaction_id"));
+        history_withBalance_column_costumerName.setCellValueFactory(new PropertyValueFactory<>("customer_name"));
+        history_withBalance_column_total.setCellValueFactory(new PropertyValueFactory<>("total"));
+        history_withBalance_column_paid.setCellValueFactory(new PropertyValueFactory<>("paid"));
+        history_withBalance_column_balance.setCellValueFactory(new PropertyValueFactory<>("balance"));
+        history_withBalance_column_date.setCellValueFactory(new PropertyValueFactory<>("date"));
+        history_withBalanceTable.setItems(historyWithBalanceList);
+    } // Put the data from SQL with balance to Table (History)
+
+
+
 
 
     public void makeTableNotReOrder() {
@@ -909,8 +1040,7 @@ public class dashboardController implements Initializable {
                 }
             }
         });
-
-
+        calculateBalanceAndChange();
     } // Only numbers allow in Price text-field
     public void clearTextField() {
         addProduct_name.setText("");
@@ -1018,18 +1148,21 @@ public class dashboardController implements Initializable {
             home_form.setVisible(true);
             orders_form.setVisible(false);
             addProducts_form.setVisible(false);
+            history_form.setVisible(false);
             home.setStyle("-fx-background-color: linear-gradient(to bottom right, #8cea50, #3ce03c)");
             orders.setStyle("-fx-background-color: transparent");
             addProducts.setStyle("-fx-background-color: transparent");
+            history.setStyle("-fx-background-color: transparent");
 
         } else if (event.getSource() == addProducts_btn || event.getSource() == addProducts) {
             home_form.setVisible(false);
             orders_form.setVisible(false);
+            history_form.setVisible(false);
             addProducts_form.setVisible(true);
             home.setStyle("-fx-background-color: transparent");
             orders.setStyle("-fx-background-color: transparent");
             addProducts.setStyle("-fx-background-color: linear-gradient(to bottom right, #8cea50, #3ce03c)");
-
+            history.setStyle("-fx-background-color: transparent");
             addProductShowListData();
             addProductListStatus();
             addProductsSearch();
@@ -1037,14 +1170,31 @@ public class dashboardController implements Initializable {
             home_form.setVisible(false);
             orders_form.setVisible(true);
             addProducts_form.setVisible(false);
+            history_form.setVisible(false);
             home.setStyle("-fx-background-color: transparent");
             orders.setStyle("-fx-background-color: linear-gradient(to bottom right, #8cea50, #3ce03c)");
             addProducts.setStyle("-fx-background-color: transparent");
+            history.setStyle("-fx-background-color: transparent");
             orderShowListData(); // Put the data from SQL to Table (Order)
             typeOfPurchased(); // Add the data to combobox (Type of Purchased)
             orderPreMade(); // Add the data to combobox (Pre-Made)
             orderSpinner(); // Set the value of spinner (Order)
             orderDisplayTotal(); // Display the total price (Order)
+        } else if (event.getSource() == history_btn || event.getSource() == history) {
+            home_form.setVisible(false);
+            orders_form.setVisible(false);
+            addProducts_form.setVisible(false);
+            history_form.setVisible(true);
+            home.setStyle("-fx-background-color: transparent");
+            orders.setStyle("-fx-background-color: transparent");
+            addProducts.setStyle("-fx-background-color: transparent");
+            history.setStyle("-fx-background-color: linear-gradient(to bottom right, #8cea50, #3ce03c)");
+            historyFullyPaid();
+            historyNotFullyPaid();
+            historyShowNoBalanceData();
+            historyShowWithBalanceData();
+
+
         }
 
     }  // Switch between forms
@@ -1088,10 +1238,12 @@ public class dashboardController implements Initializable {
             @Override
             public void run() {
                 orderResetTableWithoutAsking();
-
             }
-        });
-
+        }); // If the program is closed, it will reset the table
+        historyFullyPaid();
+        historyNotFullyPaid();
+        historyShowNoBalanceData();
+        historyShowWithBalanceData();
 
     } // Initialize
 }
