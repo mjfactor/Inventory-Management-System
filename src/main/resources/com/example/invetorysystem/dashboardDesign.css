@@ -13,7 +13,7 @@
     -fx-background-color: #ddd;
 }
 .nav-form{
-    -fx-background-color: linear-gradient(to bottom right, #67c457, #5a93d5);
+    -fx-background-color: linear-gradient(to bottom right, #aeaeaa, #aeaeaa);
 }
 .nav-button{
     -fx-background-color: transparent;
@@ -26,12 +26,12 @@
 
 }
 .logout{
-    -fx-background-color: #86b2ea;
+    -fx-background-color: #f8f8f8;
     -fx-cursor: hand;
     -fx-background-radius: 10px;
 }
 .logout:hover{
-    -fx-background-color: #abe09e;
+    -fx-background-color: #aeaeaa;
 }
 .shadow{
     -fx-effect: dropshadow(three-pass-box,rgba(0,0,0,4), 5,0,0,0);
@@ -41,7 +41,7 @@
     -fx-background-radius: 8px;
 }
 .card{
-    -fx-background-color: linear-gradient(to bottom right, #236519, #2f64a2);
+    -fx-background-color: linear-gradient(to bottom right, #aeaeaa, #aeaeaa);
 }
 .search{
     -fx-padding: 0px 0px 0px 40px;
@@ -59,17 +59,17 @@
     -fx-background-radius: 4px;
     -fx-border-radius: 4px;
     -fx-border-width: 1px;
-    -fx-border-color: linear-gradient(to bottom right, #236519, #2f64a2)
+    -fx-border-color: linear-gradient(to bottom right, #aeaeaa, #aeaeaa)
 }
 .table-view1{
     -fx-background-color: transparent;
     -fx-padding: 0px;
-    -fx-border-color: linear-gradient(to bottom right, #236519, #2f64a2);
+    -fx-border-color: linear-gradient(to bottom right, #aeaeaa, #aeaeaa);
     -fx-border-radius: 8px;
     -fx-border-width: 2px;
 }
 .table-view1 .column-header-background{
-    -fx-background-color: linear-gradient(to bottom right, #a8f89c, #6a9ad7);
+    -fx-background-color: linear-gradient(to bottom right, #aeaeaa, #aeaeaa);
     -fx-background-radius: 8px 8px 0px 0px;
 }
 .table-view1 .column-header, .filter{

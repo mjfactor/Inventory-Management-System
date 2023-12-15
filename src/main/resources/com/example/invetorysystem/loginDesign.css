@@ -1,5 +1,5 @@
 .left-form{
-    -fx-background-color: linear-gradient(to bottom right, #23591b, #f35c5c);
+    -fx-background-color: linear-gradient(to bottom right, #aeaeaa, #aeaeaa);
 
 }
 
@@ -15,8 +15,8 @@
     -fx-background-color: transparent;
 }
 .login-button{
-    -fx-background-color: linear-gradient(to bottom right, #8cea50, #97f397);
+    -fx-background-color: linear-gradient(to bottom right, #bbb2b2, #d0d5d0);
 }
 .login-button:hover{
-    -fx-background-color: red;
+    -fx-background-color: #eadfdf;
 }

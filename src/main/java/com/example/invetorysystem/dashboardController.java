@@ -32,6 +32,8 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
+import javax.swing.*;
+
 public class dashboardController implements Initializable {
     @FXML
     private Button addProduct_add;
@@ -91,7 +93,8 @@ public class dashboardController implements Initializable {
 
     @FXML
     private TableColumn<productData, String> column_addProduct_status;
-
+    @FXML
+    private TableColumn<productData, Integer> column_addProduct_quantity;
     @FXML
     private TableColumn<customerData, String> com_order_customerName;
     @FXML
@@ -193,7 +196,8 @@ public class dashboardController implements Initializable {
 
     @FXML
     private Spinner<Integer> order_quantity;
-
+    @FXML
+    private Spinner<Integer> addProduct_quantity;
     @FXML
     private Button order_recieptBtn;
 
@@ -266,8 +270,8 @@ public class dashboardController implements Initializable {
 
     public void addProductsAdd() {
 
-        String sql = "INSERT INTO products (productName, price, price_int, status, date)"
-                + "VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO products (productName, price, quantity, price_int, status, date)"
+                + "VALUES (?, ?, ?, ?, ?, ?)";
         connect = database.connectDb();
         Alert alert;
         try {
@@ -306,12 +310,13 @@ public class dashboardController implements Initializable {
                     prepare = connect.prepareStatement(sql);
                     prepare.setString(1, addProduct_name.getText());
                     prepare.setString(2, "₱" + formatPrice(addProduct_price.getText()));
-                    prepare.setInt(3, Integer.parseInt(addProduct_price.getText()));
-                    prepare.setString(4, addProduct_status.getSelectionModel().getSelectedItem());
+                    prepare.setInt(3, addProduct_quantity.getValue());
+                    prepare.setInt(4, Integer.parseInt(addProduct_price.getText()));
+                    prepare.setString(5, addProduct_status.getSelectionModel().getSelectedItem());
 
                     Date date = new Date();
                     java.sql.Date sqlDate = new java.sql.Date(date.getTime());
-                    prepare.setDate(5, sqlDate);
+                    prepare.setDate(6, sqlDate);
 
                     prepare.executeUpdate();
                     addProductShowListData();
@@ -325,8 +330,9 @@ public class dashboardController implements Initializable {
     }  // Add product
 
     public void addProductUpdate() {
-        String sql = "UPDATE products SET productName = '" + addProduct_name.getText() + "', price = '" + "₱" + formatPrice(addProduct_price.getText()) + "', price_int = '" + Integer.parseInt(addProduct_price.getText()) + "', status = '"
-                + addProduct_status.getSelectionModel().getSelectedItem() + "' WHERE id = '" + productId + "'";
+        String sql = "UPDATE products SET productName = '" + addProduct_name.getText() + "', price = '" + "₱" + formatPrice(addProduct_price.getText()) + "', price_int = '" + Integer.parseInt(addProduct_price.getText()) + "'" +
+                ", quantity = '" + addProduct_quantity.getValue() + "'" +
+                ",  status = '" + addProduct_status.getSelectionModel().getSelectedItem() + "' WHERE id = '" + productId + "'" ;
 
         connect = database.connectDb();
         Alert alert;
@@ -335,6 +341,7 @@ public class dashboardController implements Initializable {
             if (addProduct_name.getText().isEmpty()
                     || addProduct_price.getText().isEmpty()
                     || addProduct_status.getSelectionModel().getSelectedItem() == null
+                    || addProduct_table.getSelectionModel().getSelectedItem() == null
                     || Objects.equals(addProduct_status.getSelectionModel().getSelectedItem(), "Choose")) {
                 alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Error");
@@ -358,13 +365,19 @@ public class dashboardController implements Initializable {
                     alert.setHeaderText(null);
                     alert.setContentText("Successfully Updated");
                     alert.showAndWait();
-
+                    updateStatusFromProducts();
                     addProductShowListData();
                     clearTextField();
+                }else {
+                    addProduct_table.getSelectionModel().clearSelection();
                 }
             }
-        } catch (Exception ignored) {
 
+        } catch (Exception NumberFormatException) {
+            alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText(null);
+            alert.setContentText("Enter a valid price");
         }
     } // Update product
 
@@ -375,7 +388,7 @@ public class dashboardController implements Initializable {
         Alert alert;
         try {
             if (addProduct_name.getText().isEmpty()
-                    || addProduct_price.getText().isEmpty()) {
+                    || addProduct_price.getText().isEmpty()|| addProduct_table.getSelectionModel().getSelectedItem() == null) {
                 alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Error");
                 alert.setHeaderText(null);
@@ -399,6 +412,8 @@ public class dashboardController implements Initializable {
 
                     addProductShowListData();
                     clearTextField();
+                }else {
+                    addProduct_table.getSelectionModel().clearSelection();
                 }
             }
         } catch (Exception ignored) {
@@ -419,6 +434,7 @@ public class dashboardController implements Initializable {
                 prodD = new productData(result.getInt("id")
                         , result.getString("productName")
                         , result.getString("price")
+                        , result.getInt("quantity")
                         , result.getInt("price_int")
                         , result.getString("status")
                         , result.getDate("date"));
@@ -436,6 +452,7 @@ public class dashboardController implements Initializable {
         column_addProduct_id.setCellValueFactory(new PropertyValueFactory<>("productId"));
         column_addProduct_name.setCellValueFactory(new PropertyValueFactory<>("productName"));
         column_addProduct_price.setCellValueFactory(new PropertyValueFactory<>("price"));
+        column_addProduct_quantity.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         column_addProduct_status.setCellValueFactory(new PropertyValueFactory<>("status"));
         addProduct_table.setItems(addProductList);
 
@@ -448,23 +465,37 @@ public class dashboardController implements Initializable {
         if ((num - 1) < -1) {
             return;
         }
-
         productId = prodD.getProductId();
         addProduct_name.setText(prodD.getProductName());
         addProduct_price.setText(String.valueOf(prodD.getPrice_int()));
         addProduct_status.setValue(prodD.getStatus());
+        addProduct_quantity.getValueFactory().setValue(prodD.getQuantity());
     } // if you clicked data from table, it will fill the text-fields and combobox (Products)
-
     public void addProductListStatus() {
         addProduct_status.getItems().removeAll(addProduct_status.getItems());
         addProduct_status.getItems().addAll("Available", "Not Available");
         addProduct_status.getSelectionModel().select("Choose");
     } // Add the data to combobox (Status) (Products)
-
+    public void disableUpdateIfRowIsNotSelected(){
+        addProduct_table.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            if (newSelection == null) {
+                addProduct_update.setDisable(true);
+                addProduct_delete.setDisable(true);
+            }else{
+                addProduct_update.setDisable(false);
+                addProduct_delete.setDisable(false);
+            }
+        });
+    } // Disable the update and delete button if the row is not selected (Products)
+    public void addProductSpinner(){
+        SpinnerValueFactory<Integer> valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 1000, 1);
+        addProduct_quantity.setValueFactory(valueFactory);
+    } // Set the value of spinner (Products)
 
 
 
     public void ordersAdd() {
+
         int priceInt = 0;
         int qty = order_quantity.getValue();
         String sql = "INSERT INTO customer (customerName, type, productName, quantity, price, price_int, date)"
@@ -482,21 +513,41 @@ public class dashboardController implements Initializable {
                     alert.setHeaderText(null);
                     alert.setContentText("Fill out all the blank fields");
                     alert.showAndWait();
-                } else {
+                } else if (qty > getQtyFromProducts()){
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Error");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Only " + getQtyFromProducts() + " left from " + order_productName.getSelectionModel().getSelectedItem());
+                    alert.showAndWait();
+
+                }else {
+
                     // Put it in the same row if the product already exist
                     String checkName = "SELECT productName FROM customer WHERE productName = '" + order_productName.getSelectionModel().getSelectedItem() + "'";
                     assert connect != null;
                     statement = connect.createStatement();
                     result = statement.executeQuery(checkName);
                     if (result.next()) {
-                        String totalQTY = String.valueOf(getQtyFromCustomer() + qty);
-                        int totalPrice = getPriceFromCustomer() + (qty * getPriceFromProducts());
-                        String update = "UPDATE customer SET quantity = '" + totalQTY + "', price = '" + "₱" + formatPrice(String.valueOf(totalPrice)) + "', price_int = '" + totalPrice +
-                                "' WHERE customerName = '" + customer_name.getText() + "' AND productName = '" + order_productName.getSelectionModel().getSelectedItem() + "'";
-                        statement = connect.createStatement();
-                        statement.executeUpdate(update);
-                        orderShowListData();
-                        orderDisplayTotal();
+                        int TotalQTY = getQtyFromCustomer() + qty;
+                        String totalQTY = String.valueOf(TotalQTY);
+                        int left = getQtyFromProducts() - getQtyFromCustomer();
+                        if (TotalQTY > getQtyFromProducts()){
+                            Alert alert = new Alert(Alert.AlertType.ERROR);
+                            alert.setTitle("Error");
+                            alert.setHeaderText(null);
+                            alert.setContentText("Only " + left + " left from " + order_productName.getSelectionModel().getSelectedItem());
+                            alert.showAndWait();
+                        }else{
+                            int totalPrice = getPriceFromCustomer() + (qty * getPriceFromProducts());
+                            String update = "UPDATE customer SET quantity = '" + totalQTY + "', price = '" + "₱" + formatPrice(String.valueOf(totalPrice)) + "', price_int = '" + totalPrice +
+                                    "' WHERE customerName = '" + customer_name.getText() + "' AND productName = '" + order_productName.getSelectionModel().getSelectedItem() + "'";
+                            statement = connect.createStatement();
+                            statement.executeUpdate(update);
+                            orderShowListData();
+                            orderDisplayTotal();
+                        }
+
+
                     } else {
                         // If product doesn't exist
                         assert connect != null;
@@ -826,8 +877,15 @@ public class dashboardController implements Initializable {
                     prepare.setDate(9, sqlDate);
 
                     prepare.executeUpdate();
+                    updateQtyFromProducts();
+                    updateStatusFromProducts();
                     orderResetTableWithoutAsking();
+
+
+
                     orderClear();
+                    addProductShowListData();
+                    addProductListStatus();
                     orderShowListData();
                     orderDisplayTotal();
 
@@ -936,11 +994,6 @@ public class dashboardController implements Initializable {
         history_withBalance_column_date.setCellValueFactory(new PropertyValueFactory<>("date"));
         history_withBalanceTable.setItems(historyWithBalanceList);
     } // Put the data from SQL with balance to Table (History)
-
-
-
-
-
     public void makeTableNotReOrder() {
         addProduct_table.skinProperty().addListener((obs, oldSkin, newSkin) -> {
             final TableHeaderRow header = (TableHeaderRow) addProduct_table.lookup("TableHeaderRow");
@@ -948,6 +1001,14 @@ public class dashboardController implements Initializable {
         });
         order_table.skinProperty().addListener((obs, oldSkin, newSkin) -> {
             final TableHeaderRow header = (TableHeaderRow) order_table.lookup("TableHeaderRow");
+            header.reorderingProperty().addListener((o, oldVal, newVal) -> header.setReordering(false));
+        });
+        history_fullyPaidTable.skinProperty().addListener((obs, oldSkin, newSkin) -> {
+            final TableHeaderRow header = (TableHeaderRow) history_fullyPaidTable.lookup("TableHeaderRow");
+            header.reorderingProperty().addListener((o, oldVal, newVal) -> header.setReordering(false));
+        });
+        history_withBalanceTable.skinProperty().addListener((obs, oldSkin, newSkin) -> {
+            final TableHeaderRow header = (TableHeaderRow) history_withBalanceTable.lookup("TableHeaderRow");
             header.reorderingProperty().addListener((o, oldVal, newVal) -> header.setReordering(false));
         });
     } // Make the table not reorder able (Products) (Order)
@@ -986,6 +1047,74 @@ public class dashboardController implements Initializable {
         }
         return price_int;
     }
+    public int getQtyFromProducts() throws SQLException {
+        String getQty = "SELECT quantity FROM products WHERE productName = '"
+                + order_productName.getSelectionModel().getSelectedItem() + "'";
+        statement = connect.createStatement();
+        result = statement.executeQuery(getQty);
+        int qty = 0;
+        while (result.next()) {
+            qty = result.getInt("quantity");
+        }
+        return qty;
+    }
+
+    public int getQtyFromProducts2() throws SQLException {
+        int qty = 0;
+        for (int i = 0; i < order_table.getItems().size(); i++) {
+            String getQty = "SELECT quantity FROM products WHERE productName = '"
+                    + order_table.getItems().get(i).getProductName() + "'";
+            statement = connect.createStatement();
+            result = statement.executeQuery(getQty);
+            while (result.next()) {
+                qty = result.getInt("quantity");
+            }
+
+        }
+
+        return qty;
+    }
+    public void updateQtyFromProducts() throws SQLException {
+        int qty = 0;
+        for (int i = 0; i < order_table.getItems().size(); i++) {
+            String getQty = "SELECT quantity FROM products WHERE productName = '"
+                    + order_table.getItems().get(i).getProductName() + "'";
+            statement = connect.createStatement();
+            result = statement.executeQuery(getQty);
+            while (result.next()) {
+                qty = result.getInt("quantity");
+            }
+            int totalQty = qty - order_table.getItems().get(i).getQuantity();
+            String update = "UPDATE products SET quantity = '" + totalQty + "' WHERE productName = '" + order_table.getItems().get(i).getProductName() + "'";
+            statement = connect.createStatement();
+            statement.executeUpdate(update);
+        }
+
+    }
+    public void updateStatusFromProducts() throws SQLException {
+
+            String sql = "UPDATE products SET status = 'Not Available'  WHERE quantity = 0";
+            connect = database.connectDb();
+            try {
+                assert connect != null;
+                statement = connect.createStatement();
+                statement.executeUpdate(sql);
+            } catch (Exception ignored) {
+
+            }
+            String sql2 = "UPDATE products SET status = 'Available'  WHERE quantity != 0";
+            connect = database.connectDb();
+            try {
+                assert connect != null;
+                statement = connect.createStatement();
+                statement.executeUpdate(sql2);
+            } catch (Exception ignored) {
+
+            }
+
+    }
+
+
     public String getNameFromProductsToCompare() throws SQLException {
         String getName = "SELECT productName FROM products WHERE productName = '"
                 + order_customName.getText() + "'";
@@ -1045,6 +1174,12 @@ public class dashboardController implements Initializable {
     public void clearTextField() {
         addProduct_name.setText("");
         addProduct_price.setText("");
+        addProduct_status.getSelectionModel().select("Choose");
+        addProduct_update.setDisable(true);
+        addProduct_delete.setDisable(true);
+        addProduct_table.getSelectionModel().clearSelection();
+        addProduct_quantity.getValueFactory().setValue(1);
+
         addProductListStatus();
     } // Clear all text-fields
     public void logout() throws SQLException {
@@ -1149,7 +1284,7 @@ public class dashboardController implements Initializable {
             orders_form.setVisible(false);
             addProducts_form.setVisible(false);
             history_form.setVisible(false);
-            home.setStyle("-fx-background-color: linear-gradient(to bottom right, #8cea50, #3ce03c)");
+            home.setStyle("-fx-background-color: linear-gradient(to bottom right, #e7e3e3, #e1e7e1)");
             orders.setStyle("-fx-background-color: transparent");
             addProducts.setStyle("-fx-background-color: transparent");
             history.setStyle("-fx-background-color: transparent");
@@ -1161,7 +1296,7 @@ public class dashboardController implements Initializable {
             addProducts_form.setVisible(true);
             home.setStyle("-fx-background-color: transparent");
             orders.setStyle("-fx-background-color: transparent");
-            addProducts.setStyle("-fx-background-color: linear-gradient(to bottom right, #8cea50, #3ce03c)");
+            addProducts.setStyle("-fx-background-color: linear-gradient(to bottom right, #e7e3e3, #e1e7e1)");
             history.setStyle("-fx-background-color: transparent");
             addProductShowListData();
             addProductListStatus();
@@ -1172,7 +1307,7 @@ public class dashboardController implements Initializable {
             addProducts_form.setVisible(false);
             history_form.setVisible(false);
             home.setStyle("-fx-background-color: transparent");
-            orders.setStyle("-fx-background-color: linear-gradient(to bottom right, #8cea50, #3ce03c)");
+            orders.setStyle("-fx-background-color: linear-gradient(to bottom right, #e7e3e3, #e1e7e1)");
             addProducts.setStyle("-fx-background-color: transparent");
             history.setStyle("-fx-background-color: transparent");
             orderShowListData(); // Put the data from SQL to Table (Order)
@@ -1188,7 +1323,7 @@ public class dashboardController implements Initializable {
             home.setStyle("-fx-background-color: transparent");
             orders.setStyle("-fx-background-color: transparent");
             addProducts.setStyle("-fx-background-color: transparent");
-            history.setStyle("-fx-background-color: linear-gradient(to bottom right, #8cea50, #3ce03c)");
+            history.setStyle("-fx-background-color: linear-gradient(to bottom right, #e7e3e3, #e1e7e1)");
             historyFullyPaid();
             historyNotFullyPaid();
             historyShowNoBalanceData();
@@ -1226,24 +1361,34 @@ public class dashboardController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         addProductShowListData(); // Put the data from SQL to Table
         addProductListStatus(); // Add the data to combobox (Status)
+        ifTotalIsZero(); // If total is zero, disable the pay button and amount text-field (Products)
+        addProductSpinner(); // Set the value of spinner
+
+
+
         typeOfPurchased(); // Add the data to combobox (Type of Purchased)
         orderPreMade(); // Add the data to combobox (Pre-Made)
         orderSpinner(); // Set the value of spinner (Order)
         orderShowListData(); // Put the data from SQL to Table (Order)
         orderDisplayTotal(); // Display the total price (Order)
-        makeTableNotReOrder(); // Make the table not reorder able (Products) (Order)
+
+
+
+        historyFullyPaid(); // If the fully paid radio button is selected, it will show the table (History)
+        historyNotFullyPaid(); // If the not fully paid radio button is selected, it will show the table (History)
+        historyShowNoBalanceData(); // Put the data from SQL with no balance to Table (History)
+        historyShowWithBalanceData(); // Put the data from SQL with balance to Table (History)
+
+
+        makeTableNotReOrder(); // Make the table not reorder able (Products) (Order) (History)
+        disableUpdateIfRowIsNotSelected(); // Disable the update and delete button if the row is not selected
         onlyNumInTextField(); // Only numbers allow in Price text-field
-        ifTotalIsZero(); // If total is zero, disable the pay button and amount text-field
+
         Runtime.getRuntime().addShutdownHook(new Thread() {
             @Override
             public void run() {
                 orderResetTableWithoutAsking();
             }
         }); // If the program is closed, it will reset the table
-        historyFullyPaid();
-        historyNotFullyPaid();
-        historyShowNoBalanceData();
-        historyShowWithBalanceData();
-
     } // Initialize
 }

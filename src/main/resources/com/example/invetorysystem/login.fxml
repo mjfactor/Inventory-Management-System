@@ -7,6 +7,8 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
@@ -15,21 +17,43 @@
    <children>
       <AnchorPane fx:id="main_frame" prefHeight="200.0" prefWidth="200.0">
          <children>
-            <AnchorPane layoutY="-8.0" prefHeight="562.0" prefWidth="367.0" styleClass="left-form" stylesheets="@loginDesign.css" AnchorPane.bottomAnchor="-3.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="-8.0" />
-            <AnchorPane layoutX="368.0" layoutY="3.0" prefHeight="551.0" prefWidth="382.0" styleClass="right-form" stylesheets="@loginDesign.css" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <AnchorPane layoutY="-8.0" prefHeight="560.0" prefWidth="366.0" styleClass="left-form" stylesheets="@loginDesign.css" AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="-8.0">
                <children>
-                  <TextField fx:id="username" layoutX="74.0" layoutY="218.0" onAction="#loginAdmin" prefHeight="34.0" prefWidth="251.0" promptText="Username" />
-                  <Label layoutX="78.0" layoutY="139.0" prefHeight="28.0" prefWidth="242.0" text="Welcome back admin!">
+                  <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="84.0" layoutY="179.0" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="login_logo" fitHeight="227.0" fitWidth="222.0" layoutX="73.0" layoutY="112.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@Images/logo.png" />
+                     </image>
+                  </ImageView>
+                  <Label layoutX="43.0" layoutY="329.0" prefHeight="78.0" prefWidth="294.0" text="GJ Stainless Steel &#10;Fabricator and Services" textAlignment="CENTER">
                      <font>
-                        <Font name="Times New Roman Bold" size="24.0" />
+                        <Font name="Century Gothic Bold" size="24.0" />
                      </font>
                   </Label>
-                  <Button fx:id="login_button" layoutX="73.0" layoutY="351.0" mnemonicParsing="false" onAction="#loginAdmin" prefHeight="34.0" prefWidth="251.0" styleClass="login-button" stylesheets="@loginDesign.css" text="Login">
+               </children></AnchorPane>
+            <AnchorPane layoutX="368.0" layoutY="3.0" prefHeight="551.0" prefWidth="382.0" styleClass="right-form" stylesheets="@loginDesign.css" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <children>
+                  <TextField fx:id="username" layoutX="66.0" layoutY="218.0" onAction="#loginAdmin" prefHeight="34.0" prefWidth="251.0" promptText="Username">
+                     <font>
+                        <Font name="Century Gothic" size="12.0" />
+                     </font></TextField>
+                  <Label layoutX="70.0" layoutY="165.0" prefHeight="28.0" prefWidth="242.0" text="Welcome back admin!">
+                     <font>
+                        <Font name="Century Gothic" size="20.0" />
+                     </font>
+                  </Label>
+                  <Button fx:id="login_button" layoutX="65.0" layoutY="351.0" mnemonicParsing="false" onAction="#loginAdmin" prefHeight="34.0" prefWidth="251.0" styleClass="login-button" stylesheets="@loginDesign.css" text="Login">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>
+                     <font>
+                        <Font name="Century Gothic" size="12.0" />
+                     </font>
                   </Button>
-                  <PasswordField fx:id="password" layoutX="74.0" layoutY="275.0" onAction="#loginAdmin" onKeyTyped="#makePasswordDontReadSpace" prefHeight="34.0" prefWidth="251.0" promptText="Password" />
+                  <PasswordField fx:id="password" layoutX="66.0" layoutY="275.0" onAction="#loginAdmin" onKeyTyped="#makePasswordDontReadSpace" prefHeight="34.0" prefWidth="251.0" promptText="Password">
+                     <font>
+                        <Font name="Century Gothic" size="12.0" />
+                     </font></PasswordField>
                   <Button fx:id="close" layoutX="342.0" layoutY="14.0" mnemonicParsing="false" onAction="#close" styleClass="close" stylesheets="@loginDesign.css" AnchorPane.rightAnchor="4.0" AnchorPane.topAnchor="4.0">
                      <graphic>
 
@@ -38,9 +62,12 @@
                         <FontAwesomeIconView glyphName="CLOSE" />
                      </graphic>
                   </Button>
-                  <FontAwesomeIconView glyphName="USER" layoutX="178.0" layoutY="117.0" size="5EM" />
+                  <FontAwesomeIconView glyphName="USER" layoutX="162.0" layoutY="129.0" size="5EM" />
                   <TextField fx:id="password_show" layoutX="74.0" layoutY="275.0" prefHeight="34.0" prefWidth="251.0" visible="false" />
-                  <CheckBox fx:id="password_checkBox" layoutX="75.0" layoutY="317.0" mnemonicParsing="false" prefHeight="18.0" prefWidth="112.0" text="Show Password" />
+                  <CheckBox fx:id="password_checkBox" layoutX="67.0" layoutY="317.0" mnemonicParsing="false" prefHeight="18.0" prefWidth="123.0" text="Show Password">
+                     <font>
+                        <Font name="Century Gothic" size="12.0" />
+                     </font></CheckBox>
                  
                </children>
             </AnchorPane>

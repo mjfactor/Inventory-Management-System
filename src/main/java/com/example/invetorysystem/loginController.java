@@ -8,11 +8,15 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
+import java.awt.*;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -41,6 +45,9 @@ public class loginController implements Initializable {
 
     @FXML
     private TextField password_show;
+
+    @FXML
+    private ImageView login_logo;
 
     public void makePasswordDontReadSpace(){
         password.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -121,11 +128,18 @@ public class loginController implements Initializable {
         System.exit(0);
     }
 
+    public void displayLogo(){
+        login_logo.setImage(new javafx.scene.image.Image("file:src/main/resources/com/example/invetorysystem/Images/logo.png"));
+    }
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         makePasswordDontReadSpace();
         password_checkBox.selectedProperty().addListener((observable, oldValue, newValue) -> showPassword());
         password_show.textProperty().bindBidirectional(password.textProperty());
         loginWhenEnterIsPressed();
+        displayLogo();
+
+
+
     }
 }

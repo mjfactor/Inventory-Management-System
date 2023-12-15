@@ -14,6 +14,8 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.StackPane?>
@@ -28,7 +30,6 @@
                <top>
                   <AnchorPane prefHeight="58.0" prefWidth="1415.0" BorderPane.alignment="CENTER">
                      <children>
-                        <FontAwesomeIconView layoutX="57.0" layoutY="39.0" size="2.5em" />
                         <Label layoutX="109.0" layoutY="14.0" text="GJ Stainless">
                            <font>
                               <Font size="23.0" />
@@ -50,23 +51,22 @@
                               <Font size="21.0" />
                            </font>
                         </Button>
+                        <ImageView fitHeight="32.0" fitWidth="34.0" layoutX="69.0" layoutY="15.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@Images/logo.png" />
+                           </image>
+                        </ImageView>
                      </children>
                   </AnchorPane>
                </top>
                <left>
                   <AnchorPane prefHeight="313.0" prefWidth="321.0" styleClass="nav-form" stylesheets="@dashboardDesign.css" BorderPane.alignment="CENTER">
                      <children>
-                        <FontAwesomeIconView layoutX="113.0" layoutY="119.0" size="7em" />
-                        <Label layoutX="81.0" layoutY="142.0" prefHeight="39.0" prefWidth="147.0" text="Welcome">
-                           <font>
-                              <Font name="System Bold" size="33.0" />
-                           </font>
-                        </Label>
-                        <AnchorPane fx:id="home" layoutY="264.0" onMouseClicked="#switchForm" style="-fx-background-color: linear-gradient(to bottom right, #8cea50, #3ce03c);" styleClass="nav-buttonWrap" stylesheets="@dashboardDesign.css" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                        <AnchorPane fx:id="home" layoutY="277.0" onMouseClicked="#switchForm" prefHeight="40.0" prefWidth="322.0" style="-fx-background-color: linear-gradient(to bottom right, #e7e3e3, #e1e7e1);" styleClass="nav-buttonWrap" stylesheets="@dashboardDesign.css" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
                            <children>
                               <Button fx:id="home_btn" layoutX="59.0" layoutY="-2.0" mnemonicParsing="false" onMouseClicked="#switchForm" prefHeight="49.0" styleClass="nav-button" stylesheets="@dashboardDesign.css" text="Home" AnchorPane.leftAnchor="59.0">
                                  <font>
-                                    <Font size="25.0" />
+                                    <Font name="Century Gothic" size="25.0" />
                                  </font>
                                  <graphic>
                                     <FontAwesomeIconView glyphName="HOME" size="2em" text="" />
@@ -78,20 +78,20 @@
                            <children>
                               <Button fx:id="addProducts_btn" layoutX="74.0" layoutY="1.0" mnemonicParsing="false" onMouseClicked="#switchForm" prefHeight="49.0" styleClass="nav-button" stylesheets="@dashboardDesign.css" text="Add Products" AnchorPane.leftAnchor="59.0">
                                  <font>
-                                    <Font size="25.0" />
+                                    <Font name="Century Gothic" size="25.0" />
                                  </font>
                                  <graphic>
-                                    <FontAwesomeIconView glyphName="PLUS" size="2em" />
+                                    <FontAwesomeIconView glyphName="PLUS" size="2em" wrappingWidth="24.190479278564453" />
                                  </graphic>
                               </Button>
                            </children>
                         </AnchorPane>
-                        <Line endX="162.60006713867188" layoutX="134.0" layoutY="217.0" startX="-116.86663818359375" stroke="WHITE" />
+                        <Line endX="172.40008544921875" layoutX="133.0" layoutY="243.0" startX="-116.86663818359375" stroke="WHITE" />
                         <AnchorPane fx:id="orders" layoutX="36.0" layoutY="422.0" onMouseClicked="#switchForm" prefHeight="42.0" prefWidth="308.0" styleClass="nav-buttonWrap" stylesheets="@dashboardDesign.css" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
                            <children>
-                              <Button fx:id="orders_btn" layoutX="52.0" layoutY="-2.0" mnemonicParsing="false" onMouseClicked="#switchForm" prefHeight="52.0" prefWidth="157.0" styleClass="nav-button" stylesheets="@dashboardDesign.css" text=" Orders" AnchorPane.leftAnchor="52.0">
+                              <Button fx:id="orders_btn" layoutX="56.0" layoutY="-2.0" mnemonicParsing="false" onMouseClicked="#switchForm" prefHeight="52.0" prefWidth="154.0" styleClass="nav-button" stylesheets="@dashboardDesign.css" text=" Orders" AnchorPane.leftAnchor="56.0">
                                  <font>
-                                    <Font size="25.0" />
+                                    <Font name="Century Gothic" size="25.0" />
                                  </font>
                                  <graphic>
                                     <FontAwesomeIconView glyphName="CUBE" size="2em" />
@@ -110,14 +110,14 @@
                         </Button>
                         <Label layoutX="100.0" layoutY="744.0" text="Logout">
                            <font>
-                              <Font size="24.0" />
+                              <Font name="Century Gothic" size="24.0" />
                            </font>
                         </Label>
                         <AnchorPane fx:id="history" layoutX="1.0" layoutY="501.0" onMouseClicked="#switchForm" prefHeight="52.0" prefWidth="319.0" styleClass="nav-buttonWrap" stylesheets="@dashboardDesign.css">
                            <children>
                               <Button fx:id="history_btn" layoutX="51.2" layoutY="-2.0" mnemonicParsing="false" onMouseClicked="#switchForm" prefHeight="52.0" prefWidth="159.0" styleClass="nav-button" stylesheets="@dashboardDesign.css" text=" History" AnchorPane.leftAnchor="51.0">
                                  <font>
-                                    <Font size="25.0" />
+                                    <Font name="Century Gothic" size="25.0" />
                                  </font>
                                  <graphic>
                                     <FontAwesomeIconView glyphName="HISTORY" size="2em" />
@@ -125,11 +125,16 @@
                               </Button>
                            </children>
                         </AnchorPane>
+                        <ImageView fitHeight="187.0" fitWidth="199.0" layoutX="65.0" layoutY="24.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@Images/logo.png" />
+                           </image>
+                        </ImageView>
                      </children>
                   </AnchorPane>
                </left>
                <center>
-                  <AnchorPane prefHeight="822.0" prefWidth="1129.0" BorderPane.alignment="CENTER">
+                  <AnchorPane prefHeight="812.0" prefWidth="1162.0" BorderPane.alignment="CENTER">
                      <children>
                         <AnchorPane fx:id="home_form" layoutX="32.8" prefHeight="812.0" prefWidth="1226.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="33.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <children>
@@ -137,45 +142,45 @@
                                  <children>
                                     <AnchorPane layoutX="24.0" layoutY="19.2" prefHeight="226.0" prefWidth="339.0" styleClass="card" stylesheets="@dashboardDesign.css" AnchorPane.bottomAnchor="19.0" AnchorPane.topAnchor="19.0">
                                        <children>
-                                          <FontAwesomeIconView fill="WHITE" glyphName="USERS" layoutX="28.0" layoutY="136.0" size="5.5EM" />
-                                          <Label layoutX="107.0" layoutY="152.0" text="Today's Order" textFill="WHITE">
+                                          <FontAwesomeIconView glyphName="USERS" layoutX="28.0" layoutY="136.0" size="5.5EM" />
+                                          <Label layoutX="132.0" layoutY="164.0" text="Today's Order">
                                              <font>
-                                                <Font size="27.0" />
+                                                <Font name="Century Gothic" size="24.0" />
                                              </font>
                                           </Label>
-                                          <Label fx:id="home_numberofOrders" alignment="CENTER_RIGHT" layoutX="81.0" layoutY="24.0" prefHeight="28.0" prefWidth="211.0" text="0" textFill="WHITE">
+                                          <Label fx:id="home_numberofOrders" alignment="CENTER_RIGHT" layoutX="81.0" layoutY="24.0" prefHeight="28.0" prefWidth="211.0" text="0" textFill="#181818">
                                              <font>
-                                                <Font name="System Bold" size="36.0" />
+                                                <Font name="Century Gothic" size="27.0" />
                                              </font>
                                           </Label>
                                        </children>
                                     </AnchorPane>
                                     <AnchorPane layoutX="413.0" layoutY="19.2" prefHeight="226.0" prefWidth="339.0" styleClass="card" stylesheets="@dashboardDesign.css" AnchorPane.bottomAnchor="19.0" AnchorPane.topAnchor="19.0">
                                        <children>
-                                          <Label layoutX="115.0" layoutY="156.0" text="Total Income" textFill="WHITE">
+                                          <Label layoutX="139.0" layoutY="162.0" text="Total Income">
                                              <font>
-                                                <Font size="27.0" />
+                                                <Font name="Century Gothic" size="24.0" />
                                              </font>
                                           </Label>
-                                          <Label fx:id="home_totalIncome" alignment="CENTER_RIGHT" layoutX="80.0" layoutY="23.0" prefHeight="28.0" prefWidth="211.0" text="₱0.0" textFill="WHITE">
+                                          <Label fx:id="home_totalIncome" alignment="CENTER_RIGHT" layoutX="80.0" layoutY="23.0" prefHeight="28.0" prefWidth="211.0" text="₱0.0" textFill="#181818">
                                              <font>
-                                                <Font name="System Bold" size="36.0" />
+                                                <Font name="Century Gothic" size="27.0" />
                                              </font>
                                           </Label>
-                                          <FontAwesomeIconView fill="WHITE" glyphName="MONEY" layoutX="45.0" layoutY="137.0" size="5.5EM" />
+                                          <FontAwesomeIconView glyphName="MONEY" layoutX="45.0" layoutY="137.0" size="5.5EM" />
                                        </children>
                                     </AnchorPane>
                                     <AnchorPane layoutX="801.0" layoutY="15.0" prefHeight="226.0" prefWidth="339.0" styleClass="card" stylesheets="@dashboardDesign.css" AnchorPane.bottomAnchor="18.0" AnchorPane.topAnchor="18.0">
                                        <children>
-                                          <FontAwesomeIconView fill="WHITE" glyphName="CUBE" layoutX="47.0" layoutY="135.0" size="5.5EM" />
-                                          <Label layoutX="90.0" layoutY="150.0" prefHeight="52.0" prefWidth="220.0" text="Available Products" textFill="WHITE">
+                                          <FontAwesomeIconView glyphName="CUBE" layoutX="47.0" layoutY="135.0" size="5.5EM" />
+                                          <Label layoutX="82.0" layoutY="155.0" prefHeight="52.0" prefWidth="220.0" text="Available Products">
                                              <font>
-                                                <Font size="27.0" />
+                                                <Font name="Century Gothic" size="23.0" />
                                              </font>
                                           </Label>
-                                          <Label fx:id="home_availableProducts" alignment="CENTER_RIGHT" layoutX="82.0" layoutY="22.0" prefHeight="28.0" prefWidth="211.0" text="0" textFill="WHITE">
+                                          <Label fx:id="home_availableProducts" alignment="CENTER_RIGHT" layoutX="82.0" layoutY="22.0" prefHeight="28.0" prefWidth="211.0" text="0" textFill="#181818">
                                              <font>
-                                                <Font name="System Bold" size="36.0" />
+                                                <Font name="Century Gothic" size="27.0" />
                                              </font>
                                           </Label>
                                        </children>
@@ -221,90 +226,89 @@
                               <Line endX="1031.4664306640625" layoutX="137.0" layoutY="279.0" startX="-134.99998474121094" />
                            </children>
                         </AnchorPane>
-                        <AnchorPane fx:id="addProducts_form" prefHeight="812.0" prefWidth="1227.2" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <AnchorPane fx:id="addProducts_form" prefHeight="812.0" prefWidth="1227.2" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <children>
-                              <AnchorPane layoutX="23.0" layoutY="3.0" prefHeight="796.0" prefWidth="450.0" stylesheets="@dashboardDesign.css">
+                              <AnchorPane layoutX="23.0" layoutY="3.0" prefHeight="175.0" prefWidth="1169.0" stylesheets="@dashboardDesign.css">
                                  <styleClass>
                                     <String fx:value="white-bg" />
                                     <String fx:value="shadow" />
                                  </styleClass>
                                  <children>
-                                    <Label layoutX="39.0" layoutY="335.0" prefHeight="32.0" prefWidth="151.0" text="Product Name:">
+                                    <Label layoutX="14.0" layoutY="37.0" prefHeight="32.0" prefWidth="151.0" text="Product Name:">
                                        <font>
                                           <Font size="21.0" />
                                        </font>
                                     </Label>
-                                    <TextField fx:id="addProduct_name" layoutX="201.0" layoutY="334.0" prefHeight="35.0" prefWidth="199.0">
+                                    <TextField fx:id="addProduct_name" layoutX="176.0" layoutY="36.0" prefHeight="35.0" prefWidth="158.0">
                                        <font>
                                           <Font size="15.0" />
                                        </font></TextField>
-                                    <Button fx:id="addProduct_add" layoutX="87.0" layoutY="531.0" mnemonicParsing="false" onAction="#addProductsAdd" prefHeight="47.0" prefWidth="111.0" text="Add">
+                                    <Button fx:id="addProduct_add" layoutX="543.0" layoutY="106.0" mnemonicParsing="false" onAction="#addProductsAdd" prefHeight="47.0" prefWidth="111.0" text="Add">
                                        <font>
                                           <Font size="21.0" />
                                        </font>
                                     </Button>
-                                    <Button fx:id="addProduct_update" layoutX="264.0" layoutY="528.0" mnemonicParsing="false" onAction="#addProductUpdate" prefHeight="47.0" prefWidth="111.0" text="Update">
+                                    <Button fx:id="addProduct_update" disable="true" layoutX="840.0" layoutY="105.0" mnemonicParsing="false" onAction="#addProductUpdate" prefHeight="47.0" prefWidth="111.0" text="Update">
                                        <font>
                                           <Font size="21.0" />
                                        </font>
                                     </Button>
-                                    <Button fx:id="addProduct_reset" layoutX="87.0" layoutY="600.0" mnemonicParsing="false" onAction="#clearTextField" prefHeight="47.0" prefWidth="110.0" text="Reset">
+                                    <Button fx:id="addProduct_reset" layoutX="693.0" layoutY="106.0" mnemonicParsing="false" onAction="#clearTextField" prefHeight="47.0" prefWidth="110.0" text="Reset">
                                        <font>
                                           <Font size="21.0" />
                                        </font>
                                     </Button>
-                                    <Button fx:id="addProduct_delete" layoutX="264.0" layoutY="600.0" mnemonicParsing="false" onAction="#addProductDelete" prefHeight="47.0" prefWidth="111.0" text="Delete">
+                                    <Button fx:id="addProduct_delete" disable="true" layoutX="994.0" layoutY="105.0" mnemonicParsing="false" onAction="#addProductDelete" prefHeight="47.0" prefWidth="111.0" text="Delete">
                                        <font>
                                           <Font size="21.0" />
                                        </font>
                                     </Button>
-                                    <Label layoutX="120.0" layoutY="449.0" prefHeight="32.0" prefWidth="59.0" text="Price:">
+                                    <Label layoutX="639.0" layoutY="37.0" prefHeight="32.0" prefWidth="59.0" text="Price:">
                                        <font>
                                           <Font size="21.0" />
                                        </font>
                                     </Label>
-                                    <TextField fx:id="addProduct_price" layoutX="199.0" layoutY="448.0" onKeyTyped="#onlyNumInTextField" prefHeight="35.0" prefWidth="202.0" styleClass="price" stylesheets="@dashboardDesign.css">
+                                    <TextField fx:id="addProduct_price" layoutX="704.0" layoutY="36.0" onKeyTyped="#onlyNumInTextField" prefHeight="35.0" prefWidth="169.0" styleClass="price" stylesheets="@dashboardDesign.css">
                                        <font>
                                           <Font size="15.0" />
                                        </font></TextField>
-                                    <Label layoutX="117.0" layoutY="394.0" prefHeight="32.0" prefWidth="66.0" text="Status:">
+                                    <Label layoutX="371.0" layoutY="38.0" prefHeight="32.0" prefWidth="66.0" text="Status:">
                                        <font>
                                           <Font size="21.0" />
                                        </font>
                                     </Label>
-                                    <ComboBox fx:id="addProduct_status" layoutX="200.0" layoutY="392.0" prefHeight="34.0" prefWidth="201.0" promptText="Choose" style="-fx-font-size: 15;" styleClass="text-field" stylesheets="@dashboardDesign.css" />
-                                    <Label layoutX="209.0" layoutY="453.0" text="₱">
+                                    <ComboBox fx:id="addProduct_status" layoutX="445.0" layoutY="37.0" prefHeight="34.0" prefWidth="157.0" promptText="Choose" style="-fx-font-size: 15;" styleClass="text-field" stylesheets="@dashboardDesign.css" />
+                                    <Label layoutX="715.0" layoutY="41.0" text="₱">
                                        <font>
                                           <Font size="16.0" />
                                        </font>
                                     </Label>
-                                 </children>
-                              </AnchorPane>
-                              <AnchorPane layoutX="494.0" layoutY="3.0" prefHeight="794.0" prefWidth="713.0" stylesheets="@dashboardDesign.css">
-                                 <styleClass>
-                                    <String fx:value="white-bg" />
-                                    <String fx:value="shadow" />
-                                 </styleClass>
-                                 <children>
-                                    <TableView fx:id="addProduct_table" layoutX="14.0" layoutY="80.0" onMouseClicked="#addProductsSelect" onSort="#addProductShowListData" prefHeight="699.0" prefWidth="685.0" styleClass="table-view1" stylesheets="@dashboardDesign.css">
-                                      <columns>
-                                        <TableColumn fx:id="column_addProduct_id" prefWidth="157.60003662109375" resizable="false" style="-fx-font-size: 15;" text="Product ID" />
-                                          <TableColumn fx:id="column_addProduct_name" prefWidth="208.0" resizable="false" style="-fx-font-size: 15;" text="Product Name" />
-                                          <TableColumn fx:id="column_addProduct_price" prefWidth="143.99993896484375" resizable="false" style="-fx-font-size: 15;" text="Price" />
-                                          <TableColumn fx:id="column_addProduct_status" prefWidth="188.7999267578125" resizable="false" style="-fx-font-size: 15;" text="Status" />
-                                      </columns>
-                                       <columnResizePolicy>
-                                          <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                                       </columnResizePolicy>
-                                    </TableView>
-                                    <TextField fx:id="addProduct_search" layoutX="12.0" layoutY="22.0" onAction="#addProductsSearch" prefHeight="40.0" prefWidth="287.0" promptText="Search" styleClass="search" stylesheets="@dashboardDesign.css">
+                                    <Label layoutX="934.0" layoutY="38.0" prefHeight="32.0" prefWidth="95.0" text="Quantity">
+                                       <font>
+                                          <Font size="21.0" />
+                                       </font>
+                                    </Label>
+                                    <Spinner fx:id="addProduct_quantity" layoutX="1041.0" layoutY="40.0" onDragDetected="#addProductSpinner" prefHeight="27.0" prefWidth="78.0" />
+                                    <TextField fx:id="addProduct_search" layoutX="12.0" layoutY="130.0" onAction="#addProductsSearch" prefHeight="39.0" prefWidth="287.0" promptText="Search" styleClass="search" stylesheets="@dashboardDesign.css">
                                        <font>
                                           <Font size="18.0" />
                                        </font>
                                     </TextField>
-                                    <FontAwesomeIconView glyphName="SEARCH" layoutX="20.0" layoutY="50.0" size="22" text="" />
+                                    <FontAwesomeIconView glyphName="SEARCH" layoutX="25.0" layoutY="157.0" size="22" text="" />
                                  </children>
                               </AnchorPane>
+                              <TableView fx:id="addProduct_table" layoutX="18.0" layoutY="188.0" onMouseClicked="#addProductsSelect" onSort="#addProductShowListData" prefHeight="598.0" prefWidth="1175.0" styleClass="table-view1" stylesheets="@dashboardDesign.css">
+                                <columns>
+                                  <TableColumn fx:id="column_addProduct_id" prefWidth="280.8000736236572" resizable="false" style="-fx-font-size: 15;" text="ID" />
+                                    <TableColumn fx:id="column_addProduct_name" prefWidth="240.79995727539062" resizable="false" style="-fx-font-size: 15;" text="Product Name" />
+                                    <TableColumn fx:id="column_addProduct_quantity" prefWidth="220.00018310546875" resizable="false" style="-fx-font-size: 15;" text="Qty" />
+                                    <TableColumn fx:id="column_addProduct_price" minWidth="0.0" prefWidth="183.2000732421875" resizable="false" style="-fx-font-size: 15;" text="Price" />
+                                    <TableColumn fx:id="column_addProduct_status" minWidth="0.0" prefWidth="254.4000244140625" style="-fx-font-size: 15;" text="Status" />
+                                </columns>
+                                 <columnResizePolicy>
+                                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                 </columnResizePolicy>
+                              </TableView>
                            </children>
                         </AnchorPane>
                         <AnchorPane fx:id="orders_form" layoutX="-8.8" layoutY="124.0" prefHeight="812.0" prefWidth="1213.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="-9.0" AnchorPane.rightAnchor="19.0" AnchorPane.topAnchor="0.0">
@@ -435,58 +439,89 @@
                               </AnchorPane>
                            </children>
                         </AnchorPane>
-                        <AnchorPane fx:id="history_form" layoutX="-2.0" prefHeight="805.0" prefWidth="1217.0">
+                        <AnchorPane fx:id="history_form" layoutX="-2.0" prefHeight="805.0" prefWidth="1217.0" stylesheets="@dashboardDesign.css" visible="false">
                            <children>
-                              <AnchorPane layoutX="12.0" layoutY="2.0" prefHeight="802.0" prefWidth="810.0" stylesheets="@dashboardDesign.css">
-                                 <styleClass>
-                                    <String fx:value="white-bg" />
-                                    <String fx:value="shadow" />
-                                 </styleClass>
-                                 <children>
-                                    <TableView fx:id="history_fullyPaidTable" layoutX="5.0" layoutY="42.0" onSort="#orderShowListData" prefHeight="751.0" prefWidth="798.0" styleClass="table-view1" stylesheets="@dashboardDesign.css">
-                                       <columns>
-                                          <TableColumn fx:id="history_column_transactionNumber" prefWidth="131.9999942779541" resizable="false" sortable="false" style="-fx-font-size: 18;" text="Transaction #" />
-                                          <TableColumn fx:id="history_column_costumerName" prefWidth="154.40005493164062" resizable="false" sortable="false" style="-fx-font-size: 18;" text="Customer Name" />
-                                          <TableColumn fx:id="history_column_total" minWidth="6.4000244140625" prefWidth="121.5999755859375" resizable="false" sortable="false" style="-fx-font-size: 18;" text="Total " />
-                                          <TableColumn fx:id="history_column_paid" prefWidth="136.00003051757812" resizable="false" sortable="false" style="-fx-font-size: 18;" text="Paid" />
-                                          <TableColumn fx:id="history_column_change" minWidth="0.0" prefWidth="145.60003662109375" resizable="false" sortable="false" style="-fx-font-size: 18;" text="Change" />
-                                          <TableColumn fx:id="history_column_date" prefWidth="107.19992675781248" resizable="false" sortable="false" style="-fx-font-size: 18;" text="Date" />
-                                       </columns>
-                                       <columnResizePolicy>
-                                          <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                                       </columnResizePolicy>
-                                    </TableView>
-                                    <CheckBox fx:id="history_fullyPaid" layoutX="14.0" layoutY="8.0" mnemonicParsing="false" onAction="#historyFullyPaid" prefHeight="26.0" prefWidth="116.0" text="Fully Paid">
-                                       <font>
-                                          <Font size="16.0" />
-                                       </font>
-                                    </CheckBox>
-                                    <CheckBox fx:id="history_notFullyPaid" layoutX="154.0" layoutY="8.0" mnemonicParsing="false" onAction="#historyNotFullyPaid" prefHeight="26.0" prefWidth="133.0" text="Have Balance">
-                                       <font>
-                                          <Font size="16.0" />
-                                       </font>
-                                    </CheckBox>
-                                    <TableView fx:id="history_withBalanceTable" layoutX="5.0" layoutY="41.0" onSort="#orderShowListData" prefHeight="754.0" prefWidth="798.0" styleClass="table-view1" stylesheets="@dashboardDesign.css" visible="false">
-                                       <columns>
-                                          <TableColumn fx:id="history_withBalance_column_transactionNumber" prefWidth="153.60000038146973" resizable="false" sortable="false" style="-fx-font-size: 18;" text="Transaction #" />
-                                          <TableColumn fx:id="history_withBalance_column_costumerName" prefWidth="160.80001831054688" resizable="false" sortable="false" style="-fx-font-size: 18;" text="Customer Name" />
-                                          <TableColumn fx:id="history_withBalance_column_total" prefWidth="118.4000244140625" resizable="false" sortable="false" style="-fx-font-size: 18;" text="Total " />
-                                          <TableColumn fx:id="history_withBalance_column_paid" prefWidth="124.80001831054688" resizable="false" sortable="false" style="-fx-font-size: 18;" text="Paid" />
-                                          <TableColumn fx:id="history_withBalance_column_balance" minWidth="0.0" prefWidth="124.800048828125" resizable="false" sortable="false" style="-fx-font-size: 18;" text="Balance" />
-                                          <TableColumn fx:id="history_withBalance_column_date" prefWidth="112.79998779296875" resizable="false" sortable="false" style="-fx-font-size: 18;" text="Date" />
-                                       </columns>
-                                       <columnResizePolicy>
-                                          <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                                       </columnResizePolicy>
-                                    </TableView>
-                                 </children>
-                              </AnchorPane>
-                              <AnchorPane layoutX="841.0" layoutY="3.0" prefHeight="802.0" prefWidth="366.0" stylesheets="@dashboardDesign.css">
-                                 <styleClass>
-                                    <String fx:value="shadow" />
-                                    <String fx:value="white-bg" />
-                                 </styleClass>
-                              </AnchorPane>
+                              <TableView fx:id="history_fullyPaidTable" layoutX="17.0" layoutY="44.0" onSort="#orderShowListData" prefHeight="528.0" prefWidth="1196.0" styleClass="table-view1" stylesheets="@dashboardDesign.css">
+                                 <columns>
+                                    <TableColumn fx:id="history_column_transactionNumber" prefWidth="179.99996376037598" resizable="false" sortable="false" style="-fx-font-size: 18;" text="Transaction #" />
+                                    <TableColumn fx:id="history_column_costumerName" prefWidth="237.5999755859375" resizable="false" sortable="false" style="-fx-font-size: 18;" text="Customer Name" />
+                                    <TableColumn fx:id="history_column_total" minWidth="6.4000244140625" prefWidth="168.80007934570312" resizable="false" sortable="false" style="-fx-font-size: 18;" text="Total " />
+                                    <TableColumn fx:id="history_column_paid" prefWidth="178.9334716796875" resizable="false" sortable="false" style="-fx-font-size: 18;" text="Paid" />
+                                    <TableColumn fx:id="history_column_change" minWidth="0.0" prefWidth="200.2666015625" resizable="false" sortable="false" style="-fx-font-size: 18;" text="Change" />
+                                    <TableColumn fx:id="history_column_date" prefWidth="220.800048828125" resizable="false" sortable="false" style="-fx-font-size: 18;" text="Date" />
+                                 </columns>
+                                 <columnResizePolicy>
+                                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                 </columnResizePolicy>
+                              </TableView>
+                              <CheckBox fx:id="history_fullyPaid" layoutX="26.0" layoutY="10.0" mnemonicParsing="false" onAction="#historyFullyPaid" prefHeight="26.0" prefWidth="116.0" text="Fully Paid">
+                                 <font>
+                                    <Font size="16.0" />
+                                 </font>
+                              </CheckBox>
+                              <CheckBox fx:id="history_notFullyPaid" layoutX="166.0" layoutY="10.0" mnemonicParsing="false" onAction="#historyNotFullyPaid" prefHeight="26.0" prefWidth="133.0" text="Have Balance">
+                                 <font>
+                                    <Font size="16.0" />
+                                 </font>
+                              </CheckBox>
+                              <TableView fx:id="history_withBalanceTable" layoutX="17.0" layoutY="43.0" onSort="#orderShowListData" prefHeight="529.0" prefWidth="1194.0" styleClass="table-view1" stylesheets="@dashboardDesign.css" visible="false">
+                                 <columns>
+                                    <TableColumn fx:id="history_withBalance_column_transactionNumber" prefWidth="219.4666690826416" resizable="false" sortable="false" style="-fx-font-size: 18;" text="Transaction #" />
+                                    <TableColumn fx:id="history_withBalance_column_costumerName" prefWidth="213.33331298828125" resizable="false" sortable="false" style="-fx-font-size: 18;" text="Customer Name" />
+                                    <TableColumn fx:id="history_withBalance_column_total" prefWidth="189.60006713867188" resizable="false" sortable="false" style="-fx-font-size: 18;" text="Total " />
+                                    <TableColumn fx:id="history_withBalance_column_paid" prefWidth="149.5999755859375" resizable="false" sortable="false" style="-fx-font-size: 18;" text="Paid" />
+                                    <TableColumn fx:id="history_withBalance_column_balance" minWidth="0.0" prefWidth="230.4000244140625" resizable="false" sortable="false" style="-fx-font-size: 18;" text="Balance" />
+                                    <TableColumn fx:id="history_withBalance_column_date" prefWidth="193.0665283203125" resizable="false" sortable="false" style="-fx-font-size: 18;" text="Date" />
+                                 </columns>
+                                 <columnResizePolicy>
+                                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                 </columnResizePolicy>
+                              </TableView>
+                              <Label layoutX="141.0" layoutY="582.0" prefHeight="46.0" prefWidth="75.0" text="Total:">
+                                 <font>
+                                    <Font size="27.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutX="79.0" layoutY="651.0" text="Amount:">
+                                 <font>
+                                    <Font size="24.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutX="408.0" layoutY="646.0" prefHeight="46.0" prefWidth="88.0" text="Balance:">
+                                 <font>
+                                    <Font size="23.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="order_totalLabel1" layoutX="217.0" layoutY="586.0" text="₱0">
+                                 <font>
+                                    <Font size="27.0" />
+                                 </font>
+                              </Label>
+                              <TextField fx:id="order_amount1" layoutX="178.0" layoutY="648.0" onKeyTyped="#onlyNumInTextField" prefHeight="41.0" prefWidth="162.0" promptText="How much" styleClass="price" stylesheets="@dashboardDesign.css">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                              </TextField>
+                              <Label fx:id="order_balanceLabel1" layoutX="498.0" layoutY="652.0" text="₱0">
+                                 <font>
+                                    <Font size="23.0" />
+                                 </font>
+                              </Label>
+                              <Button fx:id="order_payBtn1" layoutX="293.0" layoutY="583.0" mnemonicParsing="false" onAction="#orderPay" prefHeight="48.0" prefWidth="55.0" text="Pay">
+                                 <font>
+                                    <Font size="17.0" />
+                                 </font>
+                              </Button>
+                              <Label layoutX="408.0" layoutY="702.0" prefHeight="46.0" prefWidth="88.0" text="Change:">
+                                 <font>
+                                    <Font size="23.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="order_change1" layoutX="498.0" layoutY="708.0" text="₱0">
+                                 <font>
+                                    <Font size="23.0" />
+                                 </font>
+                              </Label>
                            </children>
                         </AnchorPane>
                      </children>
