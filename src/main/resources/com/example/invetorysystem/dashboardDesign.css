@@ -67,6 +67,7 @@
     -fx-border-color: linear-gradient(to bottom right, #aeaeaa, #aeaeaa);
     -fx-border-radius: 8px;
     -fx-border-width: 2px;
+    -fx-font: 14px "Century Gothic";
 }
 .table-view1 .column-header-background{
     -fx-background-color: linear-gradient(to bottom right, #aeaeaa, #aeaeaa);

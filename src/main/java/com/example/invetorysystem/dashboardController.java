@@ -233,6 +233,11 @@ public class dashboardController implements Initializable {
     private CheckBox history_fullyPaid;
     @FXML
     private CheckBox history_notFullyPaid;
+    @FXML
+    private RadioButton history_full_paid;
+    @FXML
+    private RadioButton history_have_balance;
+
     NumberFormat formatWithComma = NumberFormat.getNumberInstance(Locale.US);
     public int productId;
     private ObservableList<productData> addProductList;
@@ -907,6 +912,7 @@ public class dashboardController implements Initializable {
             history_fullyPaidTable.setVisible(true);
             history_withBalanceTable.setVisible(false);
         }
+
     }
     public void historyNotFullyPaid(){
         if (history_notFullyPaid.isSelected()) {
@@ -1378,7 +1384,7 @@ public class dashboardController implements Initializable {
         historyNotFullyPaid(); // If the not fully paid radio button is selected, it will show the table (History)
         historyShowNoBalanceData(); // Put the data from SQL with no balance to Table (History)
         historyShowWithBalanceData(); // Put the data from SQL with balance to Table (History)
-
+        history_fullyPaid.setSelected(true);
 
         makeTableNotReOrder(); // Make the table not reorder able (Products) (Order) (History)
         disableUpdateIfRowIsNotSelected(); // Disable the update and delete button if the row is not selected

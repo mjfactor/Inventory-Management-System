@@ -136,7 +136,7 @@
                <center>
                   <AnchorPane prefHeight="812.0" prefWidth="1162.0" BorderPane.alignment="CENTER">
                      <children>
-                        <AnchorPane fx:id="home_form" layoutX="32.8" prefHeight="812.0" prefWidth="1226.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="33.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <AnchorPane fx:id="home_form" layoutX="32.8" prefHeight="812.0" prefWidth="1226.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="33.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <children>
                               <AnchorPane layoutX="-10.0" prefHeight="264.0" prefWidth="1178.0" styleClass="white-bg" stylesheets="@dashboardDesign.css">
                                  <children>
@@ -226,7 +226,7 @@
                               <Line endX="1031.4664306640625" layoutX="137.0" layoutY="279.0" startX="-134.99998474121094" />
                            </children>
                         </AnchorPane>
-                        <AnchorPane fx:id="addProducts_form" prefHeight="812.0" prefWidth="1227.2" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <AnchorPane fx:id="addProducts_form" prefHeight="812.0" prefWidth="1227.2" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <children>
                               <AnchorPane layoutX="23.0" layoutY="3.0" prefHeight="175.0" prefWidth="1169.0" stylesheets="@dashboardDesign.css">
                                  <styleClass>
@@ -236,7 +236,7 @@
                                  <children>
                                     <Label layoutX="14.0" layoutY="37.0" prefHeight="32.0" prefWidth="151.0" text="Product Name:">
                                        <font>
-                                          <Font size="21.0" />
+                                          <Font name="Century Gothic" size="20.0" />
                                        </font>
                                     </Label>
                                     <TextField fx:id="addProduct_name" layoutX="176.0" layoutY="36.0" prefHeight="35.0" prefWidth="158.0">
@@ -245,27 +245,27 @@
                                        </font></TextField>
                                     <Button fx:id="addProduct_add" layoutX="543.0" layoutY="106.0" mnemonicParsing="false" onAction="#addProductsAdd" prefHeight="47.0" prefWidth="111.0" text="Add">
                                        <font>
-                                          <Font size="21.0" />
+                                          <Font name="Century Gothic" size="18.0" />
                                        </font>
                                     </Button>
                                     <Button fx:id="addProduct_update" disable="true" layoutX="840.0" layoutY="105.0" mnemonicParsing="false" onAction="#addProductUpdate" prefHeight="47.0" prefWidth="111.0" text="Update">
                                        <font>
-                                          <Font size="21.0" />
+                                          <Font name="Century Gothic" size="18.0" />
                                        </font>
                                     </Button>
                                     <Button fx:id="addProduct_reset" layoutX="693.0" layoutY="106.0" mnemonicParsing="false" onAction="#clearTextField" prefHeight="47.0" prefWidth="110.0" text="Reset">
                                        <font>
-                                          <Font size="21.0" />
+                                          <Font name="Century Gothic" size="18.0" />
                                        </font>
                                     </Button>
                                     <Button fx:id="addProduct_delete" disable="true" layoutX="994.0" layoutY="105.0" mnemonicParsing="false" onAction="#addProductDelete" prefHeight="47.0" prefWidth="111.0" text="Delete">
                                        <font>
-                                          <Font size="21.0" />
+                                          <Font name="Century Gothic" size="18.0" />
                                        </font>
                                     </Button>
                                     <Label layoutX="639.0" layoutY="37.0" prefHeight="32.0" prefWidth="59.0" text="Price:">
                                        <font>
-                                          <Font size="21.0" />
+                                          <Font name="Century Gothic" size="20.0" />
                                        </font>
                                     </Label>
                                     <TextField fx:id="addProduct_price" layoutX="704.0" layoutY="36.0" onKeyTyped="#onlyNumInTextField" prefHeight="35.0" prefWidth="169.0" styleClass="price" stylesheets="@dashboardDesign.css">
@@ -274,7 +274,7 @@
                                        </font></TextField>
                                     <Label layoutX="371.0" layoutY="38.0" prefHeight="32.0" prefWidth="66.0" text="Status:">
                                        <font>
-                                          <Font size="21.0" />
+                                          <Font name="Century Gothic" size="20.0" />
                                        </font>
                                     </Label>
                                     <ComboBox fx:id="addProduct_status" layoutX="445.0" layoutY="37.0" prefHeight="34.0" prefWidth="157.0" promptText="Choose" style="-fx-font-size: 15;" styleClass="text-field" stylesheets="@dashboardDesign.css" />
@@ -285,13 +285,13 @@
                                     </Label>
                                     <Label layoutX="934.0" layoutY="38.0" prefHeight="32.0" prefWidth="95.0" text="Quantity">
                                        <font>
-                                          <Font size="21.0" />
+                                          <Font name="Century Gothic" size="20.0" />
                                        </font>
                                     </Label>
                                     <Spinner fx:id="addProduct_quantity" layoutX="1041.0" layoutY="40.0" onDragDetected="#addProductSpinner" prefHeight="27.0" prefWidth="78.0" />
                                     <TextField fx:id="addProduct_search" layoutX="12.0" layoutY="130.0" onAction="#addProductsSearch" prefHeight="39.0" prefWidth="287.0" promptText="Search" styleClass="search" stylesheets="@dashboardDesign.css">
                                        <font>
-                                          <Font size="18.0" />
+                                          <Font name="Century Gothic" size="18.0" />
                                        </font>
                                     </TextField>
                                     <FontAwesomeIconView glyphName="SEARCH" layoutX="25.0" layoutY="157.0" size="22" text="" />
@@ -338,85 +338,85 @@
                                     <String fx:value="shadow" />
                                  </styleClass>
                                  <children>
-                                    <Label layoutX="46.0" layoutY="120.0" prefHeight="34.0" prefWidth="146.0" text="Product type:">
+                                    <Label layoutX="39.0" layoutY="120.0" prefHeight="34.0" prefWidth="138.0" text="Product type:">
                                        <font>
-                                          <Font size="20.0" />
+                                          <Font name="Century Gothic" size="18.0" />
                                        </font>
                                     </Label>
                                     <ComboBox fx:id="order_productType" layoutX="178.0" layoutY="118.0" onAction="#orderSet" prefHeight="38.0" prefWidth="160.0" style="-fx-font-size: 15;" styleClass="text-field" stylesheets="@dashboardDesign.css" />
-                                    <Label layoutX="36.0" layoutY="188.0" prefHeight="34.0" prefWidth="154.0" text="Product Name:">
+                                    <Label layoutX="39.0" layoutY="188.0" prefHeight="34.0" prefWidth="151.0" text="Product Name:">
                                        <font>
-                                          <Font size="20.0" />
+                                          <Font name="Century Gothic" size="18.0" />
                                        </font>
                                     </Label>
                                     <ComboBox fx:id="order_productName" layoutX="178.0" layoutY="186.0" prefHeight="38.0" prefWidth="162.0" style="-fx-font-size: 15;" styleClass="text-field" stylesheets="@dashboardDesign.css" />
-                                    <Label layoutX="46.0" layoutY="253.0" prefHeight="34.0" prefWidth="100.0" text="Quantity:">
+                                    <Label layoutX="37.0" layoutY="253.0" prefHeight="34.0" prefWidth="100.0" text="Quantity:">
                                        <font>
-                                          <Font size="20.0" />
+                                          <Font name="Century Gothic" size="18.0" />
                                        </font>
                                     </Label>
-                                    <Spinner fx:id="order_quantity" layoutX="161.0" layoutY="253.0" prefHeight="34.0" prefWidth="114.0" />
-                                    <Label layoutX="39.0" layoutY="418.0" prefHeight="46.0" prefWidth="75.0" text="Total:">
+                                    <Spinner fx:id="order_quantity" layoutX="178.0" layoutY="253.0" prefHeight="34.0" prefWidth="114.0" />
+                                    <Label layoutX="34.0" layoutY="435.0" prefHeight="46.0" prefWidth="75.0" text="Total:">
                                        <font>
-                                          <Font size="27.0" />
+                                          <Font name="Century Gothic" size="18.0" />
                                        </font>
                                     </Label>
-                                    <Label layoutX="31.0" layoutY="494.0" text="Amount:">
+                                    <Label layoutX="34.0" layoutY="494.0" prefHeight="23.0" prefWidth="88.0" text="Amount:">
                                        <font>
-                                          <Font size="24.0" />
+                                          <Font name="Century Gothic" size="18.0" />
                                        </font>
                                     </Label>
-                                    <Label layoutX="28.0" layoutY="584.0" prefHeight="46.0" prefWidth="88.0" text="Balance:">
+                                    <Label layoutX="34.0" layoutY="537.0" prefHeight="46.0" prefWidth="88.0" text="Balance:">
                                        <font>
-                                          <Font size="23.0" />
+                                          <Font name="Century Gothic" size="18.0" />
                                        </font>
                                     </Label>
-                                    <Label fx:id="order_totalLabel" layoutX="115.0" layoutY="422.0" text="₱0">
+                                    <Label fx:id="order_totalLabel" layoutX="87.0" layoutY="446.0" text="₱0">
                                        <font>
-                                          <Font size="27.0" />
+                                          <Font name="Century Gothic" size="18.0" />
                                        </font>
                                     </Label>
-                                    <TextField fx:id="order_amount" layoutX="130.0" layoutY="491.0" onKeyTyped="#onlyNumInTextField" prefHeight="41.0" prefWidth="162.0" promptText="How much" styleClass="price" stylesheets="@dashboardDesign.css">
+                                    <TextField fx:id="order_amount" layoutX="125.0" layoutY="486.0" onKeyTyped="#onlyNumInTextField" prefHeight="35.0" prefWidth="162.0" promptText="How much" styleClass="price" stylesheets="@dashboardDesign.css">
                                        <font>
                                           <Font size="15.0" />
                                        </font>
                                     </TextField>
-                                    <Label fx:id="order_balanceLabel" layoutX="118.0" layoutY="590.0" text="₱0">
+                                    <Label fx:id="order_balanceLabel" layoutX="119.0" layoutY="548.0" text="₱0">
                                        <font>
-                                          <Font size="23.0" />
+                                          <Font name="Century Gothic" size="18.0" />
                                        </font>
                                     </Label>
-                                    <Button fx:id="order_payBtn" layoutX="306.0" layoutY="487.0" mnemonicParsing="false" onAction="#orderPay" prefHeight="48.0" prefWidth="90.0" text="Pay">
+                                    <Button fx:id="order_payBtn" layoutX="295.0" layoutY="487.0" mnemonicParsing="false" onAction="#orderPay" prefHeight="33.0" prefWidth="90.0" text="Pay">
                                        <font>
-                                          <Font size="17.0" />
+                                          <Font name="Century Gothic" size="17.0" />
                                        </font>
                                     </Button>
-                                    <Button fx:id="order_addBtn" layoutX="176.0" layoutY="319.0" mnemonicParsing="false" onAction="#ordersAdd" prefHeight="48.0" prefWidth="84.0" text="Add">
+                                    <Button fx:id="order_addBtn" layoutX="178.0" layoutY="317.0" mnemonicParsing="false" onAction="#ordersAdd" prefHeight="48.0" prefWidth="93.0" text="Add">
                                        <font>
                                           <Font size="17.0" />
                                        </font>
                                     </Button>
                                     <TextField fx:id="order_customName" layoutX="178.0" layoutY="185.0" prefHeight="40.0" prefWidth="162.0" promptText="Custom Product" visible="false" />
-                                    <Label layoutX="62.0" layoutY="59.0" prefHeight="34.0" prefWidth="116.0" text="Customer:">
+                                    <Label layoutX="38.0" layoutY="59.0" prefHeight="34.0" prefWidth="110.0" text="Customer:">
                                        <font>
-                                          <Font size="20.0" />
+                                          <Font name="Century Gothic" size="18.0" />
                                        </font>
                                     </Label>
                                     <TextField fx:id="customer_name" layoutX="178.0" layoutY="59.0" prefHeight="34.0" prefWidth="160.0" />
                                     <Button fx:id="order_reset" layoutX="424.0" layoutY="730.0" mnemonicParsing="false" onAction="#orderResetTable" prefHeight="42.0" prefWidth="81.0" style="-fx-background-color: Red;" text="Reset ">
                                        <font>
-                                          <Font size="17.0" />
+                                          <Font name="Century Gothic" size="17.0" />
                                        </font>
                                     </Button>
                                     <Label fx:id="custom_priceLabel" disable="true" layoutX="378.0" layoutY="139.0" prefHeight="34.0" prefWidth="102.0" text="Set Price:">
                                        <font>
-                                          <Font size="20.0" />
+                                          <Font name="Century Gothic" size="18.0" />
                                        </font>
                                     </Label>
                                     <TextField fx:id="order_customPrice" disable="true" layoutX="366.0" layoutY="183.0" onKeyTyped="#onlyNumInTextField" prefHeight="43.0" prefWidth="110.0" promptText="Custom Price" styleClass="price2" stylesheets="@dashboardDesign.css" />
-                                    <Label layoutX="143.0" layoutY="496.0" prefHeight="30.0" prefWidth="14.0" text="₱">
+                                    <Label layoutX="131.0" layoutY="491.0" prefHeight="30.0" prefWidth="14.0" text="₱">
                                        <font>
-                                          <Font size="18.0" />
+                                          <Font size="15.0" />
                                        </font>
                                     </Label>
                                     <Label layoutX="373.0" layoutY="192.0" text="₱">
@@ -424,14 +424,14 @@
                                           <Font size="16.0" />
                                        </font>
                                     </Label>
-                                    <Label layoutX="28.0" layoutY="640.0" prefHeight="46.0" prefWidth="88.0" text="Change:">
+                                    <Label layoutX="34.0" layoutY="593.0" prefHeight="46.0" prefWidth="88.0" text="Change:">
                                        <font>
-                                          <Font size="23.0" />
+                                          <Font name="Century Gothic" size="18.0" />
                                        </font>
                                     </Label>
-                                    <Label fx:id="order_change" layoutX="118.0" layoutY="646.0" text="₱0">
+                                    <Label fx:id="order_change" layoutX="119.0" layoutY="604.0" text="₱0">
                                        <font>
-                                          <Font size="23.0" />
+                                          <Font name="Century Gothic" size="18.0" />
                                        </font>
                                     </Label>
                                     <Line endX="409.0" layoutX="113.0" layoutY="382.0" startX="-113.0" />
@@ -441,7 +441,7 @@
                         </AnchorPane>
                         <AnchorPane fx:id="history_form" layoutX="-2.0" prefHeight="805.0" prefWidth="1217.0" stylesheets="@dashboardDesign.css" visible="false">
                            <children>
-                              <TableView fx:id="history_fullyPaidTable" layoutX="17.0" layoutY="44.0" onSort="#orderShowListData" prefHeight="528.0" prefWidth="1196.0" styleClass="table-view1" stylesheets="@dashboardDesign.css">
+                              <TableView fx:id="history_fullyPaidTable" layoutX="17.0" layoutY="44.0" onSort="#orderShowListData" prefHeight="746.0" prefWidth="1196.0" styleClass="table-view1" stylesheets="@dashboardDesign.css">
                                  <columns>
                                     <TableColumn fx:id="history_column_transactionNumber" prefWidth="179.99996376037598" resizable="false" sortable="false" style="-fx-font-size: 18;" text="Transaction #" />
                                     <TableColumn fx:id="history_column_costumerName" prefWidth="237.5999755859375" resizable="false" sortable="false" style="-fx-font-size: 18;" text="Customer Name" />
@@ -456,12 +456,12 @@
                               </TableView>
                               <CheckBox fx:id="history_fullyPaid" layoutX="26.0" layoutY="10.0" mnemonicParsing="false" onAction="#historyFullyPaid" prefHeight="26.0" prefWidth="116.0" text="Fully Paid">
                                  <font>
-                                    <Font size="16.0" />
+                                    <Font name="Century Gothic" size="15.0" />
                                  </font>
                               </CheckBox>
                               <CheckBox fx:id="history_notFullyPaid" layoutX="166.0" layoutY="10.0" mnemonicParsing="false" onAction="#historyNotFullyPaid" prefHeight="26.0" prefWidth="133.0" text="Have Balance">
                                  <font>
-                                    <Font size="16.0" />
+                                    <Font name="Century Gothic" size="15.0" />
                                  </font>
                               </CheckBox>
                               <TableView fx:id="history_withBalanceTable" layoutX="17.0" layoutY="43.0" onSort="#orderShowListData" prefHeight="529.0" prefWidth="1194.0" styleClass="table-view1" stylesheets="@dashboardDesign.css" visible="false">
@@ -477,47 +477,47 @@
                                     <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                                  </columnResizePolicy>
                               </TableView>
-                              <Label layoutX="141.0" layoutY="582.0" prefHeight="46.0" prefWidth="75.0" text="Total:">
+                              <Label layoutX="141.0" layoutY="582.0" prefHeight="46.0" prefWidth="75.0" text="Total:" visible="false">
                                  <font>
                                     <Font size="27.0" />
                                  </font>
                               </Label>
-                              <Label layoutX="79.0" layoutY="651.0" text="Amount:">
+                              <Label layoutX="79.0" layoutY="651.0" text="Amount:" visible="false">
                                  <font>
                                     <Font size="24.0" />
                                  </font>
                               </Label>
-                              <Label layoutX="408.0" layoutY="646.0" prefHeight="46.0" prefWidth="88.0" text="Balance:">
+                              <Label layoutX="408.0" layoutY="646.0" prefHeight="46.0" prefWidth="88.0" text="Balance:" visible="false">
                                  <font>
                                     <Font size="23.0" />
                                  </font>
                               </Label>
-                              <Label fx:id="order_totalLabel1" layoutX="217.0" layoutY="586.0" text="₱0">
+                              <Label fx:id="order_totalLabel1" layoutX="217.0" layoutY="586.0" text="₱0" visible="false">
                                  <font>
                                     <Font size="27.0" />
                                  </font>
                               </Label>
-                              <TextField fx:id="order_amount1" layoutX="178.0" layoutY="648.0" onKeyTyped="#onlyNumInTextField" prefHeight="41.0" prefWidth="162.0" promptText="How much" styleClass="price" stylesheets="@dashboardDesign.css">
+                              <TextField fx:id="order_amount1" layoutX="178.0" layoutY="648.0" onKeyTyped="#onlyNumInTextField" prefHeight="41.0" prefWidth="162.0" promptText="How much" styleClass="price" stylesheets="@dashboardDesign.css" visible="false">
                                  <font>
                                     <Font size="15.0" />
                                  </font>
                               </TextField>
-                              <Label fx:id="order_balanceLabel1" layoutX="498.0" layoutY="652.0" text="₱0">
+                              <Label fx:id="order_balanceLabel1" layoutX="498.0" layoutY="652.0" text="₱0" visible="false">
                                  <font>
                                     <Font size="23.0" />
                                  </font>
                               </Label>
-                              <Button fx:id="order_payBtn1" layoutX="293.0" layoutY="583.0" mnemonicParsing="false" onAction="#orderPay" prefHeight="48.0" prefWidth="55.0" text="Pay">
+                              <Button fx:id="order_payBtn1" layoutX="293.0" layoutY="583.0" mnemonicParsing="false" onAction="#orderPay" prefHeight="48.0" prefWidth="55.0" text="Pay" visible="false">
                                  <font>
                                     <Font size="17.0" />
                                  </font>
                               </Button>
-                              <Label layoutX="408.0" layoutY="702.0" prefHeight="46.0" prefWidth="88.0" text="Change:">
+                              <Label layoutX="408.0" layoutY="702.0" prefHeight="46.0" prefWidth="88.0" text="Change:" visible="false">
                                  <font>
                                     <Font size="23.0" />
                                  </font>
                               </Label>
-                              <Label fx:id="order_change1" layoutX="498.0" layoutY="708.0" text="₱0">
+                              <Label fx:id="order_change1" layoutX="498.0" layoutY="708.0" text="₱0" visible="false">
                                  <font>
                                     <Font size="23.0" />
                                  </font>

@@ -22,6 +22,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class loginController implements Initializable {
@@ -125,7 +126,15 @@ public class loginController implements Initializable {
 
     // Exit Button
     public void close(){
-        System.exit(0);
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirmation Message");
+        alert.setHeaderText(null);
+        alert.setContentText("Are you sure you want to exit?");
+        Optional<ButtonType> option = alert.showAndWait();
+        if (option.get().equals(ButtonType.OK)) {
+            System.exit(0);
+        }
+
     }
 
     public void displayLogo(){
