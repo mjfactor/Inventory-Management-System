@@ -5,28 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2b1c4b3e-ed24-4a03-940c-14188ed82d64" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/JAR FILES/commons-beanutils-1.9.4.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/JAR FILES/commons-collections-3.2.2.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/JAR FILES/commons-collections4-4.2.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/JAR FILES/commons-digester-2.1.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/JAR FILES/commons-logging-1.1.1.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/JAR FILES/ecj-3.21.0.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/JAR FILES/jackson-annotations-2.15.3.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/JAR FILES/jackson-core-2.15.3.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/JAR FILES/jackson-databind-2.15.3.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/JAR FILES/jackson-dataformat-xml-2.15.3.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/JAR FILES/jasperreports-6.21.0.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/JAR FILES/jcommon-1.0.23.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/JAR FILES/jfreechart-1.0.19.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/JAR FILES/openpdf-1.3.30.jaspersoft.3.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/JAR FILES/stax2-api-4.2.1.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/JAR FILES/woodstox-core-6.5.1.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/invetorysystem/ParameterFieldReport.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/invetorysystem/ReportManager.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/invetorysystem/report.jrxml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/invetorysystem/dashboardController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/invetorysystem/dashboardController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/com/example/invetorysystem/dashboard.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/example/invetorysystem/dashboard.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/invetorysystem/ReportManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/invetorysystem/ReportManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/module-info.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -76,7 +58,7 @@
     "git-widget-placeholder": "main",
     "ignore.virus.scanning.warn.message": "true",
     "jdk.selected.JAVA_MODULE": "21",
-    "last_opened_file_path": "C:/Users/emjay/Downloads/PROJECTS/INTELEJI Projects/invetory-system/JAR FILES/woodstox-core-6.5.1.jar",
+    "last_opened_file_path": "C:/Users/emjay/Downloads/PROJECTS/INTELEJI Projects/invetory-system/JAR FILES/mysql-connector-j-8.0.33.jar",
     "list.type.of.created.stylesheet": "CSS",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -176,7 +158,8 @@
       <workItem from="1702880009962" duration="6861000" />
       <workItem from="1702888900042" duration="954000" />
       <workItem from="1703046530007" duration="12797000" />
-      <workItem from="1703128317359" duration="4671000" />
+      <workItem from="1703128317359" duration="5154000" />
+      <workItem from="1703137980426" duration="1571000" />
     </task>
     <servers />
   </component>
