@@ -13,12 +13,18 @@ import javafx.fxml.Initializable;
 import java.net.URL;
 import java.sql.*;
 import java.text.NumberFormat;
+import java.time.LocalDate;
+import java.time.Month;
+import java.time.Year;
 import java.util.*;
 import java.util.Date;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import javafx.fxml.FXML;
 import javafx.geometry.Rectangle2D;
+import javafx.print.*;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.chart.AreaChart;
@@ -32,7 +38,6 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
-import javax.swing.*;
 
 public class dashboardController implements Initializable {
     @FXML
@@ -109,17 +114,17 @@ public class dashboardController implements Initializable {
     @FXML
     private TableColumn<customerData, String> com_order_type;
     @FXML
-    private TableColumn <historyData, String> history_column_costumerName;
+    private TableColumn<historyData, String> history_column_costumerName;
     @FXML
-    private TableColumn <historyData, String> history_column_total;
+    private TableColumn<historyData, String> history_column_total;
     @FXML
-    private TableColumn <historyData, String> history_column_paid;
+    private TableColumn<historyData, String> history_column_paid;
     @FXML
-    private TableColumn <historyData, String> history_column_change;
+    private TableColumn<historyData, String> history_column_change;
     @FXML
-    private TableColumn <historyData, Date> history_column_date;
+    private TableColumn<historyData, Date> history_column_date;
     @FXML
-    private TableColumn <historyData, Integer> history_column_transactionNumber;
+    private TableColumn<historyData, Integer> history_column_transactionNumber;
     @FXML
     private TableView<historyData> history_fullyPaidTable;
     @FXML
@@ -182,8 +187,7 @@ public class dashboardController implements Initializable {
     @FXML
     private Label custom_priceLabel;
 
-    @FXML
-    private ComboBox<?> order_brandName;
+
 
     @FXML
     private Button order_payBtn;
@@ -234,21 +238,27 @@ public class dashboardController implements Initializable {
     @FXML
     private CheckBox history_notFullyPaid;
     @FXML
-    private RadioButton history_full_paid;
+    private ComboBox <String> history_month;
     @FXML
-    private RadioButton history_have_balance;
+    private ComboBox <String> history_year;
+    @FXML
+    private AnchorPane history_haveBalancePayAnchorPane;
+    @FXML
+    private Button history_print;
+    @FXML
+    private AnchorPane history_filterAnchorPane;
+
 
     NumberFormat formatWithComma = NumberFormat.getNumberInstance(Locale.US);
     public int productId;
     private ObservableList<productData> addProductList;
-    private ObservableList<historyData> historyWithBalanceList;
+
     Connection connect;
     PreparedStatement prepare;
     ResultSet result;
     Statement statement;
 
-    public dashboardController() {
-    }
+
 
 
     public void addProductsSearch() {
@@ -282,7 +292,7 @@ public class dashboardController implements Initializable {
         try {
             if (addProduct_name.getText().isEmpty()
                     || addProduct_price.getText().isEmpty()
-                    || addProduct_status.getSelectionModel().getSelectedItem() == null
+
                     || Objects.equals(addProduct_status.getSelectionModel().getSelectedItem(), "Choose")) {
 
                 alert = new Alert(Alert.AlertType.ERROR);
@@ -293,7 +303,7 @@ public class dashboardController implements Initializable {
             } else {
                 // Check if product already exist
 
-                String checkName = "SELECT * FROM products WHERE productName LIKE '" + addProduct_name.getText() + "%"+ "'";
+                String checkName = "SELECT * FROM products WHERE productName LIKE '" + addProduct_name.getText() + "%" + "'";
                 assert connect != null;
                 statement = connect.createStatement();
                 result = statement.executeQuery(checkName);
@@ -337,7 +347,7 @@ public class dashboardController implements Initializable {
     public void addProductUpdate() {
         String sql = "UPDATE products SET productName = '" + addProduct_name.getText() + "', price = '" + "₱" + formatPrice(addProduct_price.getText()) + "', price_int = '" + Integer.parseInt(addProduct_price.getText()) + "'" +
                 ", quantity = '" + addProduct_quantity.getValue() + "'" +
-                ",  status = '" + addProduct_status.getSelectionModel().getSelectedItem() + "' WHERE id = '" + productId + "'" ;
+                ",  status = '" + addProduct_status.getSelectionModel().getSelectedItem() + "' WHERE id = '" + productId + "'";
 
         connect = database.connectDb();
         Alert alert;
@@ -364,7 +374,6 @@ public class dashboardController implements Initializable {
                     assert connect != null;
                     statement = connect.createStatement();
                     statement.executeUpdate(sql);
-
                     alert = new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Success");
                     alert.setHeaderText(null);
@@ -373,7 +382,7 @@ public class dashboardController implements Initializable {
                     updateStatusFromProducts();
                     addProductShowListData();
                     clearTextField();
-                }else {
+                } else {
                     addProduct_table.getSelectionModel().clearSelection();
                 }
             }
@@ -393,7 +402,7 @@ public class dashboardController implements Initializable {
         Alert alert;
         try {
             if (addProduct_name.getText().isEmpty()
-                    || addProduct_price.getText().isEmpty()|| addProduct_table.getSelectionModel().getSelectedItem() == null) {
+                    || addProduct_price.getText().isEmpty() || addProduct_table.getSelectionModel().getSelectedItem() == null) {
                 alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Error");
                 alert.setHeaderText(null);
@@ -417,7 +426,7 @@ public class dashboardController implements Initializable {
 
                     addProductShowListData();
                     clearTextField();
-                }else {
+                } else {
                     addProduct_table.getSelectionModel().clearSelection();
                 }
             }
@@ -476,24 +485,37 @@ public class dashboardController implements Initializable {
         addProduct_status.setValue(prodD.getStatus());
         addProduct_quantity.getValueFactory().setValue(prodD.getQuantity());
     } // if you clicked data from table, it will fill the text-fields and combobox (Products)
+
     public void addProductListStatus() {
         addProduct_status.getItems().removeAll(addProduct_status.getItems());
         addProduct_status.getItems().addAll("Available", "Not Available");
         addProduct_status.getSelectionModel().select("Choose");
     } // Add the data to combobox (Status) (Products)
-    public void disableUpdateIfRowIsNotSelected(){
+
+    public void addProductStatusAffectQuantity(ActionEvent e){
+        if (addProduct_status.getSelectionModel().getSelectedItem().equalsIgnoreCase("Not Available")){
+            addProduct_quantity.getValueFactory().setValue(0);
+            addProduct_quantity.setDisable(true);
+        }else if (addProduct_status.getSelectionModel().getSelectedItem().equalsIgnoreCase("Available")){
+            addProduct_quantity.getValueFactory().setValue(1);
+            addProduct_quantity.setDisable(false);
+        }
+    } // If the status is not available, the quantity will be zero (Products)
+
+    public void disableUpdateIfRowIsNotSelected() {
         addProduct_table.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection == null) {
                 addProduct_update.setDisable(true);
                 addProduct_delete.setDisable(true);
-            }else{
+            } else {
                 addProduct_update.setDisable(false);
                 addProduct_delete.setDisable(false);
             }
         });
     } // Disable the update and delete button if the row is not selected (Products)
-    public void addProductSpinner(){
-        SpinnerValueFactory<Integer> valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 1000, 1);
+
+    public void addProductSpinner() {
+        SpinnerValueFactory<Integer> valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 1000, 1);
         addProduct_quantity.setValueFactory(valueFactory);
     } // Set the value of spinner (Products)
 
@@ -518,14 +540,14 @@ public class dashboardController implements Initializable {
                     alert.setHeaderText(null);
                     alert.setContentText("Fill out all the blank fields");
                     alert.showAndWait();
-                } else if (qty > getQtyFromProducts()){
+                } else if (qty > getQtyFromProducts()) {
                     Alert alert = new Alert(Alert.AlertType.ERROR);
                     alert.setTitle("Error");
                     alert.setHeaderText(null);
                     alert.setContentText("Only " + getQtyFromProducts() + " left from " + order_productName.getSelectionModel().getSelectedItem());
                     alert.showAndWait();
 
-                }else {
+                } else {
 
                     // Put it in the same row if the product already exist
                     String checkName = "SELECT productName FROM customer WHERE productName = '" + order_productName.getSelectionModel().getSelectedItem() + "'";
@@ -536,13 +558,13 @@ public class dashboardController implements Initializable {
                         int TotalQTY = getQtyFromCustomer() + qty;
                         String totalQTY = String.valueOf(TotalQTY);
                         int left = getQtyFromProducts() - getQtyFromCustomer();
-                        if (TotalQTY > getQtyFromProducts()){
+                        if (TotalQTY > getQtyFromProducts()) {
                             Alert alert = new Alert(Alert.AlertType.ERROR);
                             alert.setTitle("Error");
                             alert.setHeaderText(null);
                             alert.setContentText("Only " + left + " left from " + order_productName.getSelectionModel().getSelectedItem());
                             alert.showAndWait();
-                        }else{
+                        } else {
                             int totalPrice = getPriceFromCustomer() + (qty * getPriceFromProducts());
                             String update = "UPDATE customer SET quantity = '" + totalQTY + "', price = '" + "₱" + formatPrice(String.valueOf(totalPrice)) + "', price_int = '" + totalPrice +
                                     "' WHERE customerName = '" + customer_name.getText() + "' AND productName = '" + order_productName.getSelectionModel().getSelectedItem() + "'";
@@ -635,7 +657,7 @@ public class dashboardController implements Initializable {
                             priceInt = Integer.parseInt(order_customPrice.getText());
 
                             var priceString = String.valueOf(qty * priceInt);  // Compute the price
-                            prepare.setString(5,"₱"+formatPrice(priceString));
+                            prepare.setString(5, "₱" + formatPrice(priceString));
 
                             int total = qty * priceInt;
                             prepare.setInt(6, total);
@@ -659,6 +681,7 @@ public class dashboardController implements Initializable {
 
         }
     } // Add order
+
     public ObservableList<customerData> orderListData() {
         ObservableList<customerData> listData = FXCollections.observableArrayList();
         String sql = "SELECT * FROM customer";
@@ -687,6 +710,7 @@ public class dashboardController implements Initializable {
 
         return listData;
     } // Get the data from SQL (Order)
+
     public void orderShowListData() {
         ObservableList<customerData> orderList = orderListData();
         com_order_type.setCellValueFactory(new PropertyValueFactory<>("type"));
@@ -696,6 +720,7 @@ public class dashboardController implements Initializable {
 
         order_table.setItems(orderList);
     } // Put the data from SQL to Table (Order)
+
     public void orderSet(ActionEvent e) {
         if (order_productType.getSelectionModel().getSelectedItem().equalsIgnoreCase("Pre-Made")) {
             order_customName.setVisible(false);
@@ -713,6 +738,7 @@ public class dashboardController implements Initializable {
 
         }
     } // Set the visibility of text-field and combobox (Order)
+
     public String orderDisplayTotal() {
         String sql = "SELECT SUM(price_int) FROM customer WHERE customerName = '"
                 + customer_name.getText() + "'";
@@ -733,6 +759,7 @@ public class dashboardController implements Initializable {
 
         return order_totalLabel.getText();
     }  // Display the total price (Order)
+
     public void orderResetTable() {
         String sql = "DELETE FROM customer";
         connect = database.connectDb();
@@ -759,6 +786,7 @@ public class dashboardController implements Initializable {
 
         }
     }  // Reset the table with yes or no (Order)
+
     public void orderResetTableWithoutAsking() {
         String sql = "DELETE FROM customer";
         connect = database.connectDb();
@@ -772,11 +800,13 @@ public class dashboardController implements Initializable {
 
         }
     }  // Reset the table without yes or no (Order)
+
     public void typeOfPurchased() {
         order_productType.getItems().removeAll(order_productType.getItems());
         order_productType.getItems().addAll("Pre-Made", "Customized");
         order_productType.getSelectionModel().select("Pre-Made");
     } // Add the data to combobox (Type of Purchased) (Order)
+
     public void orderPreMade() {
         String SQL = "SELECT productName FROM products WHERE status = 'Available'";
         connect = database.connectDb();
@@ -796,10 +826,12 @@ public class dashboardController implements Initializable {
 
         }
     } // Add the data to combobox (Pre-Made) (Order)
+
     public void orderSpinner() {
         SpinnerValueFactory<Integer> valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 1000, 1);
         order_quantity.setValueFactory(valueFactory);
     } // Set the value of spinner (Order)
+
     public void orderClear() {
         customer_name.setEditable(true);
         customer_name.setDisable(false);
@@ -814,40 +846,42 @@ public class dashboardController implements Initializable {
 
         ifTotalIsZero();
     } // Reset all text-fields and combobox (Order)
-    public void ifTotalIsZero(){
-        if (order_totalLabel.getText().equalsIgnoreCase("₱0")){
+
+    public void ifTotalIsZero() {
+        if (order_totalLabel.getText().equalsIgnoreCase("₱0")) {
             order_amount.setDisable(true);
             order_payBtn.setDisable(true);
-        }else if (!order_totalLabel.getText().equalsIgnoreCase("₱0")){
+        } else if (!order_totalLabel.getText().equalsIgnoreCase("₱0")) {
             order_amount.setDisable(false);
             order_payBtn.setDisable(false);
         }
     } // If the total is zero, disable the pay button (Order)
 
-    public void calculateBalanceAndChange(){
+    public void calculateBalanceAndChange() {
         int balance = 0;
         int change = 0;
-        if (order_amount.getText().isEmpty()){
+        if (order_amount.getText().isEmpty()) {
             order_balanceLabel.setText("₱0");
-        }else{
+        } else {
             int total = Integer.parseInt(order_totalLabel.getText().substring(1).replaceAll(",", ""));
             int amount = Integer.parseInt(order_amount.getText());
             balance = total - amount;
             change = amount - total;
-            if (balance < 0 ) { // If the balance is negative, it will display the change
+            if (balance < 0) { // If the balance is negative, it will display the change
                 order_balanceLabel.setText("₱0");
-            }else{
+            } else {
                 order_balanceLabel.setText("₱" + formatPrice(String.valueOf(balance)));
             }
-            if (change < 0){ // If the change is negative, it will display the balance
+            if (change < 0) { // If the change is negative, it will display the balance
                 order_change.setText("₱0");
-            }else{
+            } else {
                 order_change.setText("₱" + formatPrice(String.valueOf(change)));
             }
 
         }
     } // Calculate the balance (Order)
-    public void orderPay(){
+
+    public void orderPay() {
         String sql = "INSERT INTO customer_receipt (customer_name, total, paid, change_string, balance, total_int, balance_int, change_int, date)"
                 + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         connect = database.connectDb();
@@ -887,7 +921,6 @@ public class dashboardController implements Initializable {
                     orderResetTableWithoutAsking();
 
 
-
                     orderClear();
                     addProductShowListData();
                     addProductListStatus();
@@ -905,52 +938,35 @@ public class dashboardController implements Initializable {
     } // Pay the order (Order)
 
 
-
-    public void historyFullyPaid(){
+    public void historyFullyPaid(ActionEvent e) {
         if (history_fullyPaid.isSelected()) {
             history_notFullyPaid.setSelected(false);
             history_fullyPaidTable.setVisible(true);
             history_withBalanceTable.setVisible(false);
+            history_haveBalancePayAnchorPane.setVisible(false);
+            history_print.setVisible(true);
+            history_filterAnchorPane.setVisible(true);
+            history_fullyPaid.setDisable(true);
+            history_notFullyPaid.setDisable(false);
+
+
         }
 
     }
-    public void historyNotFullyPaid(){
+    public void historyNotFullyPaid(ActionEvent e) {
         if (history_notFullyPaid.isSelected()) {
             history_fullyPaid.setSelected(false);
             history_withBalanceTable.setVisible(true);
             history_fullyPaidTable.setVisible(false);
+            history_haveBalancePayAnchorPane.setVisible(true);
+            history_print.setVisible(false);
+            history_filterAnchorPane.setVisible(false);
+            history_notFullyPaid.setDisable(true);
+            history_fullyPaid.setDisable(false);
+
+
         }
     }
-    public ObservableList<historyData> historyNoBalanceList() {
-        ObservableList<historyData> listData = FXCollections.observableArrayList();
-        String sql = "SELECT * FROM customer_receipt WHERE balance_int = 0";
-        connect = database.connectDb();
-
-        try {
-            historyData historyID;
-            assert connect != null;
-            prepare = connect.prepareStatement(sql);
-            result = prepare.executeQuery();
-
-            while (result.next()) {
-                historyID = new historyData
-                        (result.getInt("transaction_id"),
-                                result.getString("customer_name")
-                                , result.getString("total")
-                                , result.getString("paid")
-                                , result.getString("change_string")
-                                , result.getString("balance")
-                                , result.getInt("total_int")
-                                , result.getInt("balance_int")
-                                , result.getInt("change_int")
-                                , result.getDate("date"));
-                listData.add(historyID);
-            }
-        } catch (Exception ignored) {
-
-        }
-        return listData;
-    } // Get the data from SQL (History)
     public ObservableList<historyData> historyWithBalanceList() {
         ObservableList<historyData> listData = FXCollections.observableArrayList();
         String sql = "SELECT * FROM customer_receipt WHERE balance_int != 0";
@@ -980,16 +996,6 @@ public class dashboardController implements Initializable {
         }
         return listData;
     } // Get the data from SQL (History)
-    public void historyShowNoBalanceData() {
-        ObservableList<historyData> historyFullyPaidList = historyNoBalanceList();
-        history_column_transactionNumber.setCellValueFactory(new PropertyValueFactory<>("transaction_id"));
-        history_column_costumerName.setCellValueFactory(new PropertyValueFactory<>("customer_name"));
-        history_column_total.setCellValueFactory(new PropertyValueFactory<>("total"));
-        history_column_paid.setCellValueFactory(new PropertyValueFactory<>("paid"));
-        history_column_change.setCellValueFactory(new PropertyValueFactory<>("change_string"));
-        history_column_date.setCellValueFactory(new PropertyValueFactory<>("date"));
-        history_fullyPaidTable.setItems(historyFullyPaidList);
-    } // Put the data from SQL with no balance to Table (History)
     public void historyShowWithBalanceData() {
         ObservableList<historyData> historyWithBalanceList = historyWithBalanceList();
         history_withBalance_column_transactionNumber.setCellValueFactory(new PropertyValueFactory<>("transaction_id"));
@@ -1000,6 +1006,398 @@ public class dashboardController implements Initializable {
         history_withBalance_column_date.setCellValueFactory(new PropertyValueFactory<>("date"));
         history_withBalanceTable.setItems(historyWithBalanceList);
     } // Put the data from SQL with balance to Table (History)
+    public void historyAddMonth(){
+        history_month.getItems().removeAll(history_month.getItems());
+        history_month.getItems().addAll("All","JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE"
+                , "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER");
+        Month month = LocalDate.now().getMonth();
+        history_month.getSelectionModel().select(month.toString());
+    } // Add the data to combobox (Month) (History)
+    public void historyAddYear(){
+        int pastYears = 1; // Number of previous years to include
+        int futureYears = 9; // Number of future years to include
+        int currentYear = Year.now().getValue();
+        history_year.getItems().setAll(
+                IntStream.rangeClosed(currentYear - pastYears, currentYear + futureYears)
+                        .mapToObj(Integer::toString)
+                        .collect(Collectors.toList())
+        );
+
+        history_year.getSelectionModel().select(Integer.toString(currentYear));
+
+        // Check if the current year has changed
+        int newCurrentYear = Year.now().getValue();
+        if (newCurrentYear != currentYear) {
+            // Update the current year
+            currentYear = newCurrentYear;
+            // Increment future and past years
+            pastYears++;
+            futureYears++;
+            // Update the list of years
+            history_year.getItems().setAll(
+                    IntStream.rangeClosed(currentYear - pastYears, currentYear + futureYears)
+                            .mapToObj(Integer::toString)
+                            .collect(Collectors.toList())
+            );
+            // Select the new current year
+            history_year.getSelectionModel().select(Integer.toString(currentYear));
+        }
+    } // Add the data to combobox (Year) (History)
+    public void historyDisplayTableFromMonths(){
+        ObservableList<historyData> monthList = FXCollections.observableArrayList();
+
+        if (history_month.getSelectionModel().getSelectedItem().equalsIgnoreCase("January")) {
+            String sql = "SELECT * FROM customer_receipt WHERE MONTH(date) = 1 AND balance_int = 0 AND YEAR(date) = '" + history_year.getSelectionModel().getSelectedItem() + "' AND YEAR(date) = '" + history_year.getSelectionModel().getSelectedItem() + "'";
+            connect = database.connectDb();
+            try {
+                historyData historyID;
+                assert connect != null;
+                prepare = connect.prepareStatement(sql);
+                result = prepare.executeQuery();
+
+                while (result.next()) {
+                    historyID = new historyData
+                            (result.getInt("transaction_id"),
+                                    result.getString("customer_name")
+                                    , result.getString("total")
+                                    , result.getString("paid")
+                                    , result.getString("change_string")
+                                    , result.getString("balance")
+                                    , result.getInt("total_int")
+                                    , result.getInt("balance_int")
+                                    , result.getInt("change_int")
+                                    , result.getDate("date"));
+                    monthList.add(historyID);
+                }
+            } catch (Exception ignored) {
+
+            }
+        }else if(history_month.getSelectionModel().getSelectedItem().equalsIgnoreCase("February")) {
+            String sql = "SELECT * FROM customer_receipt WHERE MONTH(date) = 2 AND balance_int = 0 AND YEAR(date) = '" + history_year.getSelectionModel().getSelectedItem() + "'";
+            connect = database.connectDb();
+            try {
+                historyData historyID;
+                assert connect != null;
+                prepare = connect.prepareStatement(sql);
+                result = prepare.executeQuery();
+
+                while (result.next()) {
+                    historyID = new historyData
+                            (result.getInt("transaction_id"),
+                                    result.getString("customer_name")
+                                    , result.getString("total")
+                                    , result.getString("paid")
+                                    , result.getString("change_string")
+                                    , result.getString("balance")
+                                    , result.getInt("total_int")
+                                    , result.getInt("balance_int")
+                                    , result.getInt("change_int")
+                                    , result.getDate("date"));
+                    monthList.add(historyID);
+                }
+            } catch (Exception ignored) {
+
+            }
+        }else if(history_month.getSelectionModel().getSelectedItem().equalsIgnoreCase("March")) {
+            String sql = "SELECT * FROM customer_receipt WHERE MONTH(date) = 3 AND balance_int = 0 AND YEAR(date) = '" + history_year.getSelectionModel().getSelectedItem() + "'";
+            connect = database.connectDb();
+            try {
+                historyData historyID;
+                assert connect != null;
+                prepare = connect.prepareStatement(sql);
+                result = prepare.executeQuery();
+
+                while (result.next()) {
+                    historyID = new historyData
+                            (result.getInt("transaction_id"),
+                                    result.getString("customer_name")
+                                    , result.getString("total")
+                                    , result.getString("paid")
+                                    , result.getString("change_string")
+                                    , result.getString("balance")
+                                    , result.getInt("total_int")
+                                    , result.getInt("balance_int")
+                                    , result.getInt("change_int")
+                                    , result.getDate("date"));
+                    monthList.add(historyID);
+                }
+            } catch (Exception ignored) {
+
+            }
+        }else if(history_month.getSelectionModel().getSelectedItem().equalsIgnoreCase("April")) {
+            String sql = "SELECT * FROM customer_receipt WHERE MONTH(date) = 4 AND balance_int = 0 AND YEAR(date) = '" + history_year.getSelectionModel().getSelectedItem() + "'";
+            connect = database.connectDb();
+            try {
+                historyData historyID;
+                assert connect != null;
+                prepare = connect.prepareStatement(sql);
+                result = prepare.executeQuery();
+
+                while (result.next()) {
+                    historyID = new historyData
+                            (result.getInt("transaction_id"),
+                                    result.getString("customer_name")
+                                    , result.getString("total")
+                                    , result.getString("paid")
+                                    , result.getString("change_string")
+                                    , result.getString("balance")
+                                    , result.getInt("total_int")
+                                    , result.getInt("balance_int")
+                                    , result.getInt("change_int")
+                                    , result.getDate("date"));
+                    monthList.add(historyID);
+                }
+            } catch (Exception ignored) {
+
+            }
+        }else if(history_month.getSelectionModel().getSelectedItem().equalsIgnoreCase("May")) {
+            String sql = "SELECT * FROM customer_receipt WHERE MONTH(date) = 5 AND balance_int = 0 AND YEAR(date) = '" + history_year.getSelectionModel().getSelectedItem() + "'";
+            connect = database.connectDb();
+            try {
+                historyData historyID;
+                assert connect != null;
+                prepare = connect.prepareStatement(sql);
+                result = prepare.executeQuery();
+
+                while (result.next()) {
+                    historyID = new historyData
+                            (result.getInt("transaction_id"),
+                                    result.getString("customer_name")
+                                    , result.getString("total")
+                                    , result.getString("paid")
+                                    , result.getString("change_string")
+                                    , result.getString("balance")
+                                    , result.getInt("total_int")
+                                    , result.getInt("balance_int")
+                                    , result.getInt("change_int")
+                                    , result.getDate("date"));
+                    monthList.add(historyID);
+                }
+            } catch (Exception ignored) {
+
+            }
+        }else if(history_month.getSelectionModel().getSelectedItem().equalsIgnoreCase("June")) {
+            String sql = "SELECT * FROM customer_receipt WHERE MONTH(date) = 6 AND balance_int = 0 AND YEAR(date) = '" + history_year.getSelectionModel().getSelectedItem() + "'";
+            connect = database.connectDb();
+            try {
+                historyData historyID;
+                assert connect != null;
+                prepare = connect.prepareStatement(sql);
+                result = prepare.executeQuery();
+
+                while (result.next()) {
+                    historyID = new historyData
+                            (result.getInt("transaction_id"),
+                                    result.getString("customer_name")
+                                    , result.getString("total")
+                                    , result.getString("paid")
+                                    , result.getString("change_string")
+                                    , result.getString("balance")
+                                    , result.getInt("total_int")
+                                    , result.getInt("balance_int")
+                                    , result.getInt("change_int")
+                                    , result.getDate("date"));
+                    monthList.add(historyID);
+                }
+            } catch (Exception ignored) {
+
+            }
+        }else if(history_month.getSelectionModel().getSelectedItem().equalsIgnoreCase("July")) {
+            String sql = "SELECT * FROM customer_receipt WHERE MONTH(date) = 7 AND balance_int = 0 AND YEAR(date) = '" + history_year.getSelectionModel().getSelectedItem() + "'";
+            connect = database.connectDb();
+            try {
+                historyData historyID;
+                assert connect != null;
+                prepare = connect.prepareStatement(sql);
+                result = prepare.executeQuery();
+
+                while (result.next()) {
+                    historyID = new historyData
+                            (result.getInt("transaction_id"),
+                                    result.getString("customer_name")
+                                    , result.getString("total")
+                                    , result.getString("paid")
+                                    , result.getString("change_string")
+                                    , result.getString("balance")
+                                    , result.getInt("total_int")
+                                    , result.getInt("balance_int")
+                                    , result.getInt("change_int")
+                                    , result.getDate("date"));
+                    monthList.add(historyID);
+                }
+            } catch (Exception ignored) {
+
+            }
+        }else if(history_month.getSelectionModel().getSelectedItem().equalsIgnoreCase("August")) {
+            String sql = "SELECT * FROM customer_receipt WHERE MONTH(date) = 8 AND balance_int = 0 AND YEAR(date) = '" + history_year.getSelectionModel().getSelectedItem() + "'";
+            connect = database.connectDb();
+            try {
+                historyData historyID;
+                assert connect != null;
+                prepare = connect.prepareStatement(sql);
+                result = prepare.executeQuery();
+                while (result.next()) {
+                    historyID = new historyData
+                            (result.getInt("transaction_id"),
+                                    result.getString("customer_name")
+                                    , result.getString("total")
+                                    , result.getString("paid")
+                                    , result.getString("change_string")
+                                    , result.getString("balance")
+                                    , result.getInt("total_int")
+                                    , result.getInt("balance_int")
+                                    , result.getInt("change_int")
+                                    , result.getDate("date"));
+
+                    monthList.add(historyID);
+                }
+            } catch (Exception ignored) {
+
+            }
+        }else if(history_month.getSelectionModel().getSelectedItem().equalsIgnoreCase("September")) {
+            String sql = "SELECT * FROM customer_receipt WHERE MONTH(date) = 9 AND balance_int = 0 AND YEAR(date) = '" + history_year.getSelectionModel().getSelectedItem() + "'";
+            connect = database.connectDb();
+            try {
+                historyData historyID;
+                assert connect != null;
+                prepare = connect.prepareStatement(sql);
+                result = prepare.executeQuery();
+                while (result.next()) {
+                    historyID = new historyData
+                            (result.getInt("transaction_id"),
+                                    result.getString("customer_name"),
+                                    result.getString("total"),
+                                    result.getString("paid"),
+                                    result.getString("change_string"),
+                                    result.getString("balance"),
+                                    result.getInt("total_int"),
+                                    result.getInt("balance_int"),
+                                    result.getInt("change_int"),
+                                    result.getDate("date"));
+
+                    monthList.add(historyID);
+                }
+            } catch (Exception ignored) {
+
+            }
+        }else if(history_month.getSelectionModel().getSelectedItem().equalsIgnoreCase("October")) {
+            String sql = "SELECT * FROM customer_receipt WHERE MONTH(date) = 10 AND balance_int = 0 AND YEAR(date) = '" + history_year.getSelectionModel().getSelectedItem() + "'";
+            connect = database.connectDb();
+            try {
+                historyData historyID;
+                assert connect != null;
+                prepare = connect.prepareStatement(sql);
+                result = prepare.executeQuery();
+                while (result.next()) {
+                    historyID = new historyData
+                            (result.getInt("transaction_id"),
+                                    result.getString("customer_name"),
+                                    result.getString("total"),
+                                    result.getString("paid"),
+                                    result.getString("change_string"),
+                                    result.getString("balance"),
+                                    result.getInt("total_int"),
+                                    result.getInt("balance_int"),
+                                    result.getInt("change_int"),
+                                    result.getDate("date"));
+
+                    monthList.add(historyID);
+                }
+            } catch (Exception ignored) {
+
+            }
+        }else if(history_month.getSelectionModel().getSelectedItem().equalsIgnoreCase("November")) {
+            String sql = "SELECT * FROM customer_receipt WHERE MONTH(date) = 11 AND balance_int = 0 AND YEAR(date) = '" + history_year.getSelectionModel().getSelectedItem() + "'";
+            connect = database.connectDb();
+            try {
+                historyData historyID;
+                assert connect != null;
+                prepare = connect.prepareStatement(sql);
+                result = prepare.executeQuery();
+                while (result.next()) {
+                    historyID = new historyData
+                            (result.getInt("transaction_id"),
+                                    result.getString("customer_name"),
+                                    result.getString("total"),
+                                    result.getString("paid"),
+                                    result.getString("change_string"),
+                                    result.getString("balance"),
+                                    result.getInt("total_int"),
+                                    result.getInt("balance_int"),
+                                    result.getInt("change_int"),
+                                    result.getDate("date"));
+
+                    monthList.add(historyID);
+                }
+            } catch (Exception ignored) {
+
+            }
+        }else if(history_month.getSelectionModel().getSelectedItem().equalsIgnoreCase("December")) {
+            String sql = "SELECT * FROM customer_receipt WHERE MONTH(date) = 12 AND balance_int = 0 AND YEAR(date) = '" + history_year.getSelectionModel().getSelectedItem() + "'";
+            connect = database.connectDb();
+            try {
+                historyData historyID;
+                assert connect != null;
+                prepare = connect.prepareStatement(sql);
+                result = prepare.executeQuery();
+                while (result.next()) {
+                    historyID = new historyData
+                            (result.getInt("transaction_id"),
+                                    result.getString("customer_name"),
+                                    result.getString("total"),
+                                    result.getString("paid"),
+                                    result.getString("change_string"),
+                                    result.getString("balance"),
+                                    result.getInt("total_int"),
+                                    result.getInt("balance_int"),
+                                    result.getInt("change_int"),
+                                    result.getDate("date"));
+
+                    monthList.add(historyID);
+                }
+            } catch (Exception ignored) {
+
+            }
+        }else if(history_month.getSelectionModel().getSelectedItem().equalsIgnoreCase("All" ) || history_month.getSelectionModel().getSelectedItem().equalsIgnoreCase("Select Month")) {
+            String sql = "SELECT * FROM customer_receipt WHERE balance_int = 0";
+            connect = database.connectDb();
+            try {
+                historyData historyID;
+                assert connect != null;
+                prepare = connect.prepareStatement(sql);
+                result = prepare.executeQuery();
+                while (result.next()) {
+                    historyID = new historyData
+                            (result.getInt("transaction_id"),
+                                    result.getString("customer_name"),
+                                    result.getString("total"),
+                                    result.getString("paid"),
+                                    result.getString("change_string"),
+                                    result.getString("balance"),
+                                    result.getInt("total_int"),
+                                    result.getInt("balance_int"),
+                                    result.getInt("change_int"),
+                                    result.getDate("date"));
+
+                    monthList.add(historyID);
+                }
+            } catch (Exception ignored) {
+
+            }
+        }
+        history_column_transactionNumber.setCellValueFactory(new PropertyValueFactory<>("transaction_id"));
+        history_column_costumerName.setCellValueFactory(new PropertyValueFactory<>("customer_name"));
+        history_column_total.setCellValueFactory(new PropertyValueFactory<>("total"));
+        history_column_paid.setCellValueFactory(new PropertyValueFactory<>("paid"));
+        history_column_change.setCellValueFactory(new PropertyValueFactory<>("change_string"));
+        history_column_date.setCellValueFactory(new PropertyValueFactory<>("date"));
+        history_fullyPaidTable.setItems(monthList);
+
+    } // Display the table from months (History)
+
+
+
+
     public void makeTableNotReOrder() {
         addProduct_table.skinProperty().addListener((obs, oldSkin, newSkin) -> {
             final TableHeaderRow header = (TableHeaderRow) addProduct_table.lookup("TableHeaderRow");
@@ -1017,7 +1415,7 @@ public class dashboardController implements Initializable {
             final TableHeaderRow header = (TableHeaderRow) history_withBalanceTable.lookup("TableHeaderRow");
             header.reorderingProperty().addListener((o, oldVal, newVal) -> header.setReordering(false));
         });
-    } // Make the table not reorder able (Products) (Order)
+    } // Make the table not reorder able (Products) (Order) (History)
     public int getQtyFromCustomer() throws SQLException {
         String getQty = "SELECT quantity FROM customer";
         statement = connect.createStatement();
@@ -1029,6 +1427,7 @@ public class dashboardController implements Initializable {
         }
         return qty;
     }
+
     public int getPriceFromCustomer() throws SQLException {
         String getPrice = "SELECT price_int FROM customer";
         statement = connect.createStatement();
@@ -1041,6 +1440,7 @@ public class dashboardController implements Initializable {
         }
         return price_int;
     }
+
     public int getPriceFromProducts() throws SQLException {
         String getPrice = "SELECT price_int FROM products WHERE productName = '"
                 + order_productName.getSelectionModel().getSelectedItem() + "'";
@@ -1053,6 +1453,7 @@ public class dashboardController implements Initializable {
         }
         return price_int;
     }
+
     public int getQtyFromProducts() throws SQLException {
         String getQty = "SELECT quantity FROM products WHERE productName = '"
                 + order_productName.getSelectionModel().getSelectedItem() + "'";
@@ -1080,6 +1481,7 @@ public class dashboardController implements Initializable {
 
         return qty;
     }
+
     public void updateQtyFromProducts() throws SQLException {
         int qty = 0;
         for (int i = 0; i < order_table.getItems().size(); i++) {
@@ -1097,29 +1499,32 @@ public class dashboardController implements Initializable {
         }
 
     }
+
     public void updateStatusFromProducts() throws SQLException {
 
-            String sql = "UPDATE products SET status = 'Not Available'  WHERE quantity = 0";
-            connect = database.connectDb();
-            try {
-                assert connect != null;
-                statement = connect.createStatement();
-                statement.executeUpdate(sql);
-            } catch (Exception ignored) {
 
-            }
-            String sql2 = "UPDATE products SET status = 'Available'  WHERE quantity != 0";
-            connect = database.connectDb();
-            try {
-                assert connect != null;
-                statement = connect.createStatement();
-                statement.executeUpdate(sql2);
-            } catch (Exception ignored) {
+        String sql = "UPDATE products SET status = 'Not Available'  WHERE quantity = 0";
+        connect = database.connectDb();
+        try {
+            assert connect != null;
+            statement = connect.createStatement();
+            statement.executeUpdate(sql);
+        } catch (Exception ignored) {
 
-            }
+        }
+        String sql2 = "UPDATE products SET status = 'Available'  WHERE quantity != 0";
+        connect = database.connectDb();
+        try {
+            assert connect != null;
+            statement = connect.createStatement();
+            statement.executeUpdate(sql2);
+        } catch (Exception ignored) {
+
+        }
+
+
 
     }
-
 
     public String getNameFromProductsToCompare() throws SQLException {
         String getName = "SELECT productName FROM products WHERE productName = '"
@@ -1132,6 +1537,7 @@ public class dashboardController implements Initializable {
         }
         return name;
     }
+
     public int checkIfCurrentTableEmpty() throws SQLException {
         String sql = "SELECT COUNT(*) FROM customer";
         connect = database.connectDb();
@@ -1146,10 +1552,12 @@ public class dashboardController implements Initializable {
 
 
     } // Check if the table is empty (Home)
+
     public String formatPrice(String price) {
         long priceLong = Long.parseLong(price);
         return formatWithComma.format(priceLong);
     }
+
     public void onlyNumInTextField() {
         addProduct_price.textProperty().addListener(new ChangeListener<String>() {
             @Override
@@ -1177,6 +1585,7 @@ public class dashboardController implements Initializable {
         });
         calculateBalanceAndChange();
     } // Only numbers allow in Price text-field
+
     public void clearTextField() {
         addProduct_name.setText("");
         addProduct_price.setText("");
@@ -1188,6 +1597,7 @@ public class dashboardController implements Initializable {
 
         addProductListStatus();
     } // Clear all text-fields
+
     public void logout() throws SQLException {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         if (checkIfCurrentTableEmpty() != 0) {
@@ -1280,10 +1690,12 @@ public class dashboardController implements Initializable {
 
 
     } // Logout
+
     public void minimize() {
         Stage stage = (Stage) main_form.getScene().getWindow();
         stage.setIconified(true);
     } // Minimize
+
     public void switchForm(MouseEvent event) {
         if (event.getSource() == home_btn || event.getSource() == home) {
             home_form.setVisible(true);
@@ -1330,15 +1742,20 @@ public class dashboardController implements Initializable {
             orders.setStyle("-fx-background-color: transparent");
             addProducts.setStyle("-fx-background-color: transparent");
             history.setStyle("-fx-background-color: linear-gradient(to bottom right, #e7e3e3, #e1e7e1)");
-            historyFullyPaid();
-            historyNotFullyPaid();
-            historyShowNoBalanceData();
-            historyShowWithBalanceData();
+
+            historyShowWithBalanceData(); // Put the data from SQL with balance to Table (History)
+            historyAddMonth(); // Add the data to combobox (Month) (History)
+            historyDisplayTableFromMonths(); // Display the table from months (History)
+            history_fullyPaid.setSelected(true);
+            history_fullyPaid.setDisable(true);
+            history_haveBalancePayAnchorPane.setVisible(false);
+            history_filterAnchorPane.setVisible(true);
 
 
         }
 
     }  // Switch between forms
+
     public void close() throws SQLException {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         if (checkIfCurrentTableEmpty() != 0) {
@@ -1371,7 +1788,6 @@ public class dashboardController implements Initializable {
         addProductSpinner(); // Set the value of spinner
 
 
-
         typeOfPurchased(); // Add the data to combobox (Type of Purchased)
         orderPreMade(); // Add the data to combobox (Pre-Made)
         orderSpinner(); // Set the value of spinner (Order)
@@ -1380,11 +1796,13 @@ public class dashboardController implements Initializable {
 
 
 
-        historyFullyPaid(); // If the fully paid radio button is selected, it will show the table (History)
-        historyNotFullyPaid(); // If the not fully paid radio button is selected, it will show the table (History)
-        historyShowNoBalanceData(); // Put the data from SQL with no balance to Table (History)
         historyShowWithBalanceData(); // Put the data from SQL with balance to Table (History)
+        historyAddMonth(); // Add the data to combobox (Month) (History)
+        historyAddYear(); // Add the data to combobox (Year) (History)
+        historyDisplayTableFromMonths(); // Display the table from months (History)
         history_fullyPaid.setSelected(true);
+        history_fullyPaid.setDisable(true);
+
 
         makeTableNotReOrder(); // Make the table not reorder able (Products) (Order) (History)
         disableUpdateIfRowIsNotSelected(); // Disable the update and delete button if the row is not selected
