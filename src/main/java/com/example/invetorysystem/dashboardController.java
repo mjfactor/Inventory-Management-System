@@ -24,7 +24,6 @@ import java.util.stream.IntStream;
 
 import javafx.fxml.FXML;
 import javafx.geometry.Rectangle2D;
-import javafx.print.*;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.chart.AreaChart;
@@ -37,6 +36,10 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import net.sf.jasperreports.engine.*;
+import net.sf.jasperreports.engine.design.JasperDesign;
+import net.sf.jasperreports.engine.xml.JRXmlLoader;
+import net.sf.jasperreports.view.JasperViewer;
 
 
 public class dashboardController implements Initializable {
@@ -247,8 +250,10 @@ public class dashboardController implements Initializable {
     private Button history_print;
     @FXML
     private AnchorPane history_filterAnchorPane;
+    @FXML
+    private Label history_totalIncome;
 
-
+    Locale philippinesLocale = new Locale("en", "PH");
     NumberFormat formatWithComma = NumberFormat.getNumberInstance(Locale.US);
     public int productId;
     private ObservableList<productData> addProductList;
@@ -916,6 +921,7 @@ public class dashboardController implements Initializable {
                     prepare.setDate(9, sqlDate);
 
                     prepare.executeUpdate();
+                    orderReceipt();
                     updateQtyFromProducts();
                     updateStatusFromProducts();
                     orderResetTableWithoutAsking();
@@ -936,6 +942,19 @@ public class dashboardController implements Initializable {
         }
 
     } // Pay the order (Order)
+    public void orderReceipt() throws JRException {
+        HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put("total", order_totalLabel.getText());
+        parameters.put("pesoSign", "₱");
+        parameters.put("paid", "₱" + formatPrice(order_amount.getText()));
+        parameters.put("change", order_change.getText());
+        parameters.put("balance", order_balanceLabel.getText());
+        JasperDesign jasperDesign = JRXmlLoader.load("src/main/java/com/example/invetorysystem/receipt.jrxml");
+        JasperReport jasperReport = JasperCompileManager.compileReport(jasperDesign);
+        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, database.connectDb());
+        JasperViewer.viewReport(jasperPrint, false);
+    }
+
 
 
     public void historyFullyPaid(ActionEvent e) {
@@ -947,7 +966,8 @@ public class dashboardController implements Initializable {
             history_print.setVisible(true);
             history_filterAnchorPane.setVisible(true);
             history_fullyPaid.setDisable(true);
-            history_notFullyPaid.setDisable(false);
+            history_totalIncome.setVisible(true);
+            history_notFullyPaid.setDisable(false); // Must be in the last line
 
 
         }
@@ -957,12 +977,13 @@ public class dashboardController implements Initializable {
         if (history_notFullyPaid.isSelected()) {
             history_fullyPaid.setSelected(false);
             history_withBalanceTable.setVisible(true);
+            history_totalIncome.setVisible(false);
             history_fullyPaidTable.setVisible(false);
             history_haveBalancePayAnchorPane.setVisible(true);
             history_print.setVisible(false);
             history_filterAnchorPane.setVisible(false);
             history_notFullyPaid.setDisable(true);
-            history_fullyPaid.setDisable(false);
+            history_fullyPaid.setDisable(false); // Must be in the last line
 
 
         }
@@ -1385,6 +1406,7 @@ public class dashboardController implements Initializable {
 
             }
         }
+        historyFullyPaidDisplayTotal();
         history_column_transactionNumber.setCellValueFactory(new PropertyValueFactory<>("transaction_id"));
         history_column_costumerName.setCellValueFactory(new PropertyValueFactory<>("customer_name"));
         history_column_total.setCellValueFactory(new PropertyValueFactory<>("total"));
@@ -1394,7 +1416,89 @@ public class dashboardController implements Initializable {
         history_fullyPaidTable.setItems(monthList);
 
     } // Display the table from months (History)
+    public String historyFullyPaidDisplayTotal() {
+        if (convertMonthIntoInt() == 0){
+            String sql = "SELECT SUM(total_int) FROM customer_receipt WHERE balance_int = 0 AND YEAR(date) = '" + history_year.getSelectionModel().getSelectedItem() + "'";
+            connect = database.connectDb();
 
+            try {
+                assert connect != null;
+                prepare = connect.prepareStatement(sql);
+                result = prepare.executeQuery();
+                int totalFullyPaid = 0;
+                while (result.next()) {
+                    totalFullyPaid = result.getInt("SUM(total_int)");
+                }
+                history_totalIncome.setText("₱" + formatPrice(String.valueOf(totalFullyPaid)));
+
+            } catch (Exception ignored) {
+
+            }
+        }else{
+            String sql = "SELECT SUM(total_int) FROM customer_receipt WHERE balance_int = 0 AND MONTH(date) = '" + convertMonthIntoInt() + "' AND YEAR(date) = '" + history_year.getSelectionModel().getSelectedItem() + "'";
+            connect = database.connectDb();
+
+            try {
+                assert connect != null;
+                prepare = connect.prepareStatement(sql);
+                result = prepare.executeQuery();
+                int totalFullyPaid = 0;
+                while (result.next()) {
+                    totalFullyPaid = result.getInt("SUM(total_int)");
+                }
+                history_totalIncome.setText("₱" + formatPrice(String.valueOf(totalFullyPaid)));
+
+            } catch (Exception ignored) {
+
+            }
+
+        }
+        return history_totalIncome.getText();
+    }
+    public Integer convertMonthIntoInt(){
+        int month = 0;
+        if(history_month.getSelectionModel().getSelectedItem().equalsIgnoreCase("January")){
+            month = 1;
+        }else if(history_month.getSelectionModel().getSelectedItem().equalsIgnoreCase("February")){
+            month = 2;
+        }else if(history_month.getSelectionModel().getSelectedItem().equalsIgnoreCase("March")){
+            month = 3;
+        }else if(history_month.getSelectionModel().getSelectedItem().equalsIgnoreCase("April")){
+            month = 4;
+        }else if(history_month.getSelectionModel().getSelectedItem().equalsIgnoreCase("May")){
+            month = 5;
+        }else if(history_month.getSelectionModel().getSelectedItem().equalsIgnoreCase("June")){
+            month = 6;
+        }else if(history_month.getSelectionModel().getSelectedItem().equalsIgnoreCase("July")){
+            month = 7;
+        }else if(history_month.getSelectionModel().getSelectedItem().equalsIgnoreCase("August")){
+            month = 8;
+        }else if(history_month.getSelectionModel().getSelectedItem().equalsIgnoreCase("September")){
+            month = 9;
+        }else if(history_month.getSelectionModel().getSelectedItem().equalsIgnoreCase("October")){
+            month = 10;
+        }else if(history_month.getSelectionModel().getSelectedItem().equalsIgnoreCase("November")){
+            month = 11;
+        }else if(history_month.getSelectionModel().getSelectedItem().equalsIgnoreCase("December")){
+            month = 12;
+        }else if(history_month.getSelectionModel().getSelectedItem().equalsIgnoreCase("All")){
+            month = 0;
+        }
+        return month;
+    }
+    public void printTable() throws JRException {
+        String month = history_month.getSelectionModel().getSelectedItem();
+        String year = history_year.getSelectionModel().getSelectedItem();
+        HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put("pesoSign", "₱");
+        parameters.put("total", historyFullyPaidDisplayTotal());
+        parameters.put("Month", month);
+        parameters.put("Year", year);
+        JasperDesign jasperDesign = JRXmlLoader.load("src/main/java/com/example/invetorysystem/generateReport.jrxml");
+        JasperReport jasperReport = JasperCompileManager.compileReport(jasperDesign);
+        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, database.connectDb());
+        JasperViewer.viewReport(jasperPrint, false);
+    }
 
 
 
@@ -1800,6 +1904,7 @@ public class dashboardController implements Initializable {
         historyAddMonth(); // Add the data to combobox (Month) (History)
         historyAddYear(); // Add the data to combobox (Year) (History)
         historyDisplayTableFromMonths(); // Display the table from months (History)
+        historyFullyPaidDisplayTotal(); // Display the total price (History)
         history_fullyPaid.setSelected(true);
         history_fullyPaid.setDisable(true);
 

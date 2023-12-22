@@ -547,11 +547,12 @@
                                     <ComboBox fx:id="history_year" layoutX="283.0" layoutY="4.0" onAction="#historyDisplayTableFromMonths" prefHeight="28.0" prefWidth="131.0" promptText="Select Month" />
                                  </children>
                               </AnchorPane>
-                              <Button fx:id="history_print" layoutX="1124.0" layoutY="750.0" mnemonicParsing="false" prefHeight="47.0" prefWidth="88.0" text="Print">
+                              <Button fx:id="history_print" layoutX="1124.0" layoutY="750.0" mnemonicParsing="false" onAction="#printTable" prefHeight="47.0" prefWidth="88.0" text="Print">
                                  <font>
                                     <Font size="17.0" />
                                  </font>
                               </Button>
+                              <Label fx:id="history_totalIncome" layoutX="901.0" layoutY="690.0" prefHeight="42.0" prefWidth="98.0" text="Label" />
                            </children>
                         </AnchorPane>
                      </children>
