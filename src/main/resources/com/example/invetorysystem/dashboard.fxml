@@ -311,7 +311,7 @@
                               </TableView>
                            </children>
                         </AnchorPane>
-                        <AnchorPane fx:id="orders_form" layoutX="-8.8" layoutY="124.0" prefHeight="812.0" prefWidth="1213.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="-9.0" AnchorPane.rightAnchor="19.0" AnchorPane.topAnchor="0.0">
+                        <AnchorPane fx:id="orders_form" layoutX="-8.8" layoutY="124.0" prefHeight="812.0" prefWidth="1213.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="-9.0" AnchorPane.rightAnchor="19.0" AnchorPane.topAnchor="0.0">
                            <children>
                               <AnchorPane layoutX="19.0" layoutY="3.0" prefHeight="790.0" prefWidth="659.0" stylesheets="@dashboardDesign.css">
                                  <styleClass>
@@ -439,7 +439,7 @@
                               </AnchorPane>
                            </children>
                         </AnchorPane>
-                        <AnchorPane fx:id="history_form" layoutX="-2.0" prefHeight="805.0" prefWidth="1217.0" stylesheets="@dashboardDesign.css" visible="false">
+                        <AnchorPane fx:id="history_form" layoutX="-2.0" prefHeight="805.0" prefWidth="1217.0" stylesheets="@dashboardDesign.css">
                            <children>
                               <TableView fx:id="history_fullyPaidTable" layoutX="17.0" layoutY="44.0" prefHeight="614.0" prefWidth="1196.0" styleClass="table-view1" stylesheets="@dashboardDesign.css">
                                  <columns>
@@ -464,7 +464,7 @@
                                     <Font name="Century Gothic" size="15.0" />
                                  </font>
                               </CheckBox>
-                              <TableView fx:id="history_withBalanceTable" layoutX="17.0" layoutY="43.0" prefHeight="642.0" prefWidth="1194.0" styleClass="table-view1" stylesheets="@dashboardDesign.css" visible="false">
+                              <TableView fx:id="history_withBalanceTable" layoutX="17.0" layoutY="43.0" onKeyPressed="#fillFieldWithDataFromWithBalanceTable" prefHeight="642.0" prefWidth="1194.0" styleClass="table-view1" stylesheets="@dashboardDesign.css" visible="false">
                                  <columns>
                                     <TableColumn fx:id="history_withBalance_column_transactionNumber" prefWidth="219.4666690826416" resizable="false" sortable="false" style="-fx-font-size: 18;" text="Transaction #" />
                                     <TableColumn fx:id="history_withBalance_column_costumerName" prefWidth="213.33331298828125" resizable="false" sortable="false" style="-fx-font-size: 18;" text="Customer Name" />
@@ -477,39 +477,29 @@
                                     <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                                  </columnResizePolicy>
                               </TableView>
-                              <AnchorPane fx:id="history_haveBalancePayAnchorPane" layoutX="54.0" layoutY="698.0" prefHeight="103.0" prefWidth="558.0" visible="false">
+                              <AnchorPane fx:id="history_haveBalancePayAnchorPane" layoutX="54.0" layoutY="698.0" prefHeight="103.0" prefWidth="558.0">
                                  <children>
-                                    <Label layoutX="15.0" layoutY="7.0" prefHeight="46.0" prefWidth="75.0" text="Total:">
-                                       <font>
-                                          <Font size="27.0" />
-                                       </font>
-                                    </Label>
-                                    <Label layoutY="60.0" text="Amount:">
+                                    <Label fx:id="history_amountLabel" layoutY="60.0" text="Amount:">
                                        <font>
                                           <Font size="24.0" />
                                        </font>
                                     </Label>
-                                    <Label layoutX="373.0" prefHeight="46.0" prefWidth="88.0" text="Balance:">
+                                    <Label prefHeight="46.0" prefWidth="192.0" text="Need to be Paid: ">
                                        <font>
                                           <Font size="23.0" />
                                        </font>
                                     </Label>
-                                    <Label fx:id="history_totalLabel" layoutX="91.0" layoutY="11.0" text="₱0">
-                                       <font>
-                                          <Font size="27.0" />
-                                       </font>
-                                    </Label>
-                                    <TextField fx:id="history_amount" layoutX="99.0" layoutY="57.0" onKeyTyped="#onlyNumInTextField" prefHeight="41.0" prefWidth="162.0" promptText="How much" styleClass="price" stylesheets="@dashboardDesign.css">
+                                    <TextField fx:id="history_amount" disable="true" layoutX="99.0" layoutY="57.0" onKeyTyped="#onlyNumInTextField" prefHeight="41.0" prefWidth="162.0" promptText="How much" styleClass="price" stylesheets="@dashboardDesign.css">
                                        <font>
                                           <Font size="15.0" />
                                        </font>
                                     </TextField>
-                                    <Label fx:id="history_balanceLabel" layoutX="463.0" layoutY="6.0" text="₱0">
+                                    <Label fx:id="history_balanceLabel" layoutX="178.0" layoutY="6.0" text="₱0">
                                        <font>
                                           <Font size="23.0" />
                                        </font>
                                     </Label>
-                                    <Button fx:id="history_balancePay" layoutX="268.0" layoutY="56.0" mnemonicParsing="false" onAction="#orderPay" prefHeight="40.0" prefWidth="55.0" text="Pay">
+                                    <Button fx:id="history_balancePay" layoutX="268.0" layoutY="56.0" mnemonicParsing="false" onAction="#historyPay" prefHeight="40.0" prefWidth="55.0" text="Pay">
                                        <font>
                                           <Font size="17.0" />
                                        </font>
@@ -519,7 +509,7 @@
                                           <Font size="23.0" />
                                        </font>
                                     </Label>
-                                    <Label fx:id="history_changeLabel" layoutX="463.0" layoutY="59.0" prefHeight="34.0" prefWidth="40.0" text="₱0">
+                                    <Label fx:id="history_changeLabel" layoutX="463.0" layoutY="59.0" prefHeight="34.0" prefWidth="177.0" text="₱0">
                                        <font>
                                           <Font size="23.0" />
                                        </font>
@@ -527,6 +517,16 @@
                                     <Label layoutX="110.0" layoutY="62.0" prefHeight="31.0" prefWidth="11.0" text="₱">
                                        <font>
                                           <Font size="19.0" />
+                                       </font>
+                                    </Label>
+                                    <Label layoutX="372.0" layoutY="14.0" prefHeight="46.0" prefWidth="90.0" text="Balance:">
+                                       <font>
+                                          <Font size="23.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="history_willBeBalance" layoutX="463.0" layoutY="20.0" prefHeight="34.0" prefWidth="178.0" text="₱0">
+                                       <font>
+                                          <Font size="23.0" />
                                        </font>
                                     </Label>
                                  </children>
