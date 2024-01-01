@@ -3,7 +3,6 @@
 <?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <?import java.lang.String?>
 <?import javafx.scene.chart.AreaChart?>
-<?import javafx.scene.chart.BarChart?>
 <?import javafx.scene.chart.CategoryAxis?>
 <?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.control.Button?>
@@ -136,14 +135,14 @@
                <center>
                   <AnchorPane prefHeight="812.0" prefWidth="1162.0" BorderPane.alignment="CENTER">
                      <children>
-                        <AnchorPane fx:id="home_form" layoutX="32.8" prefHeight="812.0" prefWidth="1226.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="33.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <AnchorPane fx:id="home_form" layoutX="32.8" prefHeight="812.0" prefWidth="1226.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="33.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <children>
                               <AnchorPane layoutX="-10.0" prefHeight="264.0" prefWidth="1178.0" styleClass="white-bg" stylesheets="@dashboardDesign.css">
                                  <children>
                                     <AnchorPane layoutX="24.0" layoutY="19.2" prefHeight="226.0" prefWidth="339.0" styleClass="card" stylesheets="@dashboardDesign.css" AnchorPane.bottomAnchor="19.0" AnchorPane.topAnchor="19.0">
                                        <children>
                                           <FontAwesomeIconView glyphName="USERS" layoutX="28.0" layoutY="136.0" size="5.5EM" />
-                                          <Label layoutX="132.0" layoutY="164.0" text="Today's Order">
+                                          <Label layoutX="162.0" layoutY="162.0" text="Total Order">
                                              <font>
                                                 <Font name="Century Gothic" size="24.0" />
                                              </font>
@@ -189,13 +188,13 @@
                               </AnchorPane>
                               <AnchorPane layoutX="2.0" layoutY="296.0" prefHeight="510.0" prefWidth="1183.0" stylesheets="@dashboardDesign.css">
                                  <children>
-                                    <AnchorPane layoutX="-12.0" layoutY="9.0" prefHeight="490.0" prefWidth="738.0" stylesheets="@dashboardDesign.css">
+                                    <AnchorPane layoutX="-12.0" layoutY="9.0" prefHeight="490.0" prefWidth="1177.0" stylesheets="@dashboardDesign.css">
                                        <styleClass>
                                           <String fx:value="white-bg" />
                                           <String fx:value="shadow" />
                                        </styleClass>
                                        <children>
-                                          <AreaChart fx:id="home_incomedataChart" layoutX="12.0" layoutY="-56.0" prefHeight="502.0" prefWidth="726.0" style="-fx-font-size: 15;" styleClass="column-header" stylesheets="@dashboardDesign.css" title="Income Data Chart" AnchorPane.bottomAnchor="-12.0" AnchorPane.leftAnchor="12.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                          <AreaChart fx:id="home_incomedataChart" layoutY="-56.0" legendVisible="false" prefHeight="490.0" prefWidth="727.0" style="-fx-font-size: 15;" styleClass="column-header" stylesheets="@dashboardDesign.css" title="Income Data Chart" AnchorPane.bottomAnchor="1.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="11.0" AnchorPane.topAnchor="0.0">
                                             <xAxis>
                                               <CategoryAxis side="BOTTOM" />
                                             </xAxis>
@@ -203,22 +202,6 @@
                                               <NumberAxis side="LEFT" />
                                             </yAxis>
                                           </AreaChart>
-                                       </children>
-                                    </AnchorPane>
-                                    <AnchorPane layoutX="742.0" layoutY="9.0" prefHeight="491.0" prefWidth="420.0" stylesheets="@dashboardDesign.css">
-                                       <styleClass>
-                                          <String fx:value="white-bg" />
-                                          <String fx:value="shadow" />
-                                       </styleClass>
-                                       <children>
-                                          <BarChart fx:id="home_orderChart" layoutX="1.0" layoutY="3.0" prefHeight="496.0" prefWidth="407.0" style="-fx-font-size: 15;" title="Orders Data Chart" AnchorPane.bottomAnchor="-7.800000000000011" AnchorPane.leftAnchor="1.0" AnchorPane.rightAnchor="11.800000000000011" AnchorPane.topAnchor="3.0">
-                                            <xAxis>
-                                              <CategoryAxis side="BOTTOM" />
-                                            </xAxis>
-                                            <yAxis>
-                                              <NumberAxis side="LEFT" />
-                                            </yAxis>
-                                          </BarChart>
                                        </children>
                                     </AnchorPane>
                                  </children>
@@ -439,7 +422,7 @@
                               </AnchorPane>
                            </children>
                         </AnchorPane>
-                        <AnchorPane fx:id="history_form" layoutX="-2.0" prefHeight="805.0" prefWidth="1217.0" stylesheets="@dashboardDesign.css">
+                        <AnchorPane fx:id="history_form" layoutX="-2.0" prefHeight="805.0" prefWidth="1217.0" stylesheets="@dashboardDesign.css" visible="false">
                            <children>
                               <TableView fx:id="history_fullyPaidTable" layoutX="17.0" layoutY="44.0" prefHeight="614.0" prefWidth="1196.0" styleClass="table-view1" stylesheets="@dashboardDesign.css">
                                  <columns>
@@ -464,7 +447,7 @@
                                     <Font name="Century Gothic" size="15.0" />
                                  </font>
                               </CheckBox>
-                              <TableView fx:id="history_withBalanceTable" layoutX="17.0" layoutY="43.0" onKeyPressed="#fillFieldWithDataFromWithBalanceTable" prefHeight="642.0" prefWidth="1194.0" styleClass="table-view1" stylesheets="@dashboardDesign.css" visible="false">
+                              <TableView fx:id="history_withBalanceTable" layoutX="17.0" layoutY="43.0" onKeyPressed="#fillFieldWithDataFromWithBalanceTable" prefHeight="616.0" prefWidth="1194.0" styleClass="table-view1" stylesheets="@dashboardDesign.css" visible="false">
                                  <columns>
                                     <TableColumn fx:id="history_withBalance_column_transactionNumber" prefWidth="219.4666690826416" resizable="false" sortable="false" style="-fx-font-size: 18;" text="Transaction #" />
                                     <TableColumn fx:id="history_withBalance_column_costumerName" prefWidth="213.33331298828125" resizable="false" sortable="false" style="-fx-font-size: 18;" text="Customer Name" />
@@ -547,12 +530,31 @@
                                     <ComboBox fx:id="history_year" layoutX="283.0" layoutY="4.0" onAction="#historyDisplayTableFromMonths" prefHeight="28.0" prefWidth="131.0" promptText="Select Month" />
                                  </children>
                               </AnchorPane>
-                              <Button fx:id="history_print" layoutX="1124.0" layoutY="750.0" mnemonicParsing="false" onAction="#printTable" prefHeight="47.0" prefWidth="88.0" text="Print">
+                              <Button fx:id="history_print" layoutX="1054.0" layoutY="674.0" mnemonicParsing="false" onAction="#printTable" prefHeight="47.0" prefWidth="88.0" text="Print">
                                  <font>
                                     <Font size="17.0" />
                                  </font>
                               </Button>
-                              <Label fx:id="history_totalIncome" layoutX="901.0" layoutY="690.0" prefHeight="42.0" prefWidth="98.0" text="Label" />
+                              <Button fx:id="history_deleteTable" layoutX="895.0" layoutY="674.0" mnemonicParsing="false" onAction="#historyDeleteAllTable" prefHeight="47.0" prefWidth="148.0" text="Delete All">
+                                 <font>
+                                    <Font size="17.0" />
+                                 </font>
+                              </Button>
+                              <Button fx:id="history_deleteRow" layoutX="739.0" layoutY="674.0" mnemonicParsing="false" onAction="#historyDelete" prefHeight="47.0" prefWidth="146.0" text="Delete Row">
+                                 <font>
+                                    <Font size="17.0" />
+                                 </font>
+                              </Button>
+                              <Label fx:id="history_totalIncome" layoutX="222.0" layoutY="667.0" prefHeight="34.0" prefWidth="178.0" text="₱0">
+                                 <font>
+                                    <Font size="23.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="history_totalIncomeLabel" layoutX="68.0" layoutY="667.0" text="Total Income:">
+                                 <font>
+                                    <Font size="24.0" />
+                                 </font>
+                              </Label>
                            </children>
                         </AnchorPane>
                      </children>

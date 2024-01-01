@@ -1,15 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="ArtifactsWorkspaceSettings">
+    <artifacts-to-build>
+      <artifact name="invetory-system:jar" />
+    </artifacts-to-build>
+  </component>
   <component name="AutoImportSettings">
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2b1c4b3e-ed24-4a03-940c-14188ed82d64" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/invetorysystem/generateReportForAll.jrxml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/artifacts/invetory_system_jar.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/invetorysystem/META-INF/MANIFEST.MF" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/invetorysystem/main_run.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/META-INF/MANIFEST.MF" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/com/example/invetorysystem/Images/logo_white.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/invetorysystem/dashboardController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/invetorysystem/dashboardController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/invetorysystem/generateReport.jrxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/invetorysystem/generateReport.jrxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/invetorysystem/historyData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/invetorysystem/historyData.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/invetorysystem/generateReportForAll.jrxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/invetorysystem/generateReportForAll.jrxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/invetorysystem/receipt.jrxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/invetorysystem/receipt.jrxml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/com/example/invetorysystem/dashboard.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/example/invetorysystem/dashboard.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -60,15 +70,15 @@
     "git-widget-placeholder": "main",
     "ignore.virus.scanning.warn.message": "true",
     "jdk.selected.JAVA_MODULE": "21",
-    "last_opened_file_path": "C:/Users/emjay/Downloads/PROJECTS/INTELEJI Projects/invetory-system/src/main/java/com/example/invetorysystem",
+    "last_opened_file_path": "C:/Program Files/Java/jdk-21/bin/api-ms-win-crt-utility-l1-1-0.dll",
     "list.type.of.created.stylesheet": "CSS",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Libraries",
-    "project.structure.proportion": "0.15722656",
+    "project.structure.last.edited": "Artifacts",
+    "project.structure.proportion": "0.16601562",
     "project.structure.side.proportion": "0.2737819",
     "settings.editor.selected.configurable": "preferences.pluginManager",
     "vue.rearranger.settings.migration": "true"
@@ -165,7 +175,11 @@
       <workItem from="1703162856197" duration="5384000" />
       <workItem from="1703218409118" duration="6221000" />
       <workItem from="1703225654544" duration="783000" />
-      <workItem from="1703240403768" duration="15209000" />
+      <workItem from="1703240403768" duration="16541000" />
+      <workItem from="1703302904578" duration="7664000" />
+      <workItem from="1703328431555" duration="9576000" />
+      <workItem from="1703347961426" duration="678000" />
+      <workItem from="1704092811557" duration="3230000" />
     </task>
     <servers />
   </component>
@@ -185,16 +199,5 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/example/invetorysystem/dashboardController.java</url>
-          <line>1464</line>
-          <option name="timeStamp" value="2" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>

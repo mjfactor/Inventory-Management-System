@@ -1,27 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.20.6.final using JasperReports Library version 6.20.6-5c96b6aa8a39ac1dc6b6bea4b81168e16dd39231  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Simple_Blue" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="10154924-168c-4d2b-bd18-02203e1a7110">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Blank_A4" pageWidth="255" pageHeight="425" columnWidth="215" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="7d029b05-94c9-40b8-8694-14f6c59caab4">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="New Data Adapter"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="mm"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="mm"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
 	<parameter name="total" class="java.lang.String"/>
-	<parameter name="pesoSign" class="java.lang.String"/>
 	<parameter name="paid" class="java.lang.String"/>
 	<parameter name="change" class="java.lang.String"/>
 	<parameter name="balance" class="java.lang.String"/>
 	<queryString language="SQL">
-		<![CDATA[SELECT `customerName`,
-	type,
+		<![CDATA[SELECT type,
 	`productName`,
 	quantity,
-	price_int,
-	date
+	price,
+	`customerName`
 FROM inventory.customer]]>
 	</queryString>
-	<field name="customerName" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="customerName"/>
-		<property name="com.jaspersoft.studio.field.label" value="customerName"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="customer"/>
-	</field>
 	<field name="type" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="type"/>
 		<property name="com.jaspersoft.studio.field.label" value="type"/>
@@ -37,259 +39,303 @@ FROM inventory.customer]]>
 		<property name="com.jaspersoft.studio.field.label" value="quantity"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="customer"/>
 	</field>
-	<field name="price_int" class="java.lang.Integer">
-		<property name="com.jaspersoft.studio.field.name" value="price_int"/>
-		<property name="com.jaspersoft.studio.field.label" value="price_int"/>
+	<field name="price" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="price"/>
+		<property name="com.jaspersoft.studio.field.label" value="price"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="customer"/>
 	</field>
-	<field name="date" class="java.sql.Date">
-		<property name="com.jaspersoft.studio.field.name" value="date"/>
-		<property name="com.jaspersoft.studio.field.label" value="date"/>
+	<field name="customerName" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="customerName"/>
+		<property name="com.jaspersoft.studio.field.label" value="customerName"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="customer"/>
 	</field>
-	<group name="Total Footer">
+	<group name="Total and Date">
 		<groupFooter>
-			<band height="182">
-				<staticText>
-					<reportElement x="370" y="30" width="80" height="22" uuid="27975718-83fe-4854-9bab-321de01d3768"/>
-					<textElement textAlignment="Center">
-						<font fontName="Century Gothic" size="14"/>
+			<band height="86">
+				<textField pattern="M/d/yy">
+					<reportElement x="34" y="2" width="86" height="20" uuid="bda5a5c4-efec-47c6-a767-bdfa7bf015c0"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Century Gothic" size="7"/>
 					</textElement>
-					<text><![CDATA[Total: ]]></text>
+					<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="0" y="3" width="34" height="18" uuid="16fa7db4-faa9-45ee-b181-e5aa7c803d59"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Century Gothic" size="8"/>
+					</textElement>
+					<text><![CDATA[Date:]]></text>
 				</staticText>
+				<staticText>
+					<reportElement x="0" y="23" width="34" height="18" uuid="d5408f09-9c37-43d0-a608-7282254256f9"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Century Gothic" size="8"/>
+					</textElement>
+					<text><![CDATA[Time:]]></text>
+				</staticText>
+				<textField pattern="HH:mm">
+					<reportElement x="34" y="23" width="86" height="19" uuid="7083f8e8-d1b3-46cc-b8c9-32c5aae683ff"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Century Gothic" size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+				</textField>
 				<textField>
-					<reportElement x="460" y="30" width="91" height="22" uuid="365637d5-6594-41be-914b-b6e281264c58"/>
-					<textElement textAlignment="Center">
-						<font size="14"/>
+					<reportElement x="173" y="3" width="48" height="18" uuid="0fffa73e-a979-44b9-bc76-c5a3ce06f718"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="8"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$P{total}]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement x="372" y="60" width="78" height="22" uuid="455be682-68eb-410c-9594-618b23005008"/>
-					<textElement textAlignment="Center">
-						<font fontName="Century Gothic" size="14"/>
+					<reportElement x="130" y="3" width="42" height="18" uuid="427d68fa-83f7-4e27-b33f-116f816b2dbc"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Century Gothic" size="8"/>
+					</textElement>
+					<text><![CDATA[Total:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="130" y="23" width="42" height="18" uuid="f0e8e9db-f124-4206-a6b7-2a2508d419ed"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Century Gothic" size="8"/>
 					</textElement>
 					<text><![CDATA[Paid:]]></text>
 				</staticText>
-				<line>
-					<reportElement x="460" y="82" width="84" height="1" uuid="b7713f18-240d-4b1c-a3c4-8103c6bf5e2b"/>
-				</line>
-				<textField>
-					<reportElement x="460" y="60" width="91" height="21" uuid="f8967718-e8e4-4889-8a51-754f023fbb9f"/>
-					<textElement textAlignment="Center">
-						<font size="14"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$P{paid}]]></textFieldExpression>
-				</textField>
 				<staticText>
-					<reportElement x="377" y="90" width="74" height="22" uuid="48ef53a4-ace2-4c20-9d20-ac62f0dbbdfc"/>
-					<textElement textAlignment="Center">
-						<font fontName="Century Gothic" size="14"/>
+					<reportElement x="130" y="44" width="42" height="18" uuid="1d008f49-af38-4c6f-a21c-00a99ddd6ebd"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Century Gothic" size="8"/>
 					</textElement>
 					<text><![CDATA[Change:]]></text>
 				</staticText>
-				<textField>
-					<reportElement x="460" y="91" width="84" height="21" uuid="c70a0490-bc99-458c-9382-5e2c01c946b8"/>
-					<textElement textAlignment="Center">
-						<font size="14"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$P{change}]]></textFieldExpression>
-				</textField>
 				<staticText>
-					<reportElement x="377" y="150" width="74" height="22" uuid="daed57af-a04b-45ed-bf93-c2f072f285b5"/>
-					<textElement textAlignment="Center">
-						<font fontName="Century Gothic" size="14"/>
+					<reportElement x="130" y="64" width="42" height="18" uuid="3f6c7101-1b28-4629-bf3a-a95a086f94b3"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Century Gothic" size="8"/>
 					</textElement>
 					<text><![CDATA[Balance:]]></text>
 				</staticText>
 				<textField>
-					<reportElement x="460" y="150" width="84" height="21" uuid="2be16afb-6333-402c-a6d0-cdb9cc17bcea"/>
-					<textElement textAlignment="Center">
-						<font size="14"/>
+					<reportElement x="173" y="23" width="48" height="18" uuid="a060e8e7-e04b-4815-b168-3c8c73bfa2a3"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$P{paid}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="173" y="44" width="48" height="18" uuid="d0370efb-1b0a-4dfc-a7e2-42d648348ba0"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$P{change}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="173" y="64" width="62" height="18" uuid="b783fd73-c77b-418c-962b-f432675d7c06"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="8"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$P{balance}]]></textFieldExpression>
 				</textField>
 				<line>
-					<reportElement x="460" y="70" width="10" height="1" uuid="4a9b068d-a021-4e0c-b9da-f759331a1415"/>
+					<reportElement x="-10" y="2" width="230" height="1" uuid="6d4f10c9-aaf8-4e91-853f-9361d6a140f3">
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					</reportElement>
+					<graphicElement>
+						<pen lineStyle="Dotted"/>
+					</graphicElement>
 				</line>
 			</band>
 		</groupFooter>
 	</group>
 	<background>
-		<band/>
+		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="72">
+		<band height="40" splitType="Stretch">
 			<frame>
-				<reportElement mode="Opaque" x="-20" y="-20" width="595" height="92" backcolor="#293840" uuid="8c53e003-30eb-4ae0-b1b6-de1f0380d2cf"/>
+				<reportElement mode="Opaque" x="-20" y="-20" width="255" height="60" backcolor="#FFFFFF" uuid="024cb334-2340-45f4-8c88-b39a6032d709"/>
 				<staticText>
-					<reportElement x="150" y="25" width="234" height="43" forecolor="#FFFFFF" uuid="277ec202-bd66-44a9-8ce4-1a5df8119e58"/>
-					<textElement>
-						<font fontName="Century Gothic" size="34" isBold="true"/>
+					<reportElement x="95" y="20" width="110" height="38" uuid="a438372f-5518-437f-b7af-e540772cc652"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Century Gothic" size="12" isBold="true"/>
 					</textElement>
-					<text><![CDATA[GJStainless]]></text>
+					<text><![CDATA[GJ Stainless Steel 
+and Fabricator]]></text>
 				</staticText>
+				<image>
+					<reportElement x="50" y="16" width="45" height="47" uuid="6e9cd691-510c-4c24-a562-87816840fec8"/>
+					<imageExpression><![CDATA["C:/Users/emjay/Downloads/PROJECTS/INTELEJI Projects/invetory-system/src/main/resources/com/example/invetorysystem/Images/logo.png"]]></imageExpression>
+				</image>
 			</frame>
 		</band>
 	</title>
 	<pageHeader>
-		<band height="40">
-			<textField>
-				<reportElement x="430" y="10" width="100" height="20" uuid="57629edb-89b8-496f-a9ea-615cf3d1e4d2"/>
-				<textElement textAlignment="Left" verticalAlignment="Bottom">
-					<font fontName="Century Gothic" size="16"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{customerName}]]></textFieldExpression>
-			</textField>
+		<band height="46" splitType="Stretch">
 			<staticText>
-				<reportElement x="290" y="10" width="140" height="20" uuid="cf2285ba-6bdf-4f7c-9fb3-9f613e6a7117"/>
-				<textElement textAlignment="Right">
-					<font fontName="Century Gothic" size="16"/>
+				<reportElement x="50" y="12" width="70" height="29" uuid="f6e2f596-8607-4a95-83b1-f41e3cd45cc4"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Century Gothic" size="8"/>
 				</textElement>
 				<text><![CDATA[Customer Name:]]></text>
 			</staticText>
+			<textField>
+				<reportElement x="130" y="12" width="90" height="29" uuid="444932b9-e333-47f4-84f2-bc109c27b776">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Century Gothic" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{customerName}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="-10" y="10" width="230" height="1" uuid="a05fb641-0ada-4584-bab9-c5b1609289d3">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="-10" y="40" width="230" height="1" uuid="9e4aef75-0257-4e1f-9c6d-c2a9db747333">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="-10" y="45" width="230" height="1" forecolor="#A69C9C" uuid="d321d63a-be51-4abd-9423-a62d4447a3a2">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
 		</band>
 	</pageHeader>
 	<columnHeader>
-		<band height="25">
-			<line>
-				<reportElement x="-20" y="20" width="595" height="1" forecolor="#666666" uuid="9ec32d33-e878-4b04-baf3-d2a2c3309a28"/>
-			</line>
+		<band height="21" splitType="Stretch">
 			<staticText>
-				<reportElement mode="Opaque" x="0" y="0" width="140" height="20" forecolor="#006699" backcolor="#E6E6E6" uuid="b849203c-2e37-493e-8f13-96c05c248bb0">
-					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="42f8b257-97dd-4ace-9381-4d4b80c5f5e4"/>
+				<reportElement x="0" y="5" width="50" height="10" uuid="577e4ec6-fdef-458e-bfd2-ca3190ab4ff7">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="4c5beb75-3fc1-401c-b29b-f27d41c6a854"/>
 				</reportElement>
-				<textElement textAlignment="Center">
-					<font fontName="Century Gothic" size="14" isBold="true"/>
+				<box>
+					<rightPen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Century Gothic" size="8"/>
 				</textElement>
-				<text><![CDATA[type]]></text>
+				<text><![CDATA[Type]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="140" y="0" width="136" height="20" forecolor="#006699" backcolor="#E6E6E6" uuid="ea1f395f-8a50-4af0-8257-1c6931ca6dc5">
-					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="fc4acb59-f5a3-411f-949f-ef9c4fdf26b5"/>
+				<reportElement x="50" y="5" width="70" height="10" uuid="b061b75f-d868-4d36-9384-c8bf0ec1f536">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="0204efbd-3d68-42c4-b195-ddeeb74812ef"/>
 				</reportElement>
-				<textElement textAlignment="Center">
-					<font fontName="Century Gothic" size="14" isBold="true"/>
+				<box>
+					<rightPen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Century Gothic" size="8"/>
 				</textElement>
-				<text><![CDATA[productName]]></text>
+				<text><![CDATA[Product ]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="276" y="0" width="92" height="20" forecolor="#006699" backcolor="#E6E6E6" uuid="d14b9abb-ca0e-4a8f-8c41-ebe5dd4afc58">
-					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="497850b9-9bd4-44d6-8da9-57fea1056860"/>
+				<reportElement x="120" y="5" width="40" height="10" uuid="43448d19-83ba-4e54-a965-9a1f96ee695b">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="aa61df45-7b57-401b-8903-774fba8d408c"/>
 				</reportElement>
-				<textElement textAlignment="Center">
-					<font fontName="Century Gothic" size="14" isBold="true"/>
+				<box>
+					<pen lineStyle="Solid"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Century Gothic" size="8"/>
 				</textElement>
-				<text><![CDATA[quantity]]></text>
+				<text><![CDATA[QTY]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="368" y="0" width="92" height="20" forecolor="#006699" backcolor="#E6E6E6" uuid="c13ca315-f4f8-43b9-869a-f3d8589fe7a6">
-					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="083dce86-2939-4d74-9c55-f327f1a4e873"/>
+				<reportElement x="160" y="5" width="60" height="10" uuid="8d53868c-f2e9-433a-bab5-690a546b619a">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="8791e7cb-4c83-45f2-aafb-22df043a2a19"/>
 				</reportElement>
-				<textElement textAlignment="Center">
-					<font fontName="Century Gothic" size="14" isBold="true"/>
-				</textElement>
-				<text><![CDATA[date]]></text>
-			</staticText>
-			<staticText>
-				<reportElement mode="Opaque" x="460" y="0" width="92" height="20" forecolor="#006699" backcolor="#E6E6E6" uuid="c829794b-9339-4383-8833-374ad45ed29f">
-					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="083dce86-2939-4d74-9c55-f327f1a4e873"/>
-				</reportElement>
-				<textElement textAlignment="Center">
-					<font fontName="Century Gothic" size="14" isBold="true"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Century Gothic" size="8"/>
 				</textElement>
 				<text><![CDATA[Price]]></text>
 			</staticText>
+			<line>
+				<reportElement x="-10" y="20" width="230" height="1" uuid="76a8988f-c18e-4d58-8caf-49d9381307a6">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="26">
-			<line>
-				<reportElement positionType="FixRelativeToBottom" x="0" y="19" width="555" height="1" uuid="046caf23-d2c4-4a9d-b94f-e6b6e837182d"/>
-			</line>
-			<textField textAdjust="StretchHeight">
-				<reportElement x="0" y="0" width="140" height="20" uuid="d8acaae8-bf0f-487f-b085-666895bfdfa4">
-					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="42f8b257-97dd-4ace-9381-4d4b80c5f5e4"/>
+		<band height="32" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="50" height="30" uuid="5b9b300e-aedb-4534-a00a-f836aebb680d">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="4c5beb75-3fc1-401c-b29b-f27d41c6a854"/>
 				</reportElement>
-				<textElement textAlignment="Center">
-					<font fontName="Century Gothic" size="14"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Century Gothic" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{type}]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight">
-				<reportElement x="140" y="0" width="136" height="20" uuid="f3559125-7839-473a-a32e-5407faff6a07">
-					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="fc4acb59-f5a3-411f-949f-ef9c4fdf26b5"/>
+			<textField>
+				<reportElement x="50" y="0" width="70" height="30" uuid="02ca9a70-9565-4c16-8bb1-b5e764d7fd5e">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="0204efbd-3d68-42c4-b195-ddeeb74812ef"/>
 				</reportElement>
-				<textElement textAlignment="Center">
-					<font fontName="Century Gothic" size="14"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Century Gothic" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{productName}]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight">
-				<reportElement x="276" y="0" width="92" height="20" uuid="2ad8e819-c05f-42a2-8338-728f3335c39a">
-					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="497850b9-9bd4-44d6-8da9-57fea1056860"/>
+			<textField>
+				<reportElement x="120" y="0" width="40" height="30" uuid="c4237119-7d02-43f3-8db5-1d1498ede3c2">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="aa61df45-7b57-401b-8903-774fba8d408c"/>
 				</reportElement>
-				<textElement textAlignment="Center">
-					<font fontName="Century Gothic" size="14"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Century Gothic" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{quantity}]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight">
-				<reportElement x="368" y="0" width="92" height="20" uuid="609c38b5-92f2-4646-9b0b-9f1617cbf281">
-					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="083dce86-2939-4d74-9c55-f327f1a4e873"/>
-				</reportElement>
-				<textElement textAlignment="Center">
-					<font fontName="Century Gothic" size="14"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{date}.toString()]]></textFieldExpression>
-			</textField>
 			<textField>
-				<reportElement x="490" y="0" width="62" height="18" uuid="9e4321ea-cfd9-42f9-b856-f84480c17dd0">
-					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="0f815a53-93e9-4eb4-ac1f-db104f38c096"/>
+				<reportElement x="160" y="0" width="60" height="30" uuid="33a6db3a-6418-450e-bb79-2861af22f791">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="8791e7cb-4c83-45f2-aafb-22df043a2a19"/>
 				</reportElement>
-				<textElement textAlignment="Left">
-					<font fontName="Century Gothic" size="14"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{price_int}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="460" y="0" width="30" height="18" uuid="96230d9b-3367-493a-8b75-51089c9f004d"/>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font size="14"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$P{pesoSign}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{price}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
-	<columnFooter>
-		<band/>
-	</columnFooter>
 	<pageFooter>
-		<band height="81">
-			<textField>
-				<reportElement mode="Opaque" x="0" y="68" width="515" height="13" backcolor="#E6E6E6" uuid="f8240253-ccec-4836-b5b3-d031b3170a91"/>
-				<textElement textAlignment="Right">
-					<font fontName="Century Gothic"/>
+		<band height="31" splitType="Stretch">
+			<line>
+				<reportElement x="-8" y="4" width="230" height="1" uuid="7824fccd-d5eb-4263-94c0-7652bf6efe21">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineStyle="Dotted"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="80" y="10" width="60" height="10" uuid="27b281e2-664e-40d0-bcb1-eb32887dad9c">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="4c5beb75-3fc1-401c-b29b-f27d41c6a854"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Century Gothic" size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
-			</textField>
-			<textField evaluationTime="Report">
-				<reportElement mode="Opaque" x="515" y="68" width="40" height="13" backcolor="#E6E6E6" uuid="4000efec-b65d-4f11-ae0c-265b5e7b6e6e"/>
-				<textElement>
-					<font fontName="Century Gothic"/>
-				</textElement>
-				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
-			</textField>
-			<textField pattern="EEEEE dd MMMMM yyyy">
-				<reportElement x="0" y="68" width="100" height="13" uuid="92c34cfd-60f5-4e16-a0ac-d5806453bc2e"/>
-				<textElement>
-					<font fontName="Century Gothic"/>
-				</textElement>
-				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
-			</textField>
+				<text><![CDATA[THANK YOU!]]></text>
+			</staticText>
 		</band>
 	</pageFooter>
-	<summary>
-		<band/>
-	</summary>
 </jasperReport>
