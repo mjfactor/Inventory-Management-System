@@ -10,6 +10,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 
+import java.io.InputStream;
 import java.net.URL;
 import java.sql.*;
 import java.text.NumberFormat;
@@ -1033,7 +1034,8 @@ public class dashboardController implements Initializable {
         parameters.put("paid", "₱" + formatPrice(order_amount.getText()));
         parameters.put("change", order_change.getText());
         parameters.put("balance", order_balanceLabel.getText());
-        JasperDesign jasperDesign = JRXmlLoader.load("src/main/java/com/example/invetorysystem/receipt.jrxml");
+        InputStream inputStream = getClass().getResourceAsStream("/com/example/invetorysystem/receipt.jrxml");
+        JasperDesign jasperDesign = JRXmlLoader.load(inputStream);
         JasperReport jasperReport = JasperCompileManager.compileReport(jasperDesign);
         JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, database.connectDb());
         JasperViewer.viewReport(jasperPrint, false);
@@ -1745,12 +1747,14 @@ public class dashboardController implements Initializable {
         parameters.put("pesoSign", "₱");
         parameters.put("total", historyFullyPaidDisplayTotal());
         parameters.put("Year", year);
-        JasperDesign jasperDesign = JRXmlLoader.load("src/main/java/com/example/invetorysystem/generateReportForAll.jrxml");
+        InputStream is = getClass().getResourceAsStream("/com/example/invetorysystem/generateReportForAll.jrxml");
+        JasperDesign jasperDesign = JRXmlLoader.load(is);
         JasperReport jasperReport = JasperCompileManager.compileReport(jasperDesign);
         JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, database.connectDb());
         JasperViewer.viewReport(jasperPrint, false);
     }  // Print all the data (History)
     public void printTable() throws JRException {
+
         if(history_totalIncome.getText().equalsIgnoreCase("₱0")){
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");
@@ -1770,7 +1774,8 @@ public class dashboardController implements Initializable {
                 parameters.put("total", historyFullyPaidDisplayTotal());
                 parameters.put("Month", month);
                 parameters.put("Year", year);
-                JasperDesign jasperDesign = JRXmlLoader.load("src/main/java/com/example/invetorysystem/generateReport.jrxml");
+                InputStream is = getClass().getResourceAsStream("/com/example/invetorysystem/generateReport.jrxml");
+                JasperDesign jasperDesign = JRXmlLoader.load(is);
                 JasperReport jasperReport = JasperCompileManager.compileReport(jasperDesign);
                 JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, database.connectDb());
                 JasperViewer.viewReport(jasperPrint, false);

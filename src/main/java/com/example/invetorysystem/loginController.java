@@ -69,6 +69,7 @@ public class loginController implements Initializable {
             password_show.setVisible(false);
         }
     }
+
     public void loginAdmin(){
         String sql = "SELECT * FROM admin WHERE username = ? and password = ?";
 
@@ -119,6 +120,7 @@ public class loginController implements Initializable {
         }catch (Exception e){
             e.printStackTrace();
         }
+
     }
     public void loginWhenEnterIsPressed(){
         login_button.defaultButtonProperty().bind(new SimpleBooleanProperty(true));
@@ -137,18 +139,13 @@ public class loginController implements Initializable {
 
     }
 
-    public void displayLogo(){
-        login_logo.setImage(new javafx.scene.image.Image("file:src/main/resources/com/example/invetorysystem/Images/logo.png"));
-    }
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         makePasswordDontReadSpace();
         password_checkBox.selectedProperty().addListener((observable, oldValue, newValue) -> showPassword());
         password_show.textProperty().bindBidirectional(password.textProperty());
         loginWhenEnterIsPressed();
-        displayLogo();
-
-
 
     }
 }

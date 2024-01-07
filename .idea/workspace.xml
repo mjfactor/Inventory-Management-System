@@ -10,17 +10,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2b1c4b3e-ed24-4a03-940c-14188ed82d64" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/artifacts/invetory_system_jar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/invetorysystem/META-INF/MANIFEST.MF" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/invetorysystem/main_run.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/resources/META-INF/MANIFEST.MF" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/com/example/invetorysystem/Images/logo_white.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/invetory_system_jar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/artifacts/invetory_system_jar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/invetorysystem/dashboardController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/invetorysystem/dashboardController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/invetorysystem/generateReport.jrxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/invetorysystem/generateReport.jrxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/invetorysystem/generateReportForAll.jrxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/invetorysystem/generateReportForAll.jrxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/invetorysystem/receipt.jrxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/invetorysystem/receipt.jrxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/com/example/invetorysystem/dashboard.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/example/invetorysystem/dashboard.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/invetorysystem/generateReport.jrxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/example/invetorysystem/generateReport.jrxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/invetorysystem/generateReportForAll.jrxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/example/invetorysystem/generateReportForAll.jrxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/invetorysystem/loginController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/invetorysystem/loginController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/invetorysystem/receipt.jrxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/example/invetorysystem/receipt.jrxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/com/example/invetorysystem/login.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/example/invetorysystem/login.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -70,7 +69,7 @@
     "git-widget-placeholder": "main",
     "ignore.virus.scanning.warn.message": "true",
     "jdk.selected.JAVA_MODULE": "21",
-    "last_opened_file_path": "C:/Program Files/Java/jdk-21/bin/api-ms-win-crt-utility-l1-1-0.dll",
+    "last_opened_file_path": "C:/Users/emjay/Downloads/PROJECTS/INTELEJI Projects/invetory-system/src/main/resources/com/example/invetorysystem",
     "list.type.of.created.stylesheet": "CSS",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -179,7 +178,7 @@
       <workItem from="1703302904578" duration="7664000" />
       <workItem from="1703328431555" duration="9576000" />
       <workItem from="1703347961426" duration="678000" />
-      <workItem from="1704092811557" duration="3230000" />
+      <workItem from="1704092811557" duration="6863000" />
     </task>
     <servers />
   </component>
