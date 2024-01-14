@@ -18,7 +18,7 @@ WHERE
 	 AND inventory.customer_receipt.month_string =  $P{Month} 
 	 AND inventory.customer_receipt.year_int =  $P{Year}]]>
 	</queryString>
-	<field name="transaction_id" class="java.lang.Integer">
+	<field name="transaction_id" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="transaction_id"/>
 		<property name="com.jaspersoft.studio.field.label" value="transaction_id"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="customer_receipt"/>

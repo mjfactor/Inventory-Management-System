@@ -3,6 +3,7 @@ package com.example.invetorysystem;
 import java.util.Date;
 
 public class customerData {
+
     private String customerName;
     private String productName;
     private String type;
@@ -12,6 +13,7 @@ public class customerData {
     private Date date;
 
     public customerData(String customerName, String type, String productName, Integer quantity, String price, Integer price_int, Date date ){
+
         this.customerName = customerName;
         this.type = type;
         this.productName = productName;
@@ -20,6 +22,7 @@ public class customerData {
         this.price_int = price_int;
         this.date = date;
     }
+
     public String getCustomerName(){
         return customerName;
     }

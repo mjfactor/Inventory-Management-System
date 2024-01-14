@@ -1,5 +1,8 @@
 package com.example.invetorysystem;
 
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -7,6 +10,8 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 
@@ -14,6 +19,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.sql.*;
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.Year;
@@ -38,6 +44,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.Duration;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.design.JasperDesign;
 import net.sf.jasperreports.engine.xml.JRXmlLoader;
@@ -273,12 +280,13 @@ public class dashboardController implements Initializable {
     private Button history_deleteTable;
     @FXML
     private Label history_totalIncomeLabel;
-
+    @FXML
+    private TextField transaction_Id;
 
 
     NumberFormat formatWithComma = NumberFormat.getNumberInstance(Locale.US);
     public int productId;
-    public int transactionId;
+    public String transactionId;
     public int balanceInt;
     public int paidInt;
 
@@ -608,12 +616,30 @@ public class dashboardController implements Initializable {
     } // Set the value of spinner (Products)
 
 
-    public void ordersAdd() {
 
+
+    final Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1),
+            new EventHandler()
+            {
+                @Override
+                public void handle(Event event) {
+                    Date date = new Date();
+                    SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+                    transaction_Id.setText(formatter.format(date).replaceAll("/", "").replaceAll(":", "").replaceAll(" ", ""));
+                }
+
+            }));
+
+
+    String transaction = "";
+    public void ordersAdd() {
+        if (Objects.equals(transaction, "")){
+            transaction = transaction_Id.getText();
+        }
         int priceInt = 0;
         int qty = order_quantity.getValue();
-        String sql = "INSERT INTO customer (customerName, type, productName, quantity, price, price_int, date)"
-                + "VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO customer (transaction_id, customerName, type, productName, quantity, price, price_int, date)"
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
         connect = database.connectDb();
         try {
@@ -666,10 +692,11 @@ public class dashboardController implements Initializable {
                         // If product doesn't exist
                         assert connect != null;
                         prepare = connect.prepareStatement(sql);
-                        prepare.setString(1, customer_name.getText());
-                        prepare.setString(2, order_productType.getSelectionModel().getSelectedItem());
-                        prepare.setString(3, order_productName.getSelectionModel().getSelectedItem());
-                        prepare.setString(4, String.valueOf(qty));
+                        prepare.setString(1, transaction);
+                        prepare.setString(2, customer_name.getText());
+                        prepare.setString(3, order_productType.getSelectionModel().getSelectedItem());
+                        prepare.setString(4, order_productName.getSelectionModel().getSelectedItem());
+                        prepare.setString(5, String.valueOf(qty));
 
                         String checkData = "SELECT price_int FROM products WHERE productName = '"
                                 + order_productName.getSelectionModel().getSelectedItem() + "'";
@@ -679,14 +706,14 @@ public class dashboardController implements Initializable {
                             priceInt = result.getInt("price_int");
                         }
                         String priceString = String.valueOf(qty * priceInt);  // Compute the price
-                        prepare.setString(5, "₱" + formatPrice(priceString));
+                        prepare.setString(6, "₱" + formatPrice(priceString));
 
                         int total = qty * priceInt;
-                        prepare.setInt(6, total);
+                        prepare.setInt(7, total);
 
                         Date date = new Date();
                         java.sql.Date sqlDate = new java.sql.Date(date.getTime());
-                        prepare.setDate(7, sqlDate);
+                        prepare.setDate(8, sqlDate);
 
                         prepare.executeUpdate();
                         orderDisplayTotal();
@@ -734,24 +761,24 @@ public class dashboardController implements Initializable {
                         } else {
                             assert connect != null;
                             prepare = connect.prepareStatement(sql);
+                            prepare.setString(1, transaction);
+                            prepare.setString(2, customer_name.getText());
+                            prepare.setString(3, order_productType.getSelectionModel().getSelectedItem());
+                            prepare.setString(4, order_customName.getText());
 
-                            prepare.setString(1, customer_name.getText());
-                            prepare.setString(2, order_productType.getSelectionModel().getSelectedItem());
-                            prepare.setString(3, order_customName.getText());
-
-                            prepare.setString(4, String.valueOf(qty));
+                            prepare.setString(5, String.valueOf(qty));
 
                             priceInt = Integer.parseInt(order_customPrice.getText());
 
                             var priceString = String.valueOf(qty * priceInt);  // Compute the price
-                            prepare.setString(5, "₱" + formatPrice(priceString));
+                            prepare.setString(6, "₱" + formatPrice(priceString));
 
                             int total = qty * priceInt;
-                            prepare.setInt(6, total);
+                            prepare.setInt(7, total);
 
                             Date date = new Date();
                             java.sql.Date sqlDate = new java.sql.Date(date.getTime());
-                            prepare.setDate(7, sqlDate);
+                            prepare.setDate(8, sqlDate);
 
                             prepare.executeUpdate();
                             orderDisplayTotal();
@@ -782,7 +809,8 @@ public class dashboardController implements Initializable {
 
             while (result.next()) {
                 customerID = new customerData
-                        (result.getString("customerName")
+                        (
+                                result.getString("customerName")
                                 , result.getString("type")
                                 , result.getString("productName")
                                 , result.getInt("quantity")
@@ -967,10 +995,24 @@ public class dashboardController implements Initializable {
 
         }
     } // Calculate the balance (Order)
+    public void insertCustomerTableToHistoryPayBalanceTable(){
+        // Copy all the columns from customer table to history balance table
+        String sql = "INSERT INTO historybalancepay (transaction_id, customerName, type, productName, quantity, price, price_int, date)"
+                + "SELECT transaction_id, customerName, type, productName, quantity, price, price_int, date FROM customer";
+        connect = database.connectDb();
+        try {
+            assert connect != null;
+            statement = connect.createStatement();
+            statement.executeUpdate(sql);
+        }catch (Exception ignored){
 
+        }
+
+    }
     public void orderPay() {
-        String sql = "INSERT INTO customer_receipt (customer_name, total, paid, change_string, balance, total_int, balance_int, change_int, date, year_int, month_string)"
-                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)";
+        String sql = "INSERT INTO customer_receipt (transaction_id, customer_name, total, paid, change_string, balance, total_int, balance_int, change_int, date, year_int, month_string)"
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
         connect = database.connectDb();
         Alert alert;
         try {
@@ -987,36 +1029,38 @@ public class dashboardController implements Initializable {
                 alert.setContentText("Are you sure you want this to process?");
                 Optional<ButtonType> option = alert.showAndWait();
                 if (option.get().equals(ButtonType.OK)) {
-
                     assert connect != null;
+
                     prepare = connect.prepareStatement(sql);
-                    prepare.setString(1, customer_name.getText());
-                    prepare.setString(2, order_totalLabel.getText());
-                    prepare.setString(3, "₱" + formatPrice(order_amount.getText()));
-                    prepare.setString(4, order_change.getText());
-                    prepare.setString(5, order_balanceLabel.getText());
-                    prepare.setInt(6, Integer.parseInt(order_totalLabel.getText().substring(1).replaceAll(",", "")));
-                    prepare.setInt(7, Integer.parseInt(order_balanceLabel.getText().substring(1).replaceAll(",", "")));
-                    prepare.setInt(8, Integer.parseInt(order_change.getText().substring(1).replaceAll(",", "")));
+                    prepare.setString(1, transaction);
+                    prepare.setString(2, customer_name.getText());
+                    prepare.setString(3, order_totalLabel.getText());
+                    prepare.setString(4, "₱" + formatPrice(order_amount.getText()));
+                    prepare.setString(5, order_change.getText());
+                    prepare.setString(6, order_balanceLabel.getText());
+                    prepare.setInt(7, Integer.parseInt(order_totalLabel.getText().substring(1).replaceAll(",", "")));
+                    prepare.setInt(8, Integer.parseInt(order_balanceLabel.getText().substring(1).replaceAll(",", "")));
+                    prepare.setInt(9, Integer.parseInt(order_change.getText().substring(1).replaceAll(",", "")));
                     Date date = new Date();
                     java.sql.Date sqlDate = new java.sql.Date(date.getTime());
-                    prepare.setDate(9, sqlDate);
-
-                    prepare.setInt(10, LocalDate.now().getYear());
-                    prepare.setString(11, String.valueOf(LocalDate.now().getMonth()));
-
+                    prepare.setDate(10, sqlDate);
+                    prepare.setInt(11, LocalDate.now().getYear());
+                    prepare.setString(12, String.valueOf(LocalDate.now().getMonth()));
                     prepare.executeUpdate();
+                    insertCustomerTableToHistoryPayBalanceTable();
                     orderReceipt();
                     updateQtyFromProducts();
                     updateStatusFromProducts();
                     orderResetTableWithoutAsking();
-
-
                     orderClear();
                     addProductShowListData();
                     addProductListStatus();
                     orderShowListData();
                     orderDisplayTotal();
+                    transaction = "";
+
+
+
 
                 }
             }
@@ -1027,9 +1071,9 @@ public class dashboardController implements Initializable {
         }
 
     } // Pay the order (Order)
-
     public void orderReceipt() throws JRException {
         HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put("transaction", transaction);
         parameters.put("total", order_totalLabel.getText());
         parameters.put("paid", "₱" + formatPrice(order_amount.getText()));
         parameters.put("change", order_change.getText());
@@ -1042,6 +1086,7 @@ public class dashboardController implements Initializable {
     }
 
 
+
     public void historyFullyPaid(ActionEvent e) {
         if (history_fullyPaid.isSelected()) {
             history_notFullyPaid.setSelected(false);
@@ -1050,6 +1095,9 @@ public class dashboardController implements Initializable {
             history_totalIncomeLabel.setVisible(true);
             history_haveBalancePayAnchorPane.setVisible(false);
             history_print.setVisible(true);
+            history_fullyPaidTable.getSelectionModel().clearSelection();
+            transactionId = "0";
+            history_withBalanceTable.getSelectionModel().clearSelection();
             history_filterAnchorPane.setVisible(true);
             history_fullyPaid.setDisable(true);
             history_totalIncome.setVisible(true);
@@ -1059,7 +1107,6 @@ public class dashboardController implements Initializable {
         }
 
     }
-
     public void historyNotFullyPaid(ActionEvent e) {
         if (history_notFullyPaid.isSelected()) {
             history_fullyPaid.setSelected(false);
@@ -1067,6 +1114,9 @@ public class dashboardController implements Initializable {
             history_totalIncomeLabel.setVisible(false);
             history_totalIncome.setVisible(false);
             history_fullyPaidTable.setVisible(false);
+            history_fullyPaidTable.getSelectionModel().clearSelection();
+            history_withBalanceTable.getSelectionModel().clearSelection();
+            transactionId = "0";
             history_haveBalancePayAnchorPane.setVisible(true);
             history_print.setVisible(false);
             history_filterAnchorPane.setVisible(false);
@@ -1075,7 +1125,6 @@ public class dashboardController implements Initializable {
 
         }
     }
-
     public ObservableList<historyData> historyWithBalanceList() {
         ObservableList<historyData> listData = FXCollections.observableArrayList();
         String sql = "SELECT * FROM customer_receipt WHERE balance_int != 0";
@@ -1088,7 +1137,7 @@ public class dashboardController implements Initializable {
 
             while (result.next()) {
                 historyID = new historyData
-                        (result.getInt("transaction_id"),
+                        (result.getString("transaction_id"),
                                 result.getString("customer_name")
                                 , result.getString("total")
                                 , result.getString("paid")
@@ -1108,7 +1157,6 @@ public class dashboardController implements Initializable {
         }
         return listData;
     } // Get the data from SQL (History)
-
     public void historyShowWithBalanceData() {
         ObservableList<historyData> historyWithBalanceList = historyWithBalanceList();
         history_withBalance_column_transactionNumber.setCellValueFactory(new PropertyValueFactory<>("transaction_id"));
@@ -1119,7 +1167,6 @@ public class dashboardController implements Initializable {
         history_withBalance_column_date.setCellValueFactory(new PropertyValueFactory<>("date"));
         history_withBalanceTable.setItems(historyWithBalanceList);
     } // Put the data from SQL with balance to Table (History)
-
     public void historyAddMonth() {
         history_month.getItems().removeAll(history_month.getItems());
         history_month.getItems().addAll("All", "JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE"
@@ -1127,7 +1174,6 @@ public class dashboardController implements Initializable {
         Month month = LocalDate.now().getMonth();
         history_month.getSelectionModel().select(month.toString());
     } // Add the data to combobox (Month) (History)
-
     public void historyAddYear() {
         int pastYears = 1; // Number of previous years to include
         int futureYears = 9; // Number of future years to include
@@ -1158,7 +1204,6 @@ public class dashboardController implements Initializable {
             history_year.getSelectionModel().select(Integer.toString(currentYear));
         }
     } // Add the data to combobox (Year) (History)
-
     public void historyDisplayTableFromMonths() {
         ObservableList<historyData> monthList = FXCollections.observableArrayList();
 
@@ -1173,7 +1218,7 @@ public class dashboardController implements Initializable {
 
                 while (result.next()) {
                     historyID = new historyData
-                            (result.getInt("transaction_id"),
+                            (result.getString("transaction_id"),
                                     result.getString("customer_name")
                                     , result.getString("total")
                                     , result.getString("paid")
@@ -1201,7 +1246,7 @@ public class dashboardController implements Initializable {
 
                 while (result.next()) {
                     historyID = new historyData
-                            (result.getInt("transaction_id"),
+                            (result.getString("transaction_id"),
                                     result.getString("customer_name")
                                     , result.getString("total")
                                     , result.getString("paid")
@@ -1229,7 +1274,7 @@ public class dashboardController implements Initializable {
 
                 while (result.next()) {
                     historyID = new historyData
-                            (result.getInt("transaction_id"),
+                            (result.getString("transaction_id"),
                                     result.getString("customer_name")
                                     , result.getString("total")
                                     , result.getString("paid")
@@ -1257,7 +1302,7 @@ public class dashboardController implements Initializable {
 
                 while (result.next()) {
                     historyID = new historyData
-                            (result.getInt("transaction_id"),
+                            (result.getString("transaction_id"),
                                     result.getString("customer_name")
                                     , result.getString("total")
                                     , result.getString("paid")
@@ -1285,7 +1330,7 @@ public class dashboardController implements Initializable {
 
                 while (result.next()) {
                     historyID = new historyData
-                            (result.getInt("transaction_id"),
+                            (result.getString("transaction_id"),
                                     result.getString("customer_name")
                                     , result.getString("total")
                                     , result.getString("paid")
@@ -1313,7 +1358,7 @@ public class dashboardController implements Initializable {
 
                 while (result.next()) {
                     historyID = new historyData
-                            (result.getInt("transaction_id"),
+                            (result.getString("transaction_id"),
                                     result.getString("customer_name")
                                     , result.getString("total")
                                     , result.getString("paid")
@@ -1341,7 +1386,7 @@ public class dashboardController implements Initializable {
 
                 while (result.next()) {
                     historyID = new historyData
-                            (result.getInt("transaction_id"),
+                            (result.getString("transaction_id"),
                                     result.getString("customer_name")
                                     , result.getString("total")
                                     , result.getString("paid")
@@ -1368,7 +1413,7 @@ public class dashboardController implements Initializable {
                 result = prepare.executeQuery();
                 while (result.next()) {
                     historyID = new historyData
-                            (result.getInt("transaction_id"),
+                            (result.getString("transaction_id"),
                                     result.getString("customer_name")
                                     , result.getString("total")
                                     , result.getString("paid")
@@ -1396,7 +1441,7 @@ public class dashboardController implements Initializable {
                 result = prepare.executeQuery();
                 while (result.next()) {
                     historyID = new historyData
-                            (result.getInt("transaction_id"),
+                            (result.getString("transaction_id"),
                                     result.getString("customer_name"),
                                     result.getString("total"),
                                     result.getString("paid"),
@@ -1422,7 +1467,7 @@ public class dashboardController implements Initializable {
                 result = prepare.executeQuery();
                 while (result.next()) {
                     historyID = new historyData
-                            (result.getInt("transaction_id"),
+                            (result.getString("transaction_id"),
                                     result.getString("customer_name"),
                                     result.getString("total"),
                                     result.getString("paid"),
@@ -1449,7 +1494,7 @@ public class dashboardController implements Initializable {
                 result = prepare.executeQuery();
                 while (result.next()) {
                     historyID = new historyData
-                            (result.getInt("transaction_id"),
+                            (result.getString("transaction_id"),
                                     result.getString("customer_name"),
                                     result.getString("total"),
                                     result.getString("paid"),
@@ -1476,7 +1521,7 @@ public class dashboardController implements Initializable {
                 result = prepare.executeQuery();
                 while (result.next()) {
                     historyID = new historyData
-                            (result.getInt("transaction_id"),
+                            (result.getString("transaction_id"),
                                     result.getString("customer_name"),
                                     result.getString("total"),
                                     result.getString("paid"),
@@ -1503,7 +1548,7 @@ public class dashboardController implements Initializable {
                 result = prepare.executeQuery();
                 while (result.next()) {
                     historyID = new historyData
-                            (result.getInt("transaction_id"),
+                            (result.getString("transaction_id"),
                                     result.getString("customer_name"),
                                     result.getString("total"),
                                     result.getString("paid"),
@@ -1531,7 +1576,6 @@ public class dashboardController implements Initializable {
         history_fullyPaidTable.setItems(monthList);
 
     } // Display the table from months (History)
-
     public String historyFullyPaidDisplayTotal() {
         if (convertMonthIntoInt() == 0) {
             String sql = "SELECT SUM(total_int) FROM customer_receipt WHERE balance_int = 0 AND YEAR(date) = '" + history_year.getSelectionModel().getSelectedItem() + "'";
@@ -1571,15 +1615,25 @@ public class dashboardController implements Initializable {
         }
         return history_totalIncome.getText();
     } // Display the total income (History)
-
+    String total = "";
     public void fillFieldWithDataFromWithBalanceTable() {
         history_withBalanceTable.setOnMouseClicked(e -> {
+            total = history_withBalanceTable.getItems().get(history_withBalanceTable.getSelectionModel().getSelectedIndex()).getTotal();
             transactionId = history_withBalanceTable.getItems().get(history_withBalanceTable.getSelectionModel().getSelectedIndex()).getTransaction_id();
             historyData historyData = history_withBalanceTable.getItems().get(history_withBalanceTable.getSelectionModel().getSelectedIndex());
             history_balanceLabel.setText(historyData.getBalance());
             balanceInt = historyData.getBalance_int();
             paidInt = Integer.parseInt(historyData.getPaid().substring(1).replaceAll(",", ""));
         });
+        history_fullyPaidTable.setOnMouseClicked(e -> {
+
+            transactionId = history_fullyPaidTable.getItems().get(history_fullyPaidTable.getSelectionModel().getSelectedIndex()).getTransaction_id();
+            historyData historyData = history_fullyPaidTable.getItems().get(history_fullyPaidTable.getSelectionModel().getSelectedIndex());
+            history_balanceLabel.setText(historyData.getBalance());
+            balanceInt = historyData.getBalance_int();
+            paidInt = Integer.parseInt(historyData.getPaid().substring(1).replaceAll(",", ""));
+        });
+
     } // Fill the text-field with data from table (History)
     public void historyPay() {
         int totalPaid = paidInt + Integer.parseInt(history_amount.getText());
@@ -1605,8 +1659,10 @@ public class dashboardController implements Initializable {
                     assert connect != null;
                     statement = connect.createStatement();
                     statement.executeUpdate(sql);
+                    historyPayReceipt();
                     historyShowWithBalanceData();
                     historyDisplayTableFromMonths();
+
                     history_balanceLabel.setText("₱0");
                     history_amount.setText("");
                     history_willBeBalance.setText("₱0");
@@ -1617,26 +1673,50 @@ public class dashboardController implements Initializable {
 
         }
     } // Pay the balance (History)
+    public void historyPayReceipt() throws JRException {
+        HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put("transaction", transactionId);
+        parameters.put("total", total);
+        parameters.put("lbalance", history_balanceLabel.getText());
+        parameters.put("paid", "₱" + formatPrice(history_amount.getText()));
+        parameters.put("change", history_changeLabel.getText());
+        parameters.put("balance", history_willBeBalance.getText());
+
+        InputStream inputStream = getClass().getResourceAsStream("/com/example/invetorysystem/receiptforHistory.jrxml");
+        JasperDesign jasperDesign = JRXmlLoader.load(inputStream);
+        JasperReport jasperReport = JasperCompileManager.compileReport(jasperDesign);
+        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, database.connectDb());
+        JasperViewer.viewReport(jasperPrint, false);
+    }
     public void historyDelete(){
         String sql = "DELETE FROM customer_receipt WHERE transaction_id = '"+transactionId+"'";
         connect = database.connectDb();
         Alert alert;
         try {
-            alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Sure?");
-            alert.setHeaderText(null);
-            alert.setContentText("Are you sure you to delete this row "+ transactionId +"?");
-            Optional<ButtonType> option = alert.showAndWait();
-            if (option.get().equals(ButtonType.OK)) {
-                assert connect != null;
-                statement = connect.createStatement();
-                statement.executeUpdate(sql);
-                historyShowWithBalanceData();
-                historyDisplayTableFromMonths();
-                history_balanceLabel.setText("₱0");
-                history_amount.setText("");
-                history_willBeBalance.setText("₱0");
-                history_changeLabel.setText("₱0");
+            if (Objects.equals(transactionId, "0")) {
+                alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setHeaderText(null);
+                alert.setContentText("Select a row first");
+                alert.showAndWait();
+            }else {
+                alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Sure?");
+                alert.setHeaderText(null);
+                alert.setContentText("Are you sure you to delete this row "+ transactionId +"?");
+                Optional<ButtonType> option = alert.showAndWait();
+                if (option.get().equals(ButtonType.OK)) {
+                    assert connect != null;
+                    statement = connect.createStatement();
+                    statement.executeUpdate(sql);
+                    historyShowWithBalanceData();
+                    historyDisplayTableFromMonths();
+                    history_balanceLabel.setText("₱0");
+                    history_amount.setText("");
+                    history_willBeBalance.setText("₱0");
+                    history_changeLabel.setText("₱0");
+                }
+
             }
         }catch (Exception ignored){
 
@@ -1647,27 +1727,36 @@ public class dashboardController implements Initializable {
         connect = database.connectDb();
         Alert alert;
         try {
-            alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Sure?");
-            alert.setHeaderText(null);
-            alert.setContentText("Are you sure you want to delete all the data in the table?");
-            Optional<ButtonType> option = alert.showAndWait();
-            if (option.get().equals(ButtonType.OK)) {
-                assert connect != null;
-                statement = connect.createStatement();
-                statement.executeUpdate(sql);
-                historyShowWithBalanceData();
-                historyDisplayTableFromMonths();
-                history_balanceLabel.setText("₱0");
-                history_amount.setText("");
-                history_willBeBalance.setText("₱0");
-                history_changeLabel.setText("₱0");
+            if(history_withBalanceTable.getItems().isEmpty() && history_fullyPaidTable.getItems().isEmpty() ) {
+                alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setHeaderText(null);
+                alert.setContentText("No data to delete");
+                alert.showAndWait();
+            }else{
+                alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Sure?");
+                alert.setHeaderText(null);
+                alert.setContentText("Are you sure you want to delete all the data in the table?");
+                Optional<ButtonType> option = alert.showAndWait();
+                if (option.get().equals(ButtonType.OK)) {
+                    assert connect != null;
+                    statement = connect.createStatement();
+                    statement.executeUpdate(sql);
+                    historyShowWithBalanceData();
+                    historyDisplayTableFromMonths();
+                    history_balanceLabel.setText("₱0");
+                    history_amount.setText("");
+                    history_willBeBalance.setText("₱0");
+                    history_changeLabel.setText("₱0");
+                }
             }
+
+
         }catch (Exception ignored){
 
         }
     } // Delete all the data from table (History)
-
     public void calculateHistoryBalance() {
 
         int balance = 0;
@@ -2195,12 +2284,16 @@ public class dashboardController implements Initializable {
         ifTotalIsZero(); // If total is zero, disable the pay button and amount text-field (Products)
         addProductSpinner(); // Set the value of spinner
 
+        timeline.setCycleCount(Animation.INDEFINITE);
+        timeline.play(); // Play the timeline (Home)
+
 
         typeOfPurchased(); // Add the data to combobox (Type of Purchased)
         orderPreMade(); // Add the data to combobox (Pre-Made)
         orderSpinner(); // Set the value of spinner (Order)
         orderShowListData(); // Put the data from SQL to Table (Order)
         orderDisplayTotal(); // Display the total price (Order)
+
 
 
         disableHistoryPayIfTableRowIsNotSelected(); // Disable the pay button if the table row is not selected (History)
@@ -2219,6 +2312,7 @@ public class dashboardController implements Initializable {
         makeTableNotReOrder(); // Make the table not reorder able (Products) (Order) (History)
         disableUpdateIfRowIsNotSelected(); // Disable the update and delete button if the row is not selected
         onlyNumInTextField(); // Only numbers allow in Price text-field
+
 
         Runtime.getRuntime().addShutdownHook(new Thread() {
             @Override

@@ -3,7 +3,7 @@ package com.example.invetorysystem;
 import java.util.Date;
 
 public class historyData {
-    private Integer transaction_id;
+    private String transaction_id;
     private String customer_name;
     private String total;
     private String paid;
@@ -16,7 +16,7 @@ public class historyData {
     private Integer year_int;
     private String month_string;
 
-    public historyData(Integer transaction_id, String customer_name, String total, String paid, String change_string, String balance, Integer total_int, Integer balance_int, Integer change_int, Date date, Integer year_int, String month_string){
+    public historyData(String transaction_id, String customer_name, String total, String paid, String change_string, String balance, Integer total_int, Integer balance_int, Integer change_int, Date date, Integer year_int, String month_string){
         this.transaction_id = transaction_id;
         this.customer_name = customer_name;
         this.total = total;
@@ -30,7 +30,7 @@ public class historyData {
         this.year_int = year_int;
         this.month_string = month_string;
     }
-    public Integer getTransaction_id(){
+    public String getTransaction_id(){
         return transaction_id;
     }
     public String getCustomer_name(){
