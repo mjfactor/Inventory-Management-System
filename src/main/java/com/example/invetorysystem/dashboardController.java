@@ -705,7 +705,7 @@ public class dashboardController implements Initializable {
                     transaction_Id.setText(formatter.format(date).replaceAll("/", "").replaceAll(":", "").replaceAll(" ", ""));
                 }
 
-            }));
+            }));  // Get the current date and time
 
 
     String transaction = "";
@@ -1085,7 +1085,7 @@ public class dashboardController implements Initializable {
 
         }
 
-    }
+    } // Insert the data from customer table to history balance table (Order)
     public void orderPay() {
         String sql = "INSERT INTO customer_receipt (transaction_id, customer_name, total, paid, change_string, balance, total_int, balance_int, change_int, date, year_int, month_string)"
                 + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -1160,7 +1160,7 @@ public class dashboardController implements Initializable {
         JasperReport jasperReport = JasperCompileManager.compileReport(jasperDesign);
         JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, database.connectDb());
         JasperViewer.viewReport(jasperPrint, false);
-    }
+    } // Print the receipt (Order)
 
 
 
@@ -2020,7 +2020,7 @@ public class dashboardController implements Initializable {
             qty = result.getInt("quantity");
         }
         return qty;
-    }
+    } // Get the quantity from products (Order)
 
     public int getQtyFromProducts2() throws SQLException {
         int qty = 0;
@@ -2036,7 +2036,7 @@ public class dashboardController implements Initializable {
         }
 
         return qty;
-    }
+    } // Get the quantity from products (Order)
 
     public void updateQtyFromProducts() throws SQLException {
         int qty = 0;
@@ -2054,7 +2054,7 @@ public class dashboardController implements Initializable {
             statement.executeUpdate(update);
         }
 
-    }
+    }  // Update the quantity from products (Order)
 
     public void updateStatusFromProducts() throws SQLException {
 
@@ -2079,7 +2079,7 @@ public class dashboardController implements Initializable {
         }
 
 
-    }
+    } // Update the status from products (Order)
 
     public String getNameFromProductsToCompare() throws SQLException {
         String getName = "SELECT productName FROM products WHERE productName = '"
@@ -2091,7 +2091,7 @@ public class dashboardController implements Initializable {
             name = result.getString("productName");
         }
         return name;
-    }
+    }  // Get the name from products to compare (Order)
 
     public int checkIfCurrentTableEmpty() throws SQLException {
         String sql = "SELECT COUNT(*) FROM customer";
@@ -2111,7 +2111,7 @@ public class dashboardController implements Initializable {
     public String formatPrice(String price) {
         long priceLong = Long.parseLong(price);
         return formatWithComma.format(priceLong);
-    }
+    } // Format the price (Home) (Products) (Order) (History)
 
     public void onlyNumInTextField() {
         addProduct_price.textProperty().addListener(new ChangeListener<String>() {
