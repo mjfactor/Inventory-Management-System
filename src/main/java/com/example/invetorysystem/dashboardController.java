@@ -33,9 +33,7 @@ import javafx.fxml.FXML;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
-import javafx.scene.chart.AreaChart;
-import javafx.scene.chart.BarChart;
-import javafx.scene.chart.XYChart;
+import javafx.scene.chart.*;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.skin.TableHeaderRow;
@@ -172,14 +170,12 @@ public class dashboardController implements Initializable {
     private AnchorPane home_form;
     @FXML
     private AnchorPane history;
-    @FXML
-    private AreaChart<?, ?> home_incomedataChart;
+
 
     @FXML
     private Label home_numberofOrders;
 
-    @FXML
-    private BarChart<?, ?> home_orderChart;
+
 
     @FXML
     private Label home_totalIncome;
@@ -282,6 +278,12 @@ public class dashboardController implements Initializable {
     private Label history_totalIncomeLabel;
     @FXML
     private TextField transaction_Id;
+    @FXML
+    private LineChart<?, ?> home_incomedataChart;
+    @FXML
+    private LineChart <?, ?> home_lineChart;
+    @FXML
+    private ComboBox <String> dataChart_filter;
 
 
     NumberFormat formatWithComma = NumberFormat.getNumberInstance(Locale.US);
@@ -296,6 +298,12 @@ public class dashboardController implements Initializable {
     PreparedStatement prepare;
     ResultSet result;
     Statement statement;
+
+
+
+
+
+
 
     public void homeNumberOfOrder(){
         String sql = "SELECT COUNT(*) FROM customer_receipt";
@@ -339,22 +347,91 @@ public class dashboardController implements Initializable {
 
         }
     } // Get the number of available products (Home)
+    public void addDataToDataChartFilter(){
+        dataChart_filter.getItems().removeAll(dataChart_filter.getItems());
+        // Display Only 3 years, increment when year increase
+        dataChart_filter.getItems().addAll(String.valueOf(Year.now().getValue() - 2), String.valueOf(Year.now().getValue() - 1), String.valueOf(Year.now().getValue()));
+        dataChart_filter.getSelectionModel().select("2024");
+    } // Add the data to combobox (Data Chart Filter) (Home)
+
     public void homeIncomeDataChart(){
+        // Compare sales from month to month based on the combobox year
         XYChart.Series series = new XYChart.Series();
-        String sql = "SELECT SUM(total_int), month_string FROM customer_receipt WHERE year_int = '" + LocalDate.now().getYear() + "' GROUP BY month_string";
+        series.setName("Income");
+        series.getData().add(new XYChart.Data("Jan", getIncomeFromMonth("JANUARY")));
+        series.getData().add(new XYChart.Data("Feb", getIncomeFromMonth("FEBRUARY")));
+        series.getData().add(new XYChart.Data("Mar", getIncomeFromMonth("MARCH")));
+        series.getData().add(new XYChart.Data("Apr", getIncomeFromMonth("APRIL")));
+        series.getData().add(new XYChart.Data("May", getIncomeFromMonth("MAY")));
+        series.getData().add(new XYChart.Data("Jun", getIncomeFromMonth("JUNE")));
+        series.getData().add(new XYChart.Data("Jul", getIncomeFromMonth("JULY")));
+        series.getData().add(new XYChart.Data("Aug", getIncomeFromMonth("AUGUST")));
+        series.getData().add(new XYChart.Data("Sep", getIncomeFromMonth("SEPTEMBER")));
+        series.getData().add(new XYChart.Data("Oct", getIncomeFromMonth("OCTOBER")));
+        series.getData().add(new XYChart.Data("Nov", getIncomeFromMonth("NOVEMBER")));
+        series.getData().add(new XYChart.Data("Dec", getIncomeFromMonth("DECEMBER")));
+        home_incomedataChart.getData().addAll(series);
+        // Remove Previous Line
+        if (home_incomedataChart.getData().size() > 1){
+            home_incomedataChart.getData().remove(0);
+        }
+
+
+    } // Display the income data chart (Home)
+    public int getIncomeFromMonth(String month){
+        // Get the income from month when year is equal to the combobox year
+        String sql = "SELECT SUM(total_int) FROM customer_receipt WHERE month_string = '"
+                + month + "' AND year_int = '" + dataChart_filter.getSelectionModel().getSelectedItem() + "'";
         connect = database.connectDb();
+        int total = 0;
         try {
             assert connect != null;
             prepare = connect.prepareStatement(sql);
             result = prepare.executeQuery();
             while (result.next()){
-                series.getData().add(new XYChart.Data<>(result.getString("month_string"), result.getInt("SUM(total_int)")));
+                total = result.getInt("SUM(total_int)");
             }
-            home_incomedataChart.getData().addAll(series);
         }catch (Exception ignored){
 
         }
-    } // Display the income data chart (Home)
+        return total;
+    } // Get the income from month to month (Home)
+    public void homeIncomeDataChartForYear(){
+        // Compare sales from year to year
+        // Auto Increment the year
+        XYChart.Series series = new XYChart.Series();
+        series.setName("Income");
+        // Display Only 3 years, increment when year increase
+        series.getData().add(new XYChart.Data(String.valueOf(Year.now().getValue() - 2), getIncomeFromYear(String.valueOf(Year.now().getValue() - 2))));
+        series.getData().add(new XYChart.Data(String.valueOf(Year.now().getValue() - 1), getIncomeFromYear(String.valueOf(Year.now().getValue() - 1))));
+        series.getData().add(new XYChart.Data(String.valueOf(Year.now().getValue()), getIncomeFromYear(String.valueOf(Year.now().getValue()))));
+
+        home_lineChart.getData().addAll(series);
+        // Remove Previous Line
+        if (home_lineChart.getData().size() > 1){
+            home_lineChart.getData().remove(0);
+        }
+    } // Display the income data chart for year (Home)
+    public int getIncomeFromYear(String year){
+        // Get the income from year to year
+        String sql = "SELECT SUM(total_int) FROM customer_receipt WHERE date LIKE '%"
+                + year + "%'";
+        connect = database.connectDb();
+        int total = 0;
+        try {
+            assert connect != null;
+            prepare = connect.prepareStatement(sql);
+            result = prepare.executeQuery();
+            while (result.next()){
+                total = result.getInt("SUM(total_int)");
+            }
+        }catch (Exception ignored){
+
+        }
+        return total;
+    } // Get the income from year to year (Home)
+
+
 
     public void addProductsSearch() {
         FilteredList<productData> filteredList = new FilteredList<>(addProductList, e -> true);
@@ -2198,6 +2275,7 @@ public class dashboardController implements Initializable {
             homeTotalIncome(); // Display the total income (Home)
             homeAvailableProducts(); // Display the number of available products (Home)
             homeIncomeDataChart(); // Display the income data chart (Home)
+            homeIncomeDataChartForYear(); // Display the income data chart for year (Home)
 
 
 
@@ -2273,10 +2351,13 @@ public class dashboardController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        homeIncomeDataChart(); // Display the income data chart (Home)
         homeNumberOfOrder(); // Display the number of order (Home)
         homeTotalIncome(); // Display the total income (Home)
         homeAvailableProducts(); // Display the number of available products (Home)
-        homeIncomeDataChart(); // Display the income data chart (Home)
+
+        homeIncomeDataChartForYear(); // Display the income data chart for year (Home)
+        addDataToDataChartFilter(); // Add the data to data chart filter (Home)
 
 
         addProductShowListData(); // Put the data from SQL to Table
