@@ -91,7 +91,7 @@ WHERE  transaction_id = $P{transaction}]]>
 					<textFieldExpression><![CDATA[$P{total}]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement x="130" y="3" width="42" height="18" uuid="427d68fa-83f7-4e27-b33f-116f816b2dbc"/>
+					<reportElement x="129" y="3" width="43" height="18" uuid="427d68fa-83f7-4e27-b33f-116f816b2dbc"/>
 					<textElement textAlignment="Left" verticalAlignment="Middle">
 						<font fontName="Century Gothic" size="8"/>
 					</textElement>
@@ -213,14 +213,14 @@ and Fabricator]]></text>
 				</graphicElement>
 			</line>
 			<staticText>
-				<reportElement x="40" y="30" width="80" height="16" uuid="2b9aff02-6754-409d-9992-c753298cb439"/>
+				<reportElement x="40" y="30" width="70" height="16" uuid="2b9aff02-6754-409d-9992-c753298cb439"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font fontName="Century Gothic" size="8"/>
 				</textElement>
-				<text><![CDATA[Transaction No.:]]></text>
+				<text><![CDATA[Transaction #:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="120" y="14" width="90" height="16" uuid="444932b9-e333-47f4-84f2-bc109c27b776">
+				<reportElement x="129" y="14" width="90" height="16" uuid="444932b9-e333-47f4-84f2-bc109c27b776">
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 				</reportElement>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
@@ -229,15 +229,15 @@ and Fabricator]]></text>
 				<textFieldExpression><![CDATA[$F{customerName}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="45" y="14" width="70" height="16" uuid="f6e2f596-8607-4a95-83b1-f41e3cd45cc4"/>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
+				<reportElement x="40" y="14" width="70" height="16" uuid="f6e2f596-8607-4a95-83b1-f41e3cd45cc4"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font fontName="Century Gothic" size="8"/>
 				</textElement>
 				<text><![CDATA[Customer Name: ]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="106" y="33" width="68" height="10" uuid="5fd08c14-cc9e-4e80-9315-d5bfd40435c1"/>
-				<textElement>
+				<reportElement x="129" y="30" width="90" height="16" uuid="5fd08c14-cc9e-4e80-9315-d5bfd40435c1"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font fontName="Century Gothic" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{transaction}]]></textFieldExpression>

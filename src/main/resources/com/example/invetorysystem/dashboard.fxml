@@ -202,7 +202,7 @@
                                               <NumberAxis side="LEFT" />
                                             </yAxis>
                                           </LineChart>
-                                          <LineChart fx:id="home_incomedataChart" layoutX="1.0" layoutY="33.0" legendVisible="false" prefHeight="461.0" prefWidth="602.0" style="-fx-font-size: 15;" styleClass="column-header" stylesheets="@dashboardDesign.css">
+                                          <LineChart fx:id="home_incomedataChart" layoutX="1.0" layoutY="33.0" legendVisible="false" onMouseClicked="#homeIncomeDataChart" prefHeight="461.0" prefWidth="602.0" style="-fx-font-size: 15;" styleClass="column-header" stylesheets="@dashboardDesign.css">
                                              <xAxis>
                                                 <CategoryAxis side="BOTTOM" />
                                              </xAxis>

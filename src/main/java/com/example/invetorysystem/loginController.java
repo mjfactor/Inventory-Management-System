@@ -113,8 +113,12 @@ public class loginController implements Initializable {
                     alert = new Alert(Alert.AlertType.ERROR);
                     alert.setHeaderText(null);
                     alert.setContentText("Incorrect Credentials");
+
                     alert.setTitle("Error");
                     alert.showAndWait();
+                    password.setText("");
+                    password_show.setText("");
+                    username.setText("");
                 }
             }
         }catch (Exception e){

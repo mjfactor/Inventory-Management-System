@@ -35,6 +35,22 @@
                      <font>
                         <Font name="Century Gothic" size="12.0" />
                      </font></TextField>
+                  <PasswordField fx:id="password" layoutX="66.0" layoutY="275.0" onAction="#loginAdmin" onKeyTyped="#makePasswordDontReadSpace" prefHeight="34.0" prefWidth="251.0" promptText="Password">
+                     <font>
+                        <Font name="Century Gothic" size="12.0" />
+                     </font></PasswordField>
+                  <Button fx:id="close" layoutX="342.0" layoutY="14.0" mnemonicParsing="false" onAction="#close" styleClass="close" stylesheets="@loginDesign.css" AnchorPane.rightAnchor="4.0" AnchorPane.topAnchor="4.0">
+                     <graphic>
+
+                     </graphic>
+                     <graphic>
+                        <FontAwesomeIconView glyphName="CLOSE" />
+                     </graphic>
+                  </Button>
+                  <CheckBox fx:id="password_checkBox" layoutX="67.0" layoutY="317.0" mnemonicParsing="false" prefHeight="18.0" prefWidth="123.0" text="Show Password">
+                     <font>
+                        <Font name="Century Gothic" size="12.0" />
+                     </font></CheckBox>
                   <Label layoutX="70.0" layoutY="165.0" prefHeight="28.0" prefWidth="242.0" text="Welcome back admin!">
                      <font>
                         <Font name="Century Gothic" size="20.0" />
@@ -48,27 +64,11 @@
                         <Font name="Century Gothic" size="12.0" />
                      </font>
                   </Button>
-                  <PasswordField fx:id="password" layoutX="66.0" layoutY="275.0" onAction="#loginAdmin" onKeyTyped="#makePasswordDontReadSpace" prefHeight="34.0" prefWidth="251.0" promptText="Password">
-                     <font>
-                        <Font name="Century Gothic" size="12.0" />
-                     </font></PasswordField>
-                  <Button fx:id="close" layoutX="342.0" layoutY="14.0" mnemonicParsing="false" onAction="#close" styleClass="close" stylesheets="@loginDesign.css" AnchorPane.rightAnchor="4.0" AnchorPane.topAnchor="4.0">
-                     <graphic>
-
-                     </graphic>
-                     <graphic>
-                        <FontAwesomeIconView glyphName="CLOSE" />
-                     </graphic>
-                  </Button>
                   <FontAwesomeIconView glyphName="USER" layoutX="162.0" layoutY="129.0" size="5EM" />
                   <TextField fx:id="password_show" layoutX="67.0" layoutY="275.0" prefHeight="34.0" prefWidth="251.0" promptText="Password" visible="false">
                      <font>
                         <Font name="Century Gothic" size="12.0" />
                      </font></TextField>
-                  <CheckBox fx:id="password_checkBox" layoutX="67.0" layoutY="317.0" mnemonicParsing="false" prefHeight="18.0" prefWidth="123.0" text="Show Password">
-                     <font>
-                        <Font name="Century Gothic" size="12.0" />
-                     </font></CheckBox>
                  
                </children>
             </AnchorPane>

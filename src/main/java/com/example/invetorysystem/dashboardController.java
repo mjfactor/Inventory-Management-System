@@ -351,7 +351,7 @@ public class dashboardController implements Initializable {
         dataChart_filter.getItems().removeAll(dataChart_filter.getItems());
         // Display Only 3 years, increment when year increase
         dataChart_filter.getItems().addAll(String.valueOf(Year.now().getValue() - 2), String.valueOf(Year.now().getValue() - 1), String.valueOf(Year.now().getValue()));
-        dataChart_filter.getSelectionModel().select("2024");
+        dataChart_filter.getSelectionModel().select(String.valueOf(Year.now().getValue()));
     } // Add the data to combobox (Data Chart Filter) (Home)
 
     public void homeIncomeDataChart(){
@@ -385,6 +385,7 @@ public class dashboardController implements Initializable {
         connect = database.connectDb();
         int total = 0;
         try {
+
             assert connect != null;
             prepare = connect.prepareStatement(sql);
             result = prepare.executeQuery();
@@ -2351,13 +2352,15 @@ public class dashboardController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        homeIncomeDataChart(); // Display the income data chart (Home)
+        addDataToDataChartFilter(); // Add the data to data chart filter (Home)
+
+        homeIncomeDataChartForYear(); // Display the income data chart for year (Home)
         homeNumberOfOrder(); // Display the number of order (Home)
         homeTotalIncome(); // Display the total income (Home)
         homeAvailableProducts(); // Display the number of available products (Home)
+        homeIncomeDataChart(); // Display the income data chart (Home)
 
-        homeIncomeDataChartForYear(); // Display the income data chart for year (Home)
-        addDataToDataChartFilter(); // Add the data to data chart filter (Home)
+
 
 
         addProductShowListData(); // Put the data from SQL to Table
