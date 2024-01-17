@@ -489,61 +489,71 @@
                                     <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                                  </columnResizePolicy>
                               </TableView>
-                              <AnchorPane fx:id="history_haveBalancePayAnchorPane" layoutX="54.0" layoutY="698.0" prefHeight="103.0" prefWidth="558.0">
+                              <AnchorPane fx:id="history_haveBalancePayAnchorPane" layoutX="54.0" layoutY="666.0" prefHeight="135.0" prefWidth="642.0">
                                  <children>
-                                    <Label fx:id="history_amountLabel" layoutY="60.0" text="Amount:">
+                                    <Label fx:id="history_amountLabel" layoutY="95.0" text="Amount:">
                                        <font>
                                           <Font size="24.0" />
                                        </font>
                                     </Label>
-                                    <Label prefHeight="46.0" prefWidth="192.0" text="Need to be Paid: ">
+                                    <Label layoutY="35.0" prefHeight="46.0" prefWidth="192.0" text="Need to be Paid: ">
                                        <font>
                                           <Font size="23.0" />
                                        </font>
                                     </Label>
-                                    <TextField fx:id="history_amount" disable="true" layoutX="99.0" layoutY="57.0" onKeyTyped="#onlyNumInTextField" prefHeight="41.0" prefWidth="162.0" promptText="How much" styleClass="price" stylesheets="@dashboardDesign.css">
+                                    <TextField fx:id="history_amount" disable="true" layoutX="99.0" layoutY="92.0" onKeyTyped="#onlyNumInTextField" prefHeight="41.0" prefWidth="162.0" promptText="How much" styleClass="price" stylesheets="@dashboardDesign.css">
                                        <font>
                                           <Font size="15.0" />
                                        </font>
                                     </TextField>
-                                    <Label fx:id="history_balanceLabel" layoutX="178.0" layoutY="6.0" text="₱0">
+                                    <Label fx:id="history_balanceLabel" layoutX="178.0" layoutY="41.0" text="₱0">
                                        <font>
                                           <Font size="23.0" />
                                        </font>
                                     </Label>
-                                    <Button fx:id="history_balancePay" layoutX="268.0" layoutY="56.0" mnemonicParsing="false" onAction="#historyPay" prefHeight="40.0" prefWidth="55.0" text="Pay">
+                                    <Button fx:id="history_balancePay" layoutX="268.0" layoutY="91.0" mnemonicParsing="false" onAction="#historyPay" prefHeight="40.0" prefWidth="55.0" text="Pay">
                                        <font>
                                           <Font size="17.0" />
                                        </font>
                                     </Button>
-                                    <Label layoutX="372.0" layoutY="53.0" prefHeight="46.0" prefWidth="90.0" text="Change:">
+                                    <Label layoutX="372.0" layoutY="88.0" prefHeight="46.0" prefWidth="90.0" text="Change:">
                                        <font>
                                           <Font size="23.0" />
                                        </font>
                                     </Label>
-                                    <Label fx:id="history_changeLabel" layoutX="463.0" layoutY="59.0" prefHeight="34.0" prefWidth="177.0" text="₱0">
+                                    <Label fx:id="history_changeLabel" layoutX="463.0" layoutY="94.0" prefHeight="34.0" prefWidth="177.0" text="₱0">
                                        <font>
                                           <Font size="23.0" />
                                        </font>
                                     </Label>
-                                    <Label layoutX="110.0" layoutY="62.0" prefHeight="31.0" prefWidth="11.0" text="₱">
+                                    <Label layoutX="108.0" layoutY="97.0" prefHeight="31.0" prefWidth="11.0" text="₱">
                                        <font>
                                           <Font size="19.0" />
                                        </font>
                                     </Label>
-                                    <Label layoutX="372.0" layoutY="14.0" prefHeight="46.0" prefWidth="90.0" text="Balance:">
+                                    <Label layoutX="372.0" layoutY="49.0" prefHeight="46.0" prefWidth="90.0" text="Balance:">
                                        <font>
                                           <Font size="23.0" />
                                        </font>
                                     </Label>
-                                    <Label fx:id="history_willBeBalance" layoutX="463.0" layoutY="20.0" prefHeight="34.0" prefWidth="178.0" text="₱0">
+                                    <Label fx:id="history_willBeBalance" layoutX="463.0" layoutY="55.0" prefHeight="34.0" prefWidth="178.0" text="₱0">
+                                       <font>
+                                          <Font size="23.0" />
+                                       </font>
+                                    </Label>
+                                    <Label layoutY="-9.0" prefHeight="46.0" prefWidth="189.0" text="Transaction#:">
+                                       <font>
+                                          <Font size="23.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="history_transactionId" layoutX="142.0" layoutY="-3.0" prefHeight="26.0" prefWidth="268.0">
                                        <font>
                                           <Font size="23.0" />
                                        </font>
                                     </Label>
                                  </children>
                               </AnchorPane>
-                              <AnchorPane fx:id="history_filterAnchorPane" layoutX="501.0" layoutY="6.0" prefHeight="36.0" prefWidth="698.0">
+                              <AnchorPane fx:id="history_filterAnchorPane" layoutX="501.0" layoutY="6.0" prefHeight="36.0" prefWidth="698.0" visible="false">
                                  <children>
                                     <ComboBox fx:id="history_month" layoutX="132.0" layoutY="5.0" onAction="#historyDisplayTableFromMonths" prefHeight="26.0" prefWidth="131.0" promptText="Select Month" />
                                     <FontAwesomeIconView glyphName="FILTER" layoutX="33.0" layoutY="24.0" size="19">
@@ -574,12 +584,12 @@
                                     <Font size="17.0" />
                                  </font>
                               </Button>
-                              <Label fx:id="history_totalIncome" layoutX="222.0" layoutY="667.0" prefHeight="34.0" prefWidth="178.0" text="₱0">
+                              <Label fx:id="history_totalIncome" layoutX="814.0" layoutY="750.0" prefHeight="34.0" prefWidth="178.0" text="₱0">
                                  <font>
                                     <Font size="23.0" />
                                  </font>
                               </Label>
-                              <Label fx:id="history_totalIncomeLabel" layoutX="68.0" layoutY="667.0" text="Total Income:">
+                              <Label fx:id="history_totalIncomeLabel" layoutX="660.0" layoutY="750.0" text="Total Income:">
                                  <font>
                                     <Font size="24.0" />
                                  </font>

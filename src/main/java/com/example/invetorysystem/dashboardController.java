@@ -48,6 +48,8 @@ import net.sf.jasperreports.engine.design.JasperDesign;
 import net.sf.jasperreports.engine.xml.JRXmlLoader;
 import net.sf.jasperreports.view.JasperViewer;
 
+import javax.swing.*;
+
 
 public class dashboardController implements Initializable {
     @FXML
@@ -284,6 +286,8 @@ public class dashboardController implements Initializable {
     private LineChart <?, ?> home_lineChart;
     @FXML
     private ComboBox <String> dataChart_filter;
+    @FXML
+    private Label history_transactionId;
 
 
     NumberFormat formatWithComma = NumberFormat.getNumberInstance(Locale.US);
@@ -1125,6 +1129,11 @@ public class dashboardController implements Initializable {
                     prepare.setInt(11, LocalDate.now().getYear());
                     prepare.setString(12, String.valueOf(LocalDate.now().getMonth()));
                     prepare.executeUpdate();
+                    alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Success");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Successfully Paid");
+                    alert.showAndWait();
                     insertCustomerTableToHistoryPayBalanceTable();
                     orderReceipt();
                     updateQtyFromProducts();
@@ -1136,6 +1145,11 @@ public class dashboardController implements Initializable {
                     orderShowListData();
                     orderDisplayTotal();
                     transaction = "";
+
+
+
+
+
 
 
 
@@ -1187,6 +1201,7 @@ public class dashboardController implements Initializable {
     }
     public void historyNotFullyPaid(ActionEvent e) {
         if (history_notFullyPaid.isSelected()) {
+            history_transactionId.setText("");
             history_fullyPaid.setSelected(false);
             history_withBalanceTable.setVisible(true);
             history_totalIncomeLabel.setVisible(false);
@@ -1702,6 +1717,7 @@ public class dashboardController implements Initializable {
             history_balanceLabel.setText(historyData.getBalance());
             balanceInt = historyData.getBalance_int();
             paidInt = Integer.parseInt(historyData.getPaid().substring(1).replaceAll(",", ""));
+            history_transactionId.setText(historyData.getTransaction_id());
         });
         history_fullyPaidTable.setOnMouseClicked(e -> {
 
@@ -1740,7 +1756,7 @@ public class dashboardController implements Initializable {
                     historyPayReceipt();
                     historyShowWithBalanceData();
                     historyDisplayTableFromMonths();
-
+                    history_transactionId.setText("");
                     history_balanceLabel.setText("₱0");
                     history_amount.setText("");
                     history_willBeBalance.setText("₱0");
@@ -1771,7 +1787,7 @@ public class dashboardController implements Initializable {
         connect = database.connectDb();
         Alert alert;
         try {
-            if (Objects.equals(transactionId, "0")) {
+            if (transactionId == null || transactionId.isEmpty() || transactionId.equalsIgnoreCase("0")) {
                 alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Error");
                 alert.setHeaderText(null);
@@ -1787,12 +1803,19 @@ public class dashboardController implements Initializable {
                     assert connect != null;
                     statement = connect.createStatement();
                     statement.executeUpdate(sql);
+                    alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Success");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Successfully Deleted");
+                    alert.showAndWait();
                     historyShowWithBalanceData();
                     historyDisplayTableFromMonths();
                     history_balanceLabel.setText("₱0");
                     history_amount.setText("");
                     history_willBeBalance.setText("₱0");
                     history_changeLabel.setText("₱0");
+                    transactionId = "";
+
                 }
 
             }
@@ -1821,12 +1844,19 @@ public class dashboardController implements Initializable {
                     assert connect != null;
                     statement = connect.createStatement();
                     statement.executeUpdate(sql);
+                    alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Success");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Successfully Deleted");
+                    alert.showAndWait();
+
                     historyShowWithBalanceData();
                     historyDisplayTableFromMonths();
                     history_balanceLabel.setText("₱0");
                     history_amount.setText("");
                     history_willBeBalance.setText("₱0");
                     history_changeLabel.setText("₱0");
+                    transactionId = "";
                 }
             }
 
