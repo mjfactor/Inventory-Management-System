@@ -8,6 +8,7 @@ module com.example.invetorysystem {
     requires java.sql;
     requires mysql.connector.j;
     requires jasperreports;
+    requires java.mail;
 
     opens com.example.invetorysystem to javafx.fxml;
     exports com.example.invetorysystem;

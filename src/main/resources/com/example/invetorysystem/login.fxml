@@ -69,6 +69,11 @@
                      <font>
                         <Font name="Century Gothic" size="12.0" />
                      </font></TextField>
+                  <Label layoutX="280.0" layoutY="518.0" prefHeight="18.0" prefWidth="88.0" text="Forgot Password?" textFill="#0057ff">
+                     <font>
+                        <Font name="Century Gothic" size="10.0" />
+                     </font>
+                  </Label>
                  
                </children>
             </AnchorPane>

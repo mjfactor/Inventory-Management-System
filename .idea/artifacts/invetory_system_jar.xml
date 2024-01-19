@@ -73,6 +73,7 @@
       <element id="module-source" name="invetory-system" />
       <element id="dir-copy" path="$PROJECT_DIR$/../../../../../../Program Files/Java/jdk-21/bin" />
       <element id="dir-copy" path="$PROJECT_DIR$/../../../../../../Program Files/Jaspersoft/Jaspersoft Studio-6.20.6" />
+      <element id="library" level="project" name="sun.mail.javax" />
     </root>
   </artifact>
 </component>

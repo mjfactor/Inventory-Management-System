@@ -1194,8 +1194,6 @@ public class dashboardController implements Initializable {
             history_fullyPaid.setDisable(true);
             history_totalIncome.setVisible(true);
             history_notFullyPaid.setDisable(false); // Must be in the last line
-
-
         }
 
     }
@@ -1894,8 +1892,10 @@ public class dashboardController implements Initializable {
         history_withBalanceTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection == null) {
                 history_amount.setDisable(true);
+                history_balancePay.setDisable(true);
             } else {
                 history_amount.setDisable(false);
+                history_balancePay.setDisable(false);
             }
         });
     } // Disable the pay button if the table row is not selected (History)
@@ -2378,6 +2378,7 @@ public class dashboardController implements Initializable {
         }
 
     } // Close
+
 
 
     @Override
