@@ -63,32 +63,32 @@
                      <children>
                         <AnchorPane fx:id="home" layoutY="277.0" onMouseClicked="#switchForm" prefHeight="40.0" prefWidth="322.0" style="-fx-background-color: linear-gradient(to bottom right, #e7e3e3, #e1e7e1);" styleClass="nav-buttonWrap" stylesheets="@dashboardDesign.css" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
                            <children>
-                              <Button fx:id="home_btn" layoutX="59.0" layoutY="-2.0" mnemonicParsing="false" onMouseClicked="#switchForm" prefHeight="49.0" styleClass="nav-button" stylesheets="@dashboardDesign.css" text="Home" AnchorPane.leftAnchor="59.0">
+                              <Button fx:id="home_btn" layoutX="38.4" layoutY="-2.0" mnemonicParsing="false" onMouseClicked="#switchForm" prefHeight="50.0" prefWidth="161.0" styleClass="nav-button" stylesheets="@dashboardDesign.css" text=" Home" AnchorPane.leftAnchor="38.0">
                                  <font>
                                     <Font name="Century Gothic" size="25.0" />
                                  </font>
                                  <graphic>
-                                    <FontAwesomeIconView glyphName="HOME" size="2em" text="" />
+                                    <FontAwesomeIconView glyphName="HOME" size="2em" text="" wrappingWidth="22.285715103149414" />
                                  </graphic>
                               </Button>
                            </children>
                         </AnchorPane>
                         <AnchorPane fx:id="addProducts" layoutY="343.0" onMouseClicked="#switchForm" styleClass="nav-buttonWrap" stylesheets="@dashboardDesign.css" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
                            <children>
-                              <Button fx:id="addProducts_btn" layoutX="74.0" layoutY="1.0" mnemonicParsing="false" onMouseClicked="#switchForm" prefHeight="49.0" styleClass="nav-button" stylesheets="@dashboardDesign.css" text="Add Products" AnchorPane.leftAnchor="59.0">
+                              <Button fx:id="addProducts_btn" layoutX="39.2" layoutY="1.0" mnemonicParsing="false" onMouseClicked="#switchForm" prefHeight="50.0" prefWidth="251.0" styleClass="nav-button" stylesheets="@dashboardDesign.css" text=" Add Products" AnchorPane.leftAnchor="39.0">
                                  <font>
                                     <Font name="Century Gothic" size="25.0" />
                                  </font>
                                  <graphic>
-                                    <FontAwesomeIconView glyphName="PLUS" size="2em" wrappingWidth="24.190479278564453" />
+                                    <FontAwesomeIconView glyphName="PLUS" size="2em" wrappingWidth="20.590473175048828" />
                                  </graphic>
                               </Button>
                            </children>
                         </AnchorPane>
                         <Line endX="172.40008544921875" layoutX="133.0" layoutY="243.0" startX="-116.86663818359375" stroke="WHITE" />
-                        <AnchorPane fx:id="orders" layoutX="36.0" layoutY="422.0" onMouseClicked="#switchForm" prefHeight="42.0" prefWidth="308.0" styleClass="nav-buttonWrap" stylesheets="@dashboardDesign.css" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                        <AnchorPane fx:id="orders" layoutX="36.0" layoutY="416.0" onMouseClicked="#switchForm" prefHeight="50.0" prefWidth="322.0" styleClass="nav-buttonWrap" stylesheets="@dashboardDesign.css" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
                            <children>
-                              <Button fx:id="orders_btn" layoutX="56.0" layoutY="-2.0" mnemonicParsing="false" onMouseClicked="#switchForm" prefHeight="52.0" prefWidth="154.0" styleClass="nav-button" stylesheets="@dashboardDesign.css" text=" Orders" AnchorPane.leftAnchor="56.0">
+                              <Button fx:id="orders_btn" layoutX="36.8" layoutY="-2.0" mnemonicParsing="false" onMouseClicked="#switchForm" prefHeight="52.0" prefWidth="173.0" styleClass="nav-button" stylesheets="@dashboardDesign.css" text=" Orders" AnchorPane.leftAnchor="37.0">
                                  <font>
                                     <Font name="Century Gothic" size="25.0" />
                                  </font>
@@ -112,9 +112,9 @@
                               <Font name="Century Gothic" size="24.0" />
                            </font>
                         </Label>
-                        <AnchorPane fx:id="history" layoutX="1.0" layoutY="501.0" onMouseClicked="#switchForm" prefHeight="52.0" prefWidth="319.0" styleClass="nav-buttonWrap" stylesheets="@dashboardDesign.css">
+                        <AnchorPane fx:id="history" layoutX="1.0" layoutY="491.0" onMouseClicked="#switchForm" prefHeight="46.0" prefWidth="319.0" styleClass="nav-buttonWrap" stylesheets="@dashboardDesign.css">
                            <children>
-                              <Button fx:id="history_btn" layoutX="51.2" layoutY="-2.0" mnemonicParsing="false" onMouseClicked="#switchForm" prefHeight="52.0" prefWidth="159.0" styleClass="nav-button" stylesheets="@dashboardDesign.css" text=" History" AnchorPane.leftAnchor="51.0">
+                              <Button fx:id="history_btn" layoutX="31.2" layoutY="1.0" mnemonicParsing="false" onMouseClicked="#switchForm" prefHeight="52.0" prefWidth="183.0" styleClass="nav-button" stylesheets="@dashboardDesign.css" text=" History" AnchorPane.leftAnchor="31.0">
                                  <font>
                                     <Font name="Century Gothic" size="25.0" />
                                  </font>
@@ -405,7 +405,7 @@
                                        </font>
                                     </Label>
                                     <TextField fx:id="customer_name" layoutX="178.0" layoutY="59.0" prefHeight="34.0" prefWidth="160.0" />
-                                    <Button fx:id="order_reset" layoutX="424.0" layoutY="730.0" mnemonicParsing="false" onAction="#orderResetTable" prefHeight="42.0" prefWidth="81.0" style="-fx-background-color: Red;" text="Reset ">
+                                    <Button fx:id="order_reset" layoutX="424.0" layoutY="730.0" mnemonicParsing="false" onAction="#orderResetTable" prefHeight="42.0" prefWidth="81.0" text="Reset ">
                                        <font>
                                           <Font name="Century Gothic" size="17.0" />
                                        </font>
@@ -579,7 +579,7 @@
                                     <Font size="17.0" />
                                  </font>
                               </Button>
-                              <Button fx:id="history_deleteRow" layoutX="739.0" layoutY="674.0" mnemonicParsing="false" onAction="#historyDelete" prefHeight="47.0" prefWidth="146.0" text="Delete Row">
+                              <Button fx:id="history_deleteRow" layoutX="739.0" layoutY="674.0" mnemonicParsing="false" onAction="#historyDelete" prefHeight="47.0" prefWidth="146.0" text="Delete ">
                                  <font>
                                     <Font size="17.0" />
                                  </font>

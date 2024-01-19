@@ -6,6 +6,7 @@ import javafx.animation.Timeline;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
@@ -43,6 +44,7 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
+import javafx.util.converter.IntegerStringConverter;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.design.JasperDesign;
 import net.sf.jasperreports.engine.xml.JRXmlLoader;
@@ -469,7 +471,7 @@ public class dashboardController implements Initializable {
         try {
             if (addProduct_name.getText().isEmpty()
                     || addProduct_price.getText().isEmpty()
-
+                    || addProduct_quantity.getValue() == null
                     || Objects.equals(addProduct_status.getSelectionModel().getSelectedItem(), "Choose")) {
 
                 alert = new Alert(Alert.AlertType.ERROR);
@@ -520,8 +522,81 @@ public class dashboardController implements Initializable {
         }
 
     }  // Add product
+    public void addProductUpdateMultipleRows() throws SQLException {
+        // Check if any row is selected
+        if (addProduct_table.getSelectionModel().getSelectedItems().isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText(null);
+            alert.setContentText("No rows selected");
+            alert.showAndWait();
+            return;
+        }
 
+        // Check if status and quantity are provided
+        if (addProduct_status.getSelectionModel().getSelectedItem() == null
+                || Objects.equals(addProduct_status.getSelectionModel().getSelectedItem(), "Choose")
+                || addProduct_quantity.getValue() == null) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText(null);
+            alert.setContentText("Please provide status and quantity");
+            alert.showAndWait();
+            return;
+        }
+
+        // Confirmation alert
+        Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmationAlert.setTitle("Confirmation");
+        confirmationAlert.setHeaderText(null);
+        confirmationAlert.setContentText("Are you sure you want to update?");
+
+        Optional<ButtonType> result = confirmationAlert.showAndWait();
+        if (result.get() != ButtonType.OK){
+            return; // User chose not to proceed
+        }
+
+        // Get the new status and quantity
+        String newStatus = addProduct_status.getSelectionModel().getSelectedItem();
+        int newQuantity = addProduct_quantity.getValue();
+
+        // Update each selected row
+        for (productData product : addProduct_table.getSelectionModel().getSelectedItems()) {
+            String sql = "UPDATE products SET status = ?, quantity = ? WHERE id = ?";
+
+            try {
+                assert connect != null;
+                PreparedStatement prepare = connect.prepareStatement(sql);
+                prepare.setString(1, newStatus);
+                prepare.setInt(2, newQuantity);
+                prepare.setInt(3, product.getProductId());
+                prepare.executeUpdate();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        // Show success message
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Success");
+        alert.setHeaderText(null);
+        alert.setContentText("Successfully Updated");
+        alert.showAndWait();
+
+        // Refresh the table view to reflect the changes
+        updateStatusFromProducts(); // Update the status from products
+        addProductShowListData();
+        clearTextField(); // Clear the text-fields
+    } // Update multiple rows (Products)
     public void addProductUpdate() {
+        if (addProduct_table.getSelectionModel().getSelectedItems().size() > 1) {
+            try {
+                addProductUpdateMultipleRows();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return;
+        }
         String sql = "UPDATE products SET productName = '" + addProduct_name.getText() + "', price = '" + "₱" + formatPrice(addProduct_price.getText()) + "', price_int = '" + Integer.parseInt(addProduct_price.getText()) + "'" +
                 ", quantity = '" + addProduct_quantity.getValue() + "'" +
                 ",  status = '" + addProduct_status.getSelectionModel().getSelectedItem() + "' WHERE id = '" + productId + "'";
@@ -571,8 +646,58 @@ public class dashboardController implements Initializable {
             alert.setContentText("Enter a valid price");
         }
     } // Update product
+    public void addProductDeleteMultipleRows(){
+        // Check if any row is selected
+        if (addProduct_table.getSelectionModel().getSelectedItems().isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText(null);
+            alert.setContentText("No rows selected");
+            alert.showAndWait();
+            return;
+        }
 
+        // Confirmation alert
+        Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmationAlert.setTitle("Confirmation");
+        confirmationAlert.setHeaderText(null);
+        confirmationAlert.setContentText("Are you sure you want to delete the selected rows?");
+
+        Optional<ButtonType> result = confirmationAlert.showAndWait();
+        if (result.get() != ButtonType.OK){
+            return; // User chose not to proceed
+        }
+
+        // Delete each selected row
+        for (productData product : addProduct_table.getSelectionModel().getSelectedItems()) {
+            String sql = "DELETE from products WHERE id = ?";
+
+            try {
+                assert connect != null;
+                PreparedStatement prepare = connect.prepareStatement(sql);
+                prepare.setInt(1, product.getProductId());
+                prepare.executeUpdate();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        // Show success message
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Success");
+        alert.setHeaderText(null);
+        alert.setContentText("Successfully Deleted");
+        alert.showAndWait();
+
+        // Refresh the table view to reflect the changes
+        addProductShowListData();
+        clearTextField(); // Clear the text-fields
+    }
     public void addProductDelete() {
+        if (addProduct_table.getSelectionModel().getSelectedItems().size() > 1) {
+            addProductDeleteMultipleRows();
+            return;
+        }
 
         String sql = "DELETE from products WHERE id = '" + productId + "'";
         connect = database.connectDb();
@@ -678,7 +803,29 @@ public class dashboardController implements Initializable {
             addProduct_quantity.setDisable(false);
         }
     } // If the status is not available, the quantity will be zero (Products)
+    public void productsIfMultipleSelected(){
+        addProduct_table.getSelectionModel().getSelectedItems().addListener(new ListChangeListener<productData>() {
+            @Override
+            public void onChanged(Change<? extends productData> change) {
+                // Check if multiple rows are selected
+                if (addProduct_table.getSelectionModel().getSelectedItems().size() > 1) {
+                    // Disable the TextField and Button
+                    addProduct_name.setDisable(true);
+                    addProduct_price.setDisable(true);
+                    addProduct_add.setDisable(true);
 
+                    // Make the TextField values empty
+                    addProduct_name.setText("");
+                    addProduct_price.setText("");
+                } else {
+                    // Enable the TextField and Button
+                    addProduct_name.setDisable(false);
+                    addProduct_price.setDisable(false);
+                    addProduct_add.setDisable(false);
+                }
+            }
+        });
+    }
     public void disableUpdateIfRowIsNotSelected() {
         addProduct_table.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection == null) {
@@ -691,11 +838,29 @@ public class dashboardController implements Initializable {
         });
 
     } // Disable the update and delete button if the row is not selected (Products)
-
     public void addProductSpinner() {
         SpinnerValueFactory<Integer> valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 1000, 1);
         addProduct_quantity.setValueFactory(valueFactory);
-    } // Set the value of spinner (Products)
+        addProduct_quantity.setEditable(true);
+
+        // Add a TextFormatter to restrict input
+        TextFormatter<Integer> formatter = new TextFormatter<>(new IntegerStringConverter(), 1, change -> {
+            try {
+                String newText = change.getControlNewText();
+                if (newText.isEmpty()) {
+                    return change;
+                } else if (newText.startsWith("0")) {
+                    return null;
+                }
+                int newValue = Integer.parseInt(newText);
+                return newValue <= 1000 ? change : null;
+            } catch (NumberFormatException e) {
+                return null;
+            }
+        });
+
+        addProduct_quantity.getEditor().setTextFormatter(formatter);
+    }
 
 
 
@@ -1025,8 +1190,28 @@ public class dashboardController implements Initializable {
     } // Add the data to combobox (Pre-Made) (Order)
 
     public void orderSpinner() {
-        SpinnerValueFactory<Integer> valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 1000, 1);
+        SpinnerValueFactory<Integer> valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 1000, 1);
         order_quantity.setValueFactory(valueFactory);
+        order_quantity.setEditable(true);
+
+        // Add a TextFormatter to restrict input
+        TextFormatter<Integer> formatter = new TextFormatter<>(new IntegerStringConverter(), 1, change -> {
+            try {
+                String newText = change.getControlNewText();
+                if (newText.isEmpty()) {
+                    return change;
+                } else if (newText.startsWith("0")) {
+
+                    return null;
+                }
+                int newValue = Integer.parseInt(newText);
+                return newValue <= 1000 ? change : null;
+            } catch (NumberFormatException e) {
+                return null;
+            }
+        });
+
+        order_quantity.getEditor().setTextFormatter(formatter);
     } // Set the value of spinner (Order)
 
     public void orderClear() {
@@ -1145,15 +1330,6 @@ public class dashboardController implements Initializable {
                     orderShowListData();
                     orderDisplayTotal();
                     transaction = "";
-
-
-
-
-
-
-
-
-
                 }
             }
 
@@ -1295,6 +1471,15 @@ public class dashboardController implements Initializable {
             history_year.getSelectionModel().select(Integer.toString(currentYear));
         }
     } // Add the data to combobox (Year) (History)
+    public void disableYearIfMonthIsAll(){
+        history_month.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            if (newSelection != null && newSelection.equals("All")) {
+                history_year.setDisable(true);
+            } else {
+                history_year.setDisable(false);
+            }
+        });
+    }
     public void historyDisplayTableFromMonths() {
         ObservableList<historyData> monthList = FXCollections.observableArrayList();
 
@@ -1727,6 +1912,7 @@ public class dashboardController implements Initializable {
         });
 
     } // Fill the text-field with data from table (History)
+
     public void historyPay() {
         int totalPaid = paidInt + Integer.parseInt(history_amount.getText());
         int totalBalance = history_willBeBalance.getText().equalsIgnoreCase("₱0") ? 0 : Integer.parseInt(history_willBeBalance.getText().substring(1).replaceAll(",", ""));
@@ -1780,7 +1966,76 @@ public class dashboardController implements Initializable {
         JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, database.connectDb());
         JasperViewer.viewReport(jasperPrint, false);
     }
+    public void historyDeleteMultipleRows() {
+        // Check if any row is selected in history_fullyPaidTable
+        if (history_fullyPaidTable.getSelectionModel().getSelectedItems().isEmpty() && history_withBalanceTable.getSelectionModel().getSelectedItems().isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText(null);
+            alert.setContentText("No rows selected");
+            alert.showAndWait();
+            return;
+        }
+
+        // Confirmation alert
+        Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmationAlert.setTitle("Confirmation");
+        confirmationAlert.setHeaderText(null);
+        confirmationAlert.setContentText("Are you sure you want to delete the selected rows?");
+
+        Optional<ButtonType> result = confirmationAlert.showAndWait();
+        if (result.get() != ButtonType.OK){
+            return; // User chose not to proceed
+        }
+
+        // Delete each selected row from history_fullyPaidTable
+        for (historyData history : history_fullyPaidTable.getSelectionModel().getSelectedItems()) {
+            String sql = "DELETE from customer_receipt WHERE transaction_id = ?";
+
+            try {
+                PreparedStatement statement = connect.prepareStatement(sql);
+                statement.setString(1, history.getTransaction_id());
+                statement.executeUpdate();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        // Delete each selected row from history_withBalanceTable
+        for (historyData history : history_withBalanceTable.getSelectionModel().getSelectedItems()) {
+            String sql = "DELETE from customer_receipt WHERE transaction_id = ?";
+
+            try {
+                PreparedStatement statement = connect.prepareStatement(sql);
+                statement.setString(1, history.getTransaction_id());
+                statement.executeUpdate();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        // Show success message
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Success");
+        alert.setHeaderText(null);
+        alert.setContentText("Successfully Deleted");
+        alert.showAndWait();
+
+        // Refresh the table view to reflect the changes
+        historyShowWithBalanceData();
+        historyDisplayTableFromMonths();
+        history_balanceLabel.setText("₱0");
+        history_amount.setText("");
+        history_willBeBalance.setText("₱0");
+        history_changeLabel.setText("₱0");
+        transactionId = "";
+    } // Delete multiple rows (History)
     public void historyDelete(){
+        if (history_fullyPaidTable.getSelectionModel().getSelectedItems().size() > 1 || history_withBalanceTable.getSelectionModel().getSelectedItems().size() > 1) {
+            historyDeleteMultipleRows();
+            return;
+        }
+
         String sql = "DELETE FROM customer_receipt WHERE transaction_id = '"+transactionId+"'";
         connect = database.connectDb();
         Alert alert;
@@ -2148,33 +2403,44 @@ public class dashboardController implements Initializable {
         addProduct_price.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observableValue, String s, String t1) {
-                if (!t1.matches("\\d*")) {
+                if (!t1.matches("\\d*") || Integer.parseInt(t1) > 100000) {
                     addProduct_price.setText(t1.replaceAll("[^\\d]", ""));
+                    if(Integer.parseInt(addProduct_price.getText()) > 100000){
+                        addProduct_price.setText("100000");
+                    }
                 }
             }
         });
         order_customPrice.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observableValue, String s, String t1) {
-                if (!t1.matches("\\d*")) {
+                if (!t1.matches("\\d*") || Integer.parseInt(t1) > 100000) {
                     order_customPrice.setText(t1.replaceAll("[^\\d]", ""));
+                    if(Integer.parseInt(order_customPrice.getText()) > 100000){
+                        order_customPrice.setText("100000");
+                    }
                 }
             }
         });
         order_amount.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observableValue, String s, String t1) {
-                if (!t1.matches("\\d*")) {
+                if (!t1.matches("\\d*") || Integer.parseInt(t1) > 10000000) {
                     order_amount.setText(t1.replaceAll("[^\\d]", ""));
+                    if(Integer.parseInt(order_amount.getText()) > 10000000){
+                        order_amount.setText("10000000");
+                    }
                 }
             }
         });
         history_amount.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observableValue, String s, String t1) {
-
-                if (!t1.matches("\\d*")) {
+                if (!t1.matches("\\d*") || Integer.parseInt(t1) > 10000000) {
                     history_amount.setText(t1.replaceAll("[^\\d]", ""));
+                    if(Integer.parseInt(history_amount.getText()) > 10000000){
+                        history_amount.setText("10000000");
+                    }
                 }
             }
         });
@@ -2383,6 +2649,10 @@ public class dashboardController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        addProduct_table.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        order_table.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        history_fullyPaidTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+
         addDataToDataChartFilter(); // Add the data to data chart filter (Home)
 
         homeIncomeDataChartForYear(); // Display the income data chart for year (Home)
@@ -2393,7 +2663,7 @@ public class dashboardController implements Initializable {
 
 
 
-
+        productsIfMultipleSelected(); // If multiple row is selected, disable the update and delete button (Products)
         addProductShowListData(); // Put the data from SQL to Table
         addProductListStatus(); // Add the data to combobox (Status)
         ifTotalIsZero(); // If total is zero, disable the pay button and amount text-field (Products)
@@ -2410,7 +2680,7 @@ public class dashboardController implements Initializable {
         orderDisplayTotal(); // Display the total price (Order)
 
 
-
+        disableYearIfMonthIsAll(); // Disable the year if the month is all (History)
         disableHistoryPayIfTableRowIsNotSelected(); // Disable the pay button if the table row is not selected (History)
         historyShowWithBalanceData(); // Put the data from SQL with balance to Table (History)
         historyAddMonth(); // Add the data to combobox (Month) (History)
