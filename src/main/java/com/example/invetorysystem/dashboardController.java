@@ -1368,7 +1368,7 @@ public class dashboardController implements Initializable {
             history_withBalanceTable.getSelectionModel().clearSelection();
             history_filterAnchorPane.setVisible(true);
             history_fullyPaid.setDisable(true);
-            history_totalIncome.setVisible(true);
+
             history_notFullyPaid.setDisable(false); // Must be in the last line
         }
 
@@ -1379,7 +1379,7 @@ public class dashboardController implements Initializable {
             history_fullyPaid.setSelected(false);
             history_withBalanceTable.setVisible(true);
             history_totalIncomeLabel.setVisible(false);
-            history_totalIncome.setVisible(false);
+
             history_fullyPaidTable.setVisible(false);
             history_fullyPaidTable.getSelectionModel().clearSelection();
             history_withBalanceTable.getSelectionModel().clearSelection();

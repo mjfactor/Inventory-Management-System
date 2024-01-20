@@ -15,13 +15,17 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+
+import javax.swing.*;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.UUID;
 
 public class loginController implements Initializable {
     @FXML
@@ -47,7 +51,88 @@ public class loginController implements Initializable {
 
     @FXML
     private ImageView login_logo;
+    @FXML
+    private Label forgot_password;
+    public boolean usernameExists(String username) {
+        String sql = "SELECT * FROM admin WHERE username = ?";
 
+        try (Connection connect = database.connectDb();
+             PreparedStatement prepare = connect.prepareStatement(sql)) {
+
+            prepare.setString(1, username);
+            ResultSet result = prepare.executeQuery();
+
+            if (result.next()) {
+                return true;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+    public String generateTempPassword() {
+        // Generate a temporary password
+        // This is a simple example, consider using a more secure method
+        return UUID.randomUUID().toString().substring(0, 30);
+    }
+    public void resetPassword(String username) {
+        // Reset the password to the original one
+        String sql = "UPDATE admin SET password = ? WHERE username = ?";
+
+        try (Connection connect = database.connectDb();
+             PreparedStatement prepare = connect.prepareStatement(sql)) {
+
+            prepare.setString(1, "password");
+            prepare.setString(2, username);
+            prepare.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    public void forgotPassword() {
+        String checkUsername = JOptionPane.showInputDialog("Enter your username");
+
+        if (usernameExists(checkUsername)) {
+            String tempPassword = generateTempPassword();
+            String sql = "UPDATE admin SET password = ? WHERE username = ?";
+
+            try (Connection connect = database.connectDb();
+                 PreparedStatement prepare = connect.prepareStatement(sql)) {
+
+                prepare.setString(1, tempPassword);
+                prepare.setString(2, checkUsername);
+                prepare.executeUpdate();
+
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Temporary Password");
+                alert.setHeaderText(null);
+
+                TextArea textArea = new TextArea("Temp Password: "+tempPassword);
+                textArea.setEditable(false);
+                textArea.setWrapText(true);
+
+                alert.getDialogPane().setContent(textArea);
+                alert.showAndWait();
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } else {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText(null);
+            alert.setContentText("Username does not exist.");
+            alert.showAndWait();
+            alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText(null);
+            alert.setContentText("Contact the developer to reset your password: +639951712402");
+            alert.showAndWait();
+        }
+    }
     public void makePasswordDontReadSpace(){
         password.textProperty().addListener((observable, oldValue, newValue) -> {
             if (password.getText().contains(" ")){
@@ -93,6 +178,9 @@ public class loginController implements Initializable {
                 alert.showAndWait();
             }else{
                 if(result.next()){ // If Authentication is correct
+                    if (password.getText().length() == 30) { // Assuming temp passwords are 8 characters long
+                        resetPassword(username.getText());
+                    }
                     login_button.getScene().getWindow().hide();  // hide login form
                     Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("dashboard.fxml")));
                     Stage stage = new Stage();
@@ -148,6 +236,7 @@ public class loginController implements Initializable {
         password_checkBox.selectedProperty().addListener((observable, oldValue, newValue) -> showPassword());
         password_show.textProperty().bindBidirectional(password.textProperty());
         loginWhenEnterIsPressed();
+        forgot_password.setOnMouseClicked(event -> forgotPassword());
 
     }
 }
