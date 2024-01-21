@@ -190,7 +190,7 @@ public class loginController implements Initializable {
                     Stage stage = new Stage();
                     Scene scene = new Scene(root);
                     stage.initStyle(StageStyle.UNDECORATED);  // Remove Stage Buttons (Minimize, maximize, close)
-                    stage.getIcons().add(new javafx.scene.image.Image("com/example/invetorysystem/images/logo_white.png"));
+
                     stage.setScene(scene);
 
 
@@ -244,9 +244,10 @@ public class loginController implements Initializable {
         loginWhenEnterIsPressed();
         forgot_password.setOnMouseClicked(event -> forgotPassword());
 
+
         Platform.runLater(() -> {
             Stage stage = (Stage) main_frame.getScene().getWindow();
-            stage.getIcons().add(new javafx.scene.image.Image("com/example/invetorysystem/images/logo_white.png"));
+            stage.getIcons().add(new javafx.scene.image.Image(Objects.requireNonNull(getClass().getResourceAsStream("/com/example/invetorysystem/images/logo_white.png"))));
         });
 
     }
