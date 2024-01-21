@@ -461,7 +461,6 @@ public class dashboardController implements Initializable {
         addProduct_table.setItems(sortedList);
 
     } // Search product
-
     public void addProductsAdd() {
 
         String sql = "INSERT INTO products (productName, price, quantity, price_int, status, date)"
@@ -471,6 +470,7 @@ public class dashboardController implements Initializable {
         try {
             if (addProduct_name.getText().isEmpty()
                     || addProduct_price.getText().isEmpty()
+                    || addProduct_price.getText().startsWith("0")
                     || addProduct_quantity.getValue() == null
                     || Objects.equals(addProduct_status.getSelectionModel().getSelectedItem(), "Choose")) {
 
@@ -974,6 +974,7 @@ public class dashboardController implements Initializable {
                 if (customer_name.getText().isEmpty()
                         || order_customName.getText().isEmpty()
                         || order_customPrice.getText().isEmpty()
+                        || order_customPrice.getText().startsWith("0")
                         || order_productType.getSelectionModel().getSelectedItem() == null
                         || order_quantity.getValue() == 0) {
                     Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -1283,7 +1284,7 @@ public class dashboardController implements Initializable {
         connect = database.connectDb();
         Alert alert;
         try {
-            if (order_amount.getText().isEmpty()) {
+            if (order_amount.getText().isEmpty()|| order_amount.getText().startsWith("0")) {
                 alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Error");
                 alert.setHeaderText(null);
@@ -1921,11 +1922,11 @@ public class dashboardController implements Initializable {
         connect = database.connectDb();
         Alert alert;
         try {
-            if (history_balanceLabel.getText().equalsIgnoreCase("₱0")) {
+            if (history_amount.getText().isEmpty()||history_amount.getText().startsWith("0")) {
                 alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Error");
                 alert.setHeaderText(null);
-                alert.setContentText("The balance is already paid");
+                alert.setContentText("Enter the amount");
                 alert.showAndWait();
             } else {
                 alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -1937,6 +1938,11 @@ public class dashboardController implements Initializable {
                     assert connect != null;
                     statement = connect.createStatement();
                     statement.executeUpdate(sql);
+                    alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Success");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Successfully Paid");
+                    alert.showAndWait();
                     historyPayReceipt();
                     historyShowWithBalanceData();
                     historyDisplayTableFromMonths();

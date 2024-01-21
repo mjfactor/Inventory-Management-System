@@ -197,21 +197,21 @@ and Fabricator]]></text>
 				</graphicElement>
 			</line>
 			<textField>
-				<reportElement x="105" y="27" width="80" height="22" uuid="af5a8b4d-dff9-4c67-af69-c5da3e5f2b83"/>
+				<reportElement x="124" y="27" width="76" height="22" uuid="af5a8b4d-dff9-4c67-af69-c5da3e5f2b83"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font fontName="Century Gothic" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{transaction}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="40" y="30" width="80" height="16" uuid="2b9aff02-6754-409d-9992-c753298cb439"/>
+				<reportElement x="40" y="30" width="66" height="16" uuid="2b9aff02-6754-409d-9992-c753298cb439"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font fontName="Century Gothic" size="8"/>
 				</textElement>
-				<text><![CDATA[Transaction No.:]]></text>
+				<text><![CDATA[Transaction #:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="120" y="14" width="90" height="16" uuid="444932b9-e333-47f4-84f2-bc109c27b776">
+				<reportElement x="124" y="14" width="86" height="16" uuid="444932b9-e333-47f4-84f2-bc109c27b776">
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 				</reportElement>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
@@ -220,8 +220,8 @@ and Fabricator]]></text>
 				<textFieldExpression><![CDATA[$F{customerName}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="43" y="14" width="74" height="16" uuid="f6e2f596-8607-4a95-83b1-f41e3cd45cc4"/>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
+				<reportElement x="40" y="14" width="74" height="16" uuid="f6e2f596-8607-4a95-83b1-f41e3cd45cc4"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font fontName="Century Gothic" size="8"/>
 				</textElement>
 				<text><![CDATA[Customer Name: ]]></text>
