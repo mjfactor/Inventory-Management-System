@@ -1296,8 +1296,8 @@ public class dashboardController implements Initializable {
 
     } // Insert the data from customer table to history balance table (Order)
     public void orderPay() {
-        String sql = "INSERT INTO customer_receipt (transaction_id, customer_name, total, paid, change_string, balance, total_int, balance_int, change_int, date, year_int, month_string)"
-                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO customer_receipt (transaction_id, customer_name, total, paid, change_string, balance, paid_int, total_int, balance_int, change_int, date, year_int, month_string)"
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         connect = database.connectDb();
         Alert alert;
@@ -1324,14 +1324,15 @@ public class dashboardController implements Initializable {
                     prepare.setString(4, "₱" + formatPrice(order_amount.getText()));
                     prepare.setString(5, order_change.getText());
                     prepare.setString(6, order_balanceLabel.getText());
-                    prepare.setInt(7, Integer.parseInt(order_totalLabel.getText().substring(1).replaceAll(",", "")));
-                    prepare.setInt(8, Integer.parseInt(order_balanceLabel.getText().substring(1).replaceAll(",", "")));
-                    prepare.setInt(9, Integer.parseInt(order_change.getText().substring(1).replaceAll(",", "")));
+                    prepare.setInt(7, Integer.parseInt(order_amount.getText()));
+                    prepare.setInt(8, Integer.parseInt(order_totalLabel.getText().substring(1).replaceAll(",", "")));
+                    prepare.setInt(9, Integer.parseInt(order_balanceLabel.getText().substring(1).replaceAll(",", "")));
+                    prepare.setInt(10, Integer.parseInt(order_change.getText().substring(1).replaceAll(",", "")));
                     Date date = new Date();
                     java.sql.Date sqlDate = new java.sql.Date(date.getTime());
-                    prepare.setDate(10, sqlDate);
-                    prepare.setInt(11, LocalDate.now().getYear());
-                    prepare.setString(12, String.valueOf(LocalDate.now().getMonth()));
+                    prepare.setDate(11, sqlDate);
+                    prepare.setInt(12, LocalDate.now().getYear());
+                    prepare.setString(13, String.valueOf(LocalDate.now().getMonth()));
                     prepare.executeUpdate();
                     alert = new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Success");
@@ -1404,7 +1405,7 @@ public class dashboardController implements Initializable {
             history_withBalanceTable.getSelectionModel().clearSelection();
             transactionId = "0";
             history_haveBalancePayAnchorPane.setVisible(true);
-            history_print.setVisible(false);
+            history_print.setVisible(true);
             history_filterAnchorPane.setVisible(false);
             history_notFullyPaid.setDisable(true);
             history_fullyPaid.setDisable(false); // Must be in the last line
@@ -1910,6 +1911,40 @@ public class dashboardController implements Initializable {
         }
         return history_totalIncome.getText();
     } // Display the total income (History)
+    public String historyNotFullyPaidDisplayTotal() {
+        String sql = "SELECT SUM(paid_int) FROM customer_receipt WHERE balance_int != 0";
+        connect = database.connectDb();
+        int totalNotFullyPaid = 0;
+        try {
+            assert connect != null;
+            prepare = connect.prepareStatement(sql);
+            result = prepare.executeQuery();
+            while (result.next()) {
+                totalNotFullyPaid = result.getInt("SUM(paid_int)");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "₱" + formatPrice(String.valueOf(totalNotFullyPaid));
+    } // Display the total income (History)
+    public String historyNotFullyPaidCalculateTotalBalance(){
+        String sql = "SELECT SUM(balance_int) FROM customer_receipt WHERE balance_int != 0";
+        connect = database.connectDb();
+        int totalNotFullyPaid = 0;
+        try {
+            assert connect != null;
+            prepare = connect.prepareStatement(sql);
+            result = prepare.executeQuery();
+            while (result.next()) {
+                totalNotFullyPaid = result.getInt("SUM(balance_int)");
+            }
+
+        }catch (Exception ignored){
+
+        }
+        return "₱" + formatPrice(String.valueOf(totalNotFullyPaid));
+    }
     String total = "";
     public void fillFieldWithDataFromWithBalanceTable() {
         history_withBalanceTable.setOnMouseClicked(e -> {
@@ -1936,7 +1971,7 @@ public class dashboardController implements Initializable {
         int totalPaid = paidInt + Integer.parseInt(history_amount.getText());
         int totalBalance = history_willBeBalance.getText().equalsIgnoreCase("₱0") ? 0 : Integer.parseInt(history_willBeBalance.getText().substring(1).replaceAll(",", ""));
         int totalChange = history_changeLabel.getText().equalsIgnoreCase("₱0") ? 0 : Integer.parseInt(history_changeLabel.getText().substring(1).replaceAll(",", ""));
-        String sql = "UPDATE customer_receipt SET paid = '₱" + formatPrice(String.valueOf(totalPaid)) + "', balance = '₱" + formatPrice(String.valueOf(totalBalance)) + "', change_string = '₱" + formatPrice(String.valueOf(totalChange)) + "', balance_int = '" + totalBalance + "', change_int = '" + totalChange + "' WHERE transaction_id = '" + transactionId + "'";
+        String sql = "UPDATE customer_receipt SET paid = '₱" + formatPrice(String.valueOf(totalPaid)) + "', balance = '₱" + formatPrice(String.valueOf(totalBalance)) + "', change_string = '₱" + formatPrice(String.valueOf(totalChange)) + "', balance_int = '" + totalBalance + "', change_int = '" + totalChange + "', paid_int = '" + totalPaid + "' WHERE transaction_id = '" + transactionId + "'";
         connect = database.connectDb();
         Alert alert;
         try {
@@ -2230,36 +2265,81 @@ public class dashboardController implements Initializable {
         JasperViewer.viewReport(jasperPrint, false);
     }  // Print all the data (History)
     public void printTable() throws JRException {
+        if(history_fullyPaid.isSelected()){
+            if(history_totalIncome.getText().equalsIgnoreCase("₱0")){
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setHeaderText(null);
+                alert.setContentText("No data to print");
+                alert.showAndWait();
+            }else{
+                if(history_month.getSelectionModel().getSelectedItem().equalsIgnoreCase("ALL")){
+                    printAll();
+                }else {
+                    String month = history_month.getSelectionModel().getSelectedItem();
+                    Integer year = Integer.valueOf(history_year.getSelectionModel().getSelectedItem());
+                    System.out.println(month);
+                    System.out.println(year);
+                    HashMap<String, Object> parameters = new HashMap<>();
+                    parameters.put("pesoSign", "₱");
+                    parameters.put("total", historyFullyPaidDisplayTotal());
+                    parameters.put("Month", month);
+                    parameters.put("Year", year);
+                    InputStream is = getClass().getResourceAsStream("/com/example/invetorysystem/generateReport.jrxml");
+                    JasperDesign jasperDesign = JRXmlLoader.load(is);
+                    JasperReport jasperReport = JasperCompileManager.compileReport(jasperDesign);
+                    JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, database.connectDb());
+                    JasperViewer.viewReport(jasperPrint, false);
+                }
+            }
+        }else{
+            printNotFullyPaid(); // Print the data from table (History)
+        }
 
-        if(history_totalIncome.getText().equalsIgnoreCase("₱0")){
+
+
+    }  // Print the data from table (History)
+
+    public void printNotFullyPaid(){
+        if (history_withBalanceTable.getItems().isEmpty()) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");
             alert.setHeaderText(null);
             alert.setContentText("No data to print");
             alert.showAndWait();
         }else{
-            if(history_month.getSelectionModel().getSelectedItem().equalsIgnoreCase("ALL")){
-                printAll();
-            }else {
-                String month = history_month.getSelectionModel().getSelectedItem();
-                Integer year = Integer.valueOf(history_year.getSelectionModel().getSelectedItem());
-                System.out.println(month);
-                System.out.println(year);
-                HashMap<String, Object> parameters = new HashMap<>();
-                parameters.put("pesoSign", "₱");
-                parameters.put("total", historyFullyPaidDisplayTotal());
-                parameters.put("Month", month);
-                parameters.put("Year", year);
-                InputStream is = getClass().getResourceAsStream("/com/example/invetorysystem/generateReport.jrxml");
-                JasperDesign jasperDesign = JRXmlLoader.load(is);
-                JasperReport jasperReport = JasperCompileManager.compileReport(jasperDesign);
-                JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, database.connectDb());
-                JasperViewer.viewReport(jasperPrint, false);
+            String month = history_month.getSelectionModel().getSelectedItem();
+            Integer year = Integer.valueOf(history_year.getSelectionModel().getSelectedItem());
+            System.out.println(month);
+            System.out.println(year);
+            HashMap<String, Object> parameters = new HashMap<>();
+            parameters.put("pesoSign", "₱");
+            parameters.put("balance_total", historyNotFullyPaidCalculateTotalBalance());
+            parameters.put("total", historyNotFullyPaidDisplayTotal());
+            parameters.put("Month", month);
+            parameters.put("Year", year);
+            InputStream is = getClass().getResourceAsStream("/com/example/invetorysystem/generateReportForNotFullyPaid.jrxml");
+            JasperDesign jasperDesign = null;
+            try {
+                jasperDesign = JRXmlLoader.load(is);
+            } catch (JRException e) {
+                e.printStackTrace();
             }
+            JasperReport jasperReport = null;
+            try {
+                jasperReport = JasperCompileManager.compileReport(jasperDesign);
+            } catch (JRException e) {
+                e.printStackTrace();
+            }
+            JasperPrint jasperPrint = null;
+            try {
+                jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, database.connectDb());
+            } catch (JRException e) {
+                e.printStackTrace();
+            }
+            JasperViewer.viewReport(jasperPrint, false);
         }
-
-
-    }  // Print the data from table (History)
+    }
 
 
 
