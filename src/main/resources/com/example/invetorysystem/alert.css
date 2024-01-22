@@ -1,0 +1,21 @@
+.dialog-pane {
+    -fx-background-color: #2C2F33;
+    -fx-text-fill: #FFFFFF;
+}
+
+.dialog-pane .content {
+    -fx-font-size: 14px;
+    -fx-text-fill: #FFFFFF;
+}
+
+.dialog-pane .header-panel {
+    -fx-background-color: #23272A;
+}
+
+.dialog-pane .button-bar {
+    -fx-background-color: #23272A;
+}
+
+.dialog-pane .button {
+    -fx-text-fill: #FFFFFF;
+}

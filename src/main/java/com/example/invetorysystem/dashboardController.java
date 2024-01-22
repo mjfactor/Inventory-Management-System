@@ -879,7 +879,14 @@ public class dashboardController implements Initializable {
 
 
     String transaction = "";
-    public void ordersAdd() {
+    public void showAlert(String title, String content) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait();
+    }
+    public void ordersAdd() throws SQLException {
         if (Objects.equals(transaction, "")){
             transaction = transaction_Id.getText();
         }
@@ -1041,6 +1048,17 @@ public class dashboardController implements Initializable {
 
         } catch (Exception ignored) {
 
+        } finally {
+            System.out.println(getQtyFromProducts());
+            System.out.println(getQtyFromCustomer());
+            if (connect != null) {
+                try {
+                    connect.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+
+            }
         }
     } // Add order
 
@@ -1361,7 +1379,7 @@ public class dashboardController implements Initializable {
             history_notFullyPaid.setSelected(false);
             history_fullyPaidTable.setVisible(true);
             history_withBalanceTable.setVisible(false);
-            history_totalIncomeLabel.setVisible(true);
+
             history_haveBalancePayAnchorPane.setVisible(false);
             history_print.setVisible(true);
             history_fullyPaidTable.getSelectionModel().clearSelection();
@@ -1379,7 +1397,7 @@ public class dashboardController implements Initializable {
             history_transactionId.setText("");
             history_fullyPaid.setSelected(false);
             history_withBalanceTable.setVisible(true);
-            history_totalIncomeLabel.setVisible(false);
+
 
             history_fullyPaidTable.setVisible(false);
             history_fullyPaidTable.getSelectionModel().clearSelection();
@@ -2265,7 +2283,8 @@ public class dashboardController implements Initializable {
     } // Make the table not reorder able (Products) (Order) (History)
 
     public int getQtyFromCustomer() throws SQLException {
-        String getQty = "SELECT quantity FROM customer";
+        String getQty = "SELECT quantity FROM customer WHERE productName = '"
+                + order_productName.getSelectionModel().getSelectedItem() + "'" ;
         statement = connect.createStatement();
         result = statement.executeQuery(getQty);
         int qty = 0;

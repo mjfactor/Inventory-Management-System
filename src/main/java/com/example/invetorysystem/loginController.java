@@ -133,7 +133,13 @@ public class loginController implements Initializable {
             alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");
             alert.setHeaderText(null);
-            alert.setContentText("Contact the developer to reset your password: +639951712402");
+            alert.setContentText("Contact the developer to reset your password: \n" +
+                    "gemdef2024@gmail.com\n" +
+                    "emjayfactor@gmail.com\n" +
+                    "eubertandreii@gmail.com\n" +
+                    "kyleligaje3@gmail.com\n" +
+                    "gdumlao0327@gmail.com"
+                   );
             alert.showAndWait();
         }
     }
@@ -157,7 +163,7 @@ public class loginController implements Initializable {
         }
     }
 
-    public void loginAdmin(){
+    public void loginAdmin() throws SQLException {
         String sql = "SELECT * FROM admin WHERE username = ? and password = ?";
 
         Connection connect = database.connectDb();
