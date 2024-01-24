@@ -1005,7 +1005,7 @@ public class dashboardController implements Initializable {
                         statement = connect.createStatement();
                         result = statement.executeQuery(checkName);
                         if (result.next()) {
-                            String totalQTY = String.valueOf(getQtyFromCustomer() + qty);
+                            String totalQTY = String.valueOf(getQtyFromCustomer2() + qty);
                             int totalPrice = getPriceFromCustomer() + (qty * Integer.parseInt(order_customPrice.getText()));
                             String update = "UPDATE customer SET quantity = '" + totalQTY + "', price = '" + "₱" + formatPrice(String.valueOf(totalPrice)) + "', price_int = '" + totalPrice +
                                     "' WHERE customerName = '" + customer_name.getText() + "' AND productName = '" + order_customName.getText() + "'";
@@ -1013,6 +1013,7 @@ public class dashboardController implements Initializable {
                             statement.executeUpdate(update);
                             orderShowListData();
                             orderDisplayTotal();
+                            System.out.println(getQtyFromCustomer());
                         } else {
                             assert connect != null;
                             prepare = connect.prepareStatement(sql);
@@ -1049,8 +1050,7 @@ public class dashboardController implements Initializable {
         } catch (Exception ignored) {
 
         } finally {
-            System.out.println(getQtyFromProducts());
-            System.out.println(getQtyFromCustomer());
+
             if (connect != null) {
                 try {
                     connect.close();
@@ -2375,6 +2375,19 @@ public class dashboardController implements Initializable {
         return qty;
     } // Get the quantity from customer (Order)
 
+    public int getQtyFromCustomer2() throws SQLException {
+        String getQty = "SELECT quantity FROM customer WHERE productName = '"
+                + order_customName.getText() + "'";
+        statement = connect.createStatement();
+        result = statement.executeQuery(getQty);
+        int qty = 0;
+
+        while (result.next()) {
+            qty = result.getInt("quantity");
+        }
+        return qty;
+    } // Get the quantity from customer (Order)
+
     public int getPriceFromCustomer() throws SQLException {
         String getPrice = "SELECT price_int FROM customer";
         statement = connect.createStatement();
@@ -2410,22 +2423,6 @@ public class dashboardController implements Initializable {
         while (result.next()) {
             qty = result.getInt("quantity");
         }
-        return qty;
-    } // Get the quantity from products (Order)
-
-    public int getQtyFromProducts2() throws SQLException {
-        int qty = 0;
-        for (int i = 0; i < order_table.getItems().size(); i++) {
-            String getQty = "SELECT quantity FROM products WHERE productName = '"
-                    + order_table.getItems().get(i).getProductName() + "'";
-            statement = connect.createStatement();
-            result = statement.executeQuery(getQty);
-            while (result.next()) {
-                qty = result.getInt("quantity");
-            }
-
-        }
-
         return qty;
     } // Get the quantity from products (Order)
 
@@ -2664,35 +2661,82 @@ public class dashboardController implements Initializable {
     } // Minimize
 
     public void switchForm(MouseEvent event) {
+
         if (event.getSource() == home_btn || event.getSource() == home) {
-            home_form.setVisible(true);
-            orders_form.setVisible(false);
-            addProducts_form.setVisible(false);
-            history_form.setVisible(false);
-            home.setStyle("-fx-background-color: linear-gradient(to bottom right, #e7e3e3, #e1e7e1)");
-            orders.setStyle("-fx-background-color: transparent");
-            addProducts.setStyle("-fx-background-color: transparent");
-            history.setStyle("-fx-background-color: transparent");
-            homeNumberOfOrder(); // Display the number of order (Home)
-            homeTotalIncome(); // Display the total income (Home)
-            homeAvailableProducts(); // Display the number of available products (Home)
-            homeIncomeDataChart(); // Display the income data chart (Home)
-            homeIncomeDataChartForYear(); // Display the income data chart for year (Home)
-
-
-
+            if(order_table.getItems().isEmpty()) {
+                home_form.setVisible(true);
+                orders_form.setVisible(false);
+                addProducts_form.setVisible(false);
+                history_form.setVisible(false);
+                home.setStyle("-fx-background-color: linear-gradient(to bottom right, #e7e3e3, #e1e7e1)");
+                orders.setStyle("-fx-background-color: transparent");
+                addProducts.setStyle("-fx-background-color: transparent");
+                history.setStyle("-fx-background-color: transparent");
+                homeNumberOfOrder(); // Display the number of order (Home)
+                homeTotalIncome(); // Display the total income (Home)
+                homeAvailableProducts(); // Display the number of available products (Home)
+                homeIncomeDataChart(); // Display the income data chart (Home)
+                homeIncomeDataChartForYear(); // Display the income data chart for year (Home)
+            }else {
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Confirmation Message");
+                alert.setHeaderText(null);
+                alert.setContentText("There is still data in the order table. If you exit now, this data will be deleted. Are you sure you want to proceed?");
+                Optional<ButtonType> option = alert.showAndWait();
+                if (option.get().equals(ButtonType.OK)) {
+                    orderResetTableWithoutAsking();
+                    home_form.setVisible(true);
+                    orders_form.setVisible(false);
+                    addProducts_form.setVisible(false);
+                    history_form.setVisible(false);
+                    home.setStyle("-fx-background-color: linear-gradient(to bottom right, #e7e3e3, #e1e7e1)");
+                    orders.setStyle("-fx-background-color: transparent");
+                    addProducts.setStyle("-fx-background-color: transparent");
+                    history.setStyle("-fx-background-color: transparent");
+                    homeNumberOfOrder(); // Display the number of order (Home)
+                    homeTotalIncome(); // Display the total income (Home)
+                    homeAvailableProducts(); // Display the number of available products (Home)
+                    homeIncomeDataChart(); // Display the income data chart (Home)
+                    homeIncomeDataChartForYear(); // Display the income data chart for year (Home)
+                }
+            }
         } else if (event.getSource() == addProducts_btn || event.getSource() == addProducts) {
-            home_form.setVisible(false);
-            orders_form.setVisible(false);
-            history_form.setVisible(false);
-            addProducts_form.setVisible(true);
-            home.setStyle("-fx-background-color: transparent");
-            orders.setStyle("-fx-background-color: transparent");
-            addProducts.setStyle("-fx-background-color: linear-gradient(to bottom right, #e7e3e3, #e1e7e1)");
-            history.setStyle("-fx-background-color: transparent");
-            addProductShowListData();
-            addProductListStatus();
-            addProductsSearch();
+            if (order_table.getItems().isEmpty()) {
+                home_form.setVisible(false);
+                orders_form.setVisible(false);
+                addProducts_form.setVisible(true);
+                history_form.setVisible(false);
+                home.setStyle("-fx-background-color: transparent");
+                orders.setStyle("-fx-background-color: transparent");
+                addProducts.setStyle("-fx-background-color: linear-gradient(to bottom right, #e7e3e3, #e1e7e1)");
+                history.setStyle("-fx-background-color: transparent");
+                addProductShowListData();
+                addProductListStatus();
+                addProductsSearch();
+            } else {
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Confirmation Message");
+                alert.setHeaderText(null);
+                alert.setContentText("There is still data in the order table. If you exit now, this data will be deleted. Are you sure you want to proceed?");
+
+                Optional<ButtonType> option = alert.showAndWait();
+                if (option.get().equals(ButtonType.OK)) {
+                    orderResetTableWithoutAsking();
+                    home_form.setVisible(false);
+                    orders_form.setVisible(false);
+                    addProducts_form.setVisible(true);
+                    history_form.setVisible(false);
+                    home.setStyle("-fx-background-color: transparent");
+                    orders.setStyle("-fx-background-color: transparent");
+                    addProducts.setStyle("-fx-background-color: linear-gradient(to bottom right, #e7e3e3, #e1e7e1)");
+                    history.setStyle("-fx-background-color: transparent");
+                    addProductShowListData();
+                    addProductListStatus();
+                    addProductsSearch();
+                }
+
+            }
+
         } else if (event.getSource() == orders_btn || event.getSource() == orders) {
             home_form.setVisible(false);
             orders_form.setVisible(true);
@@ -2707,22 +2751,45 @@ public class dashboardController implements Initializable {
             orderPreMade(); // Add the data to combobox (Pre-Made)
             orderSpinner(); // Set the value of spinner (Order)
             orderDisplayTotal(); // Display the total price (Order)
+
         } else if (event.getSource() == history_btn || event.getSource() == history) {
-            home_form.setVisible(false);
-            orders_form.setVisible(false);
-            addProducts_form.setVisible(false);
-            history_form.setVisible(true);
-            home.setStyle("-fx-background-color: transparent");
-            orders.setStyle("-fx-background-color: transparent");
-            addProducts.setStyle("-fx-background-color: transparent");
-            history.setStyle("-fx-background-color: linear-gradient(to bottom right, #e7e3e3, #e1e7e1)");
-            clearHistory(); // Clear all text-fields (History)
-            disableHistoryPayIfTableRowIsNotSelected(); // Disable the pay button if the table row is not selected (History)
-            historyShowWithBalanceData(); // Put the data from SQL with balance to Table (History)
-            historyAddMonth(); // Add the data to combobox (Month) (History)
-            historyDisplayTableFromMonths(); // Display the table from months (History)
-
-
+            if(order_table.getItems().isEmpty()){
+                home_form.setVisible(false);
+                orders_form.setVisible(false);
+                addProducts_form.setVisible(false);
+                history_form.setVisible(true);
+                home.setStyle("-fx-background-color: transparent");
+                orders.setStyle("-fx-background-color: transparent");
+                addProducts.setStyle("-fx-background-color: transparent");
+                history.setStyle("-fx-background-color: linear-gradient(to bottom right, #e7e3e3, #e1e7e1)");
+                clearHistory(); // Clear all text-fields (History)
+                disableHistoryPayIfTableRowIsNotSelected(); // Disable the pay button if the table row is not selected (History)
+                historyShowWithBalanceData(); // Put the data from SQL with balance to Table (History)
+                historyAddMonth(); // Add the data to combobox (Month) (History)
+                historyDisplayTableFromMonths(); // Display the table from months (History)
+            }else{
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Confirmation Message");
+                alert.setHeaderText(null);
+                alert.setContentText("There is still data in the order table. If you exit now, this data will be deleted. Are you sure you want to proceed?");
+                Optional<ButtonType> option = alert.showAndWait();
+                if (option.get().equals(ButtonType.OK)) {
+                    orderResetTableWithoutAsking();
+                    home_form.setVisible(false);
+                    orders_form.setVisible(false);
+                    addProducts_form.setVisible(false);
+                    history_form.setVisible(true);
+                    home.setStyle("-fx-background-color: transparent");
+                    orders.setStyle("-fx-background-color: transparent");
+                    addProducts.setStyle("-fx-background-color: transparent");
+                    history.setStyle("-fx-background-color: linear-gradient(to bottom right, #e7e3e3, #e1e7e1)");
+                    clearHistory(); // Clear all text-fields (History)
+                    disableHistoryPayIfTableRowIsNotSelected(); // Disable the pay button if the table row is not selected (History)
+                    historyShowWithBalanceData(); // Put the data from SQL with balance to Table (History)
+                    historyAddMonth(); // Add the data to combobox (Month) (History)
+                    historyDisplayTableFromMonths(); // Display the table from months (History)
+                }
+            }
         }
 
     }  // Switch between forms
