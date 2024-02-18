@@ -26,7 +26,10 @@ Before you begin, ensure you have met the following requirements:
 
 To install the Inventory System, follow these steps:
 
-1. Clone the repository: `git clone https://github.com/mjfactor/invetorysystem.git`
+1. Clone the repository:
+```bash
+git clone https://github.com/mjfactor/invetorysystem.git
+```
 2. Navigate into the directory: `cd invetorysystem`
 3. Build the project: `main`
 
