@@ -33,9 +33,22 @@ git clone https://github.com/mjfactor/invetorysystem.git
 2. Navigate into the directory: `cd invetorysystem`
 3. Build the project: `main`
 
+
+## Database Setup
+
+This application uses a MySQL database to store inventory data. Follow these steps to set up the database:
+
+1. Download and install XAMPP from the [official website](https://www.apachefriends.org/index.html).
+2. Start the XAMPP control panel and start the Apache and MySQL modules.
+3. Open a web browser and navigate to `http://localhost/phpmyadmin`.
+4. In the phpMyAdmin interface, click on the `Import` tab.
+5. Click `Choose File` and navigate to the `inventory.sql` file in the project directory.
+6. Click `Go` to import the database.
+
+**The program will not work if the database is not set up correctly.**
+
+
 ## Usage
-
-
 To use the Inventory System, follow these steps:
 
 1. Run the application: `java -jar target/invetorysystem-1.0-SNAPSHOT.jar`
