@@ -60,7 +60,5 @@ The GUI for this application is built using JavaFX and can be edited using Scene
 4. After opening the file, you can visually edit the GUI.
 5. Save your changes and they will be reflected in the application when you run it.
 
-Please note that you should have a good understanding of JavaFX before editing the GUI.
-=======
-Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change
->>>>>>> 19559e479859f581efa506652b37ab5b806e0253
+*Please note that you should have a good understanding of JavaFX before editing the GUI.*
+
