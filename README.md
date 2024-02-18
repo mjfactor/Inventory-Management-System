@@ -43,7 +43,7 @@ To install the Inventory System, follow these steps:
 
 ## Usage
 
-<<<<<<< HEAD
+
 To use the Inventory System, follow these steps:
 
 1. Run the application: `java -jar target/invetorysystem-1.0-SNAPSHOT.jar`
