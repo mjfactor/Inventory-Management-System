@@ -2,17 +2,6 @@
 
 The Inventory System is a robust and user-friendly application built using Java, SQL, and Maven. It provides a comprehensive solution for managing inventory, tracking transactions, and user authentication with password reset functionality. The application uses JavaFX for its user interface.
 
-## Table of Contents
-
-- [Technologies Used](#technologies-used)
-- [Features](#features)
-- [Prerequisites](#prerequisites)
-- [Setup](#setup)
-- [Usage](#usage)
-- [Running Tests](#running-tests)
-- [Contributing](#contributing)
-- [License](#license)
-
 ## Technologies Used
 
 - [Java](https://www.java.com/)
