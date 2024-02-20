@@ -10,7 +10,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2b1c4b3e-ed24-4a03-940c-14188ed82d64" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -62,7 +61,7 @@
     "git-widget-placeholder": "main",
     "ignore.virus.scanning.warn.message": "true",
     "jdk.selected.JAVA_MODULE": "21",
-    "last_opened_file_path": "C:/Users/emjay/Downloads/PROJECTS/NetBeansProjects/java-dashboard-project",
+    "last_opened_file_path": "C:/Users/emjay/Downloads/PROJECTS/INTELEJI Projects/inventory",
     "list.type.of.created.stylesheet": "CSS",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -236,6 +235,7 @@
       <workItem from="1708241983199" duration="181000" />
       <workItem from="1708242423168" duration="1985000" />
       <workItem from="1708421664965" duration="354000" />
+      <workItem from="1708422077009" duration="332000" />
     </task>
     <servers />
   </component>

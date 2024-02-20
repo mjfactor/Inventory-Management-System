@@ -30,9 +30,10 @@ To install the Inventory System, follow these steps:
 ```bash
 git clone https://github.com/mjfactor/invetorysystem.git 
 ```
-or You can create "**New Project from Version Control**" in IntelliJ IDEA and paste the URL.
 2. Navigate into the directory: `cd invetorysystem`
 3. Build the project: `main`
+
+(You can use `New Project from Version Control` in IntelliJ IDEA and paste the URL.)
 
 
 ## Database Setup
