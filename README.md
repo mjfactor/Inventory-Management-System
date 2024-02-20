@@ -62,7 +62,7 @@ This application may require additional jar files to be added to the project lib
 
 
 
-The jar files are now added to your project libraries and you can use the classes and methods they provide in your project.
+
 ## Usage
 To use the Inventory System, follow these steps:
 
