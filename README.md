@@ -66,10 +66,10 @@ This application may require additional jar files to be added to the project lib
 
 ## Usage
 To use the Inventory System, follow these steps:
-
-1. Run the application: `java -jar target/invetorysystem-1.0-SNAPSHOT.jar`
-2. Follow the on-screen prompts to log in or reset your password.
-3. Use the dashboard to manage inventory and view transaction history.
+1  Fork this Repository
+2. Run the application: `java -jar target/invetorysystem-1.0-SNAPSHOT.jar`
+3. Follow the on-screen prompts to log in or reset your password.
+4. Use the dashboard to manage inventory and view transaction history.
 
 ## Editing the GUI
 
